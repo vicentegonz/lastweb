@@ -2,8 +2,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styles from './layout.module.css';
-import utilStyles from '../styles/utils.module.css';
+import utilStyles from '@/styles/utils.module.scss';
+import styles from './layout.module.scss';
 
 const name = 'Arcoprime';
 export const siteTitle = 'Arcoprime App';
