@@ -8,12 +8,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "classnames": "^2.3.1",
     "eslint-import-resolver-alias": "^1.1.2",
     "next": "^10.0.0",
+    "next-redux-wrapper": "^6.0.2",
     "prop-types": "^15.7.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-google-login": "^5.2.2",
+    "react-redux": "^7.2.3",
     "sass": "^1.32.11"
   },
   "devDependencies": {

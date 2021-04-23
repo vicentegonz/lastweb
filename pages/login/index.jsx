@@ -1,20 +1,24 @@
+import continueWithGoogle from '@/actions/GoogleAuth.jsx';
 import Head from 'next/head';
-import Link from 'next/link';
 import React from 'react';
-import Layout from '@/components/layout.jsx';
+import Layout from '@/components/layout/layout.jsx';
+import GoogleLogin from 'react-google-login';
 
-export default function Login() {
-  return (
-    <Layout>
-      <Head>
-        <title>Login</title>
-      </Head>
-      <h1>Login Page</h1>
-      <h2>
-        <Link href="/">
-          Back to home
-        </Link>
-      </h2>
-    </Layout>
-  );
-}
+const Login = () => (
+  <Layout>
+    <Head>
+      <title>Login</title>
+    </Head>
+    <h1>Login Page</h1>
+    <br />
+    <GoogleLogin
+      clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+      buttonText="Log in with Google"
+      onSuccess={continueWithGoogle}
+      onFailure={continueWithGoogle}
+      cookiePolicy="single_host_origin"
+    />
+  </Layout>
+);
+
+export default Login;

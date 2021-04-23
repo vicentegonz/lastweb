@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
 import utilStyles from '@/styles/utils.module.scss';
 import styles from './layout.module.scss';
 
@@ -47,6 +47,6 @@ Layout.defaultProps = {
 };
 
 Layout.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.instanceOf(Array),
   home: PropTypes.bool,
 };
