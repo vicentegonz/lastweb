@@ -1,15 +1,10 @@
-import axios from 'axios';
+import api from '@/api';
 
 const continueWithGoogle = async (googleData) => {
-  const details = {
-    auth_token: googleData.tokenId,
-  };
+  const response = await api.accounts.authenticate(googleData.tokenId);
 
-  try {
-    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/social_auth/google/`, { ...details });
-  } catch (err) {
-    //
-  }
+  // eslint-disable-next-line no-console
+  console.log(response.data);
 };
 
 export default continueWithGoogle;
