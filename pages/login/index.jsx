@@ -3,6 +3,7 @@ import Head from 'next/head';
 import React from 'react';
 import Layout from '@/components/layout/layout.jsx';
 import GoogleLogin from 'react-google-login';
+import Counter from '@/components/counter/counter.jsx';
 
 const Login = () => (
   <Layout>
@@ -18,6 +19,7 @@ const Login = () => (
       onFailure={continueWithGoogle}
       cookiePolicy="single_host_origin"
     />
+    <Counter />
   </Layout>
 );
 

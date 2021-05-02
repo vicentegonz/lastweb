@@ -1,6 +1,7 @@
 module.exports = {
   env: {
     es6: true,
+    browser: true,
   },
   parserOptions: {
     ecmaVersion: 2018,
@@ -43,4 +44,12 @@ module.exports = {
     'airbnb',
     'airbnb/hooks',
   ],
+  rules: {
+    'no-param-reassign': ['error', {
+      props: true,
+      ignorePropertyModificationsFor: [
+        'state',
+      ],
+    }],
+  },
 };
