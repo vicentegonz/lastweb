@@ -3,8 +3,7 @@ import React from 'react';
 import {
   Row, Col, Avatar, Button,
 } from 'antd';
-import 'antd/dist/antd.css';
-import Layout, { siteTitle } from '@/components/layout/layout.jsx';
+import Layout, { siteTitle } from '@/components/layout/Layout.jsx';
 
 export default function Home() {
   return (

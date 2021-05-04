@@ -1,7 +1,7 @@
 import continueWithGoogle from '@/actions/GoogleAuth.jsx';
 import Head from 'next/head';
 import React from 'react';
-import Layout from '@/components/layout/layout.jsx';
+import Layout from '@/components/layout/Layout.jsx';
 import GoogleLogin from 'react-google-login';
 import Counter from '@/components/counter/counter.jsx';
 

@@ -1,0 +1,23 @@
+.userInfoContainer {
+  align-items: center;
+  border: 0.1rem solid black;
+  display: flex;
+  height: 100%;
+  margin: 0.5rem 0;
+  width: 14rem;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.userProfilePic {
+  margin: 0.8rem;
+}
+
+.navIcons {
+  svg {
+    font-size: 30px !important;
+  }
+}
