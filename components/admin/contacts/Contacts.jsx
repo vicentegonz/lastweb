@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import { siteTitle } from '@/components/layout/Layout.jsx';
 
-import 'antd/dist/antd.css';
 import {
   Row, Col, Avatar, Typography, Divider, Tabs, Input, Menu, Space, Button, Upload, Comment,
 } from 'antd';

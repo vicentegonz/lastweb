@@ -1,8 +1,9 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
-import utilStyles from '@/styles/utils.module.scss';
 import Navbar from '@/components/navbar/Navbar.jsx';
+import PropTypes from 'prop-types';
+
+import utilStyles from '@/styles/utils.module.scss';
 import styles from './Layout.module.scss';
 
 const name = 'Arcoprime';

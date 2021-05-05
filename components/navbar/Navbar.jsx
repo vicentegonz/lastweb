@@ -1,13 +1,15 @@
+import Link from 'next/link';
+import Notifications from '@/components/notifications/Notifications.jsx';
+import Settings from '@/components/settings/Settings.jsx';
+import Logout from '@/components/logout/Logout.jsx';
+
 import {
   Menu, Dropdown, Row, Col, Space,
 } from 'antd';
 import {
   PieChartOutlined, LikeOutlined, ContactsOutlined, ShopOutlined, SettingOutlined, BellOutlined,
 } from '@ant-design/icons';
-import Link from 'next/link';
-import Notifications from '@/components/notifications/Notifications.jsx';
-import Settings from '@/components/settings/Settings.jsx';
-import Logout from '@/components/logout/Logout.jsx';
+
 import styles from './Navbar.module.scss';
 
 export default function Navbar() {

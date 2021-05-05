@@ -1,10 +1,10 @@
-import { React } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   decrement,
   increment,
   selectCount,
 } from '@/store/counter/counterReducer';
+
 import styles from './counter.module.css';
 
 const Counter = () => {
