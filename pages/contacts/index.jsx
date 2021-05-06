@@ -1,7 +1,10 @@
 import AdminContacts from '@/components/admin/contacts/Contacts.jsx';
+import PageLayout from '@/components/pageLayout/PageLayout.jsx';
 
 const Contacts = () => (
-  <AdminContacts />
+  <PageLayout>
+    <AdminContacts />
+  </PageLayout>
 );
 
 export default Contacts;

@@ -1,11 +1,11 @@
 import { Menu } from 'antd';
 
-export default function Logout() {
-  return (
-    <Menu theme="dark" mode="horizontal">
-      <Menu.Item>
-        Logout
-      </Menu.Item>
-    </Menu>
-  );
-}
+const Logout = () => (
+  <Menu theme="dark">
+    <Menu.Item>
+      Logout
+    </Menu.Item>
+  </Menu>
+);
+
+export default Logout;
