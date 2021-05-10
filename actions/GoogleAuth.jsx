@@ -1,10 +1,13 @@
 import api from '@/api';
 
-const continueWithGoogle = async (googleData) => {
-  const response = await api.account.authenticate(googleData.tokenId);
-
-  // eslint-disable-next-line no-console
-  console.log(response.data);
+const ContinueWithGoogle = async (googleData) => {
+  try {
+    const response = await api.account.authenticate(googleData.tokenId);
+    localStorage.setItem('token', response.data.access);
+    localStorage.setItem('refresh', response.data.refresh);
+  } catch (err) {
+    // pass
+  }
 };
 
-export default continueWithGoogle;
+export default ContinueWithGoogle;

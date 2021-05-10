@@ -4,14 +4,17 @@
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import store from '@/store';
+import { AuthProvider } from '@/contexts/withAuth.jsx';
 
 import '@/styles/global.scss';
 import 'antd/dist/antd.css';
 
 const App = ({ Component, pageProps }) => (
-  <Provider store={store}>
-    <Component {...pageProps} />
-  </Provider>
+  <AuthProvider>
+    <Provider store={store}>
+      <Component {...pageProps} />
+    </Provider>
+  </AuthProvider>
 );
 
 App.propTypes = {
