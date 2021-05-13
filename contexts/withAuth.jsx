@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import {
   createContext, useContext, useState, useEffect,
 } from 'react';
+import { clearTokens, getAccessToken } from '@/actions/storeTokens';
 import PropTypes from 'prop-types';
 import api from '@/api';
 
@@ -16,13 +17,13 @@ const AuthProvider = ({ children }) => {
     let validated = null;
     const checkPermissions = async () => {
       setLoaded(null);
-      const currentToken = localStorage.getItem('token');
+      const currentToken = getAccessToken();
       if (currentToken) {
         try {
           await api.account.validate(currentToken);
           validated = true;
         } catch (e) {
-          localStorage.clear();
+          clearTokens();
           validated = null;
         }
       } else {

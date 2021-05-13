@@ -1,10 +1,10 @@
 import api from '@/api';
+import { saveTokens } from './storeTokens';
 
 const ContinueWithGoogle = async (googleData) => {
   try {
     const response = await api.account.authenticate(googleData.tokenId);
-    localStorage.setItem('token', response.data.access);
-    localStorage.setItem('refresh', response.data.refresh);
+    saveTokens(response.data.access, response.data.refresh);
   } catch (err) {
     // pass
   }
