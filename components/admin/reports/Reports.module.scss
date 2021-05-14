@@ -1,0 +1,34 @@
+.header {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.containerHorizontalMargin {
+  margin: 0 4rem;
+}
+
+.dividerA {
+  border-top: 2px solid rgb(173, 173, 173);
+}
+
+.fatherWidth {
+  width: 100%;
+}
+
+.orangeAvatar {
+  background-color: #f56a00;
+  vertical-align: middle;
+}
+
+.contactTitle {
+  margin: 0.5em 0;
+}
+
+.barChartSize {
+  height: 40rem;
+}
+
+.foodCard {
+  width: 100%;
+}
