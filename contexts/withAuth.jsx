@@ -11,7 +11,7 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const router = useRouter();
   const [loaded, setLoaded] = useState(null);
-  const [user] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     let validated = null;
@@ -22,6 +22,7 @@ const AuthProvider = ({ children }) => {
         try {
           await api.account.validate(currentToken);
           validated = true;
+          setUser(true);
         } catch (e) {
           clearTokens();
           validated = null;
