@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import Notifications from '@/components/notifications/Notifications.jsx';
 import Settings from '@/components/settings/Settings.jsx';
 import Logout from '@/components/logout/Logout.jsx';
@@ -18,7 +19,7 @@ const Navbar = () => (
       <Col span={5}>
         <Link href="/">
           <a>
-            <img src="https://via.placeholder.com/150x50" alt="" />
+            <Image src="/images/logo.png" alt="me" width="130" height="70" />
           </a>
         </Link>
       </Col>

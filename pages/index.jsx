@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import Image from 'next/image';
 import {
-  Row, Col, Avatar, Space, Typography,
+  Row, Col, Space, Typography,
 } from 'antd';
 import GoogleLogin from 'react-google-login';
 import { useSelector, useDispatch } from 'react-redux';
@@ -74,14 +75,7 @@ const Login = () => {
       <Row justify="center" align="middle" className={styles.rowCentered}>
         <Col>
           <Space direction="vertical" size={30} align="center">
-            <Avatar
-              className={styles.googleLogin}
-              size={{
-                xs: 72, sm: 96, md: 120, lg: 192, xl: 240, xxl: 300,
-              }}
-            >
-              Logo
-            </Avatar>
+            <Image src="/images/logo.png" alt="me" width="256" height="140" />
             {showCorrectContent(successfulLogin, refreshOnceLogged, user)}
           </Space>
         </Col>

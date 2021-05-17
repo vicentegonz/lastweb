@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import Navbar from '@/components/navbar/Navbar.jsx';
@@ -21,7 +22,7 @@ const PageLayout = ({ children, home }) => (
       <Header>
         <Link href="/">
           <a>
-            <img src="https://via.placeholder.com/150x50" alt="" />
+            <Image src="/images/logo.png" alt="me" width="130" height="70" />
           </a>
         </Link>
       </Header>
