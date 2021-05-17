@@ -10,11 +10,11 @@ import '@/styles/global.scss';
 import 'antd/dist/antd.css';
 
 const App = ({ Component, pageProps }) => (
-  <AuthProvider>
-    <Provider store={store}>
+  <Provider store={store}>
+    <AuthProvider>
       <Component {...pageProps} />
-    </Provider>
-  </AuthProvider>
+    </AuthProvider>
+  </Provider>
 );
 
 App.propTypes = {

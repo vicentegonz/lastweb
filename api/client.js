@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { camelizeKeys, decamelizeKeys } from 'humps';
+import { getAccessToken } from '@/actions/storeTokens';
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -20,8 +21,12 @@ const CLIENT = axios.create({
 });
 
 CLIENT.interceptors.request.use((config) => {
-  const { params } = config;
-  return { ...config, params: decamelizeKeys(params) };
+  const newConfig = config;
+  if (getAccessToken()) {
+    newConfig.headers.Authorization = `Bearer ${getAccessToken()}`;
+  }
+  const { params } = newConfig;
+  return { ...newConfig, params: decamelizeKeys(params) };
 });
 
 export default CLIENT;

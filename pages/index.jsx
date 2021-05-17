@@ -1,20 +1,22 @@
-import continueWithGoogle from '@/actions/GoogleAuth.jsx';
-import PageLayout from '@/components/pageLayout/PageLayout.jsx';
 import { useState } from 'react';
-import { useAuth } from '@/contexts/withAuth.jsx';
 import {
   Row, Col, Avatar, Space, Typography,
 } from 'antd';
 import GoogleLogin from 'react-google-login';
+import { useSelector, useDispatch } from 'react-redux';
+import { save, selectUser } from '@/store/user/userReducer';
+import continueWithGoogle from '@/actions/GoogleAuth';
+import PageLayout from '@/components/pageLayout/PageLayout.jsx';
+import api from '@/api';
 
 import styles from '@/styles/landing.module.scss';
 
 const { Title } = Typography;
 
-const showCorrectContent = (alreadyLogged, successfulLogin, refreshFunction) => {
+const showCorrectContent = (successfulLogin, refreshFunction, user) => {
   let currentMessage = '';
-  if (alreadyLogged || successfulLogin === 'Logged') {
-    currentMessage = 'Bienvenido';
+  if (successfulLogin === 'Logged' || user.givenName) {
+    currentMessage = `Bienvenido, ${user.givenName}`;
   } else if (successfulLogin === 'Failed') {
     currentMessage = 'Se ha producido un error. Inténtalo de nuevo.';
   } else if (successfulLogin === 'Loading') {
@@ -24,7 +26,7 @@ const showCorrectContent = (alreadyLogged, successfulLogin, refreshFunction) => 
   return (
     <>
       <Title level={2}>{currentMessage}</Title>
-      {alreadyLogged || successfulLogin
+      {successfulLogin || user.givenName
         ? null
         : (
           <GoogleLogin
@@ -42,13 +44,25 @@ const showCorrectContent = (alreadyLogged, successfulLogin, refreshFunction) => 
 };
 
 const Login = () => {
-  const alreadyLogged = useAuth();
   const [successfulLogin, setSuccessfulLogin] = useState(null);
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+
+  const storeUserData = async () => {
+    try {
+      const response = await api.account.accountData();
+      dispatch(save(response.data));
+      return true;
+    } catch (err) {
+      return false;
+    }
+  };
 
   const refreshOnceLogged = async (googleData) => {
     setSuccessfulLogin('Loading');
     const loginResult = await continueWithGoogle(googleData);
     if (loginResult) {
+      await storeUserData();
       setSuccessfulLogin('Logged');
     } else {
       setSuccessfulLogin('Failed');
@@ -68,7 +82,7 @@ const Login = () => {
             >
               Logo
             </Avatar>
-            {showCorrectContent(alreadyLogged, successfulLogin, refreshOnceLogged)}
+            {showCorrectContent(successfulLogin, refreshOnceLogged, user)}
           </Space>
         </Col>
       </Row>
