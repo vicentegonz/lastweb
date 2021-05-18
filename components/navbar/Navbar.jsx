@@ -1,6 +1,6 @@
 import Link from 'next/link';
+import NotificationsDropDown from '@/components/notificationsDropDown/NotificationsDropDown.jsx';
 import Image from 'next/image';
-import Notifications from '@/components/notifications/Notifications.jsx';
 import Settings from '@/components/settings/Settings.jsx';
 import Logout from '@/components/logout/Logout.jsx';
 
@@ -8,7 +8,7 @@ import {
   Menu, Dropdown, Row, Col, Space,
 } from 'antd';
 import {
-  PieChartOutlined, LikeOutlined, ContactsOutlined, ShopOutlined, SettingOutlined, BellOutlined,
+  PieChartOutlined, ContactsOutlined, ShopOutlined, SettingOutlined, BellOutlined,
 } from '@ant-design/icons';
 
 import styles from './Navbar.module.scss';
@@ -27,7 +27,7 @@ const Navbar = () => (
         <Row justify="end" align="middle">
           <Space size="large">
             <Col>
-              <Dropdown overlay={Notifications} trigger={['click']} placement="bottomCenter">
+              <Dropdown overlay={NotificationsDropDown} trigger={['click']} placement="bottomCenter">
                 <BellOutlined className={styles.navIcons} />
               </Dropdown>
             </Col>
@@ -67,13 +67,6 @@ const Navbar = () => (
               </a>
             </Link>
           </Menu.Item>
-          <Menu.Item key="recommendations" icon={<LikeOutlined />}>
-            <Link href="/recommendations">
-              <a>
-                Recomendaciones
-              </a>
-            </Link>
-          </Menu.Item>
           <Menu.Item key="contacts" icon={<ContactsOutlined />}>
             <Link href="/contacts">
               <a>
@@ -85,6 +78,13 @@ const Navbar = () => (
             <Link href="/stores">
               <a>
                 Tiendas
+              </a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="notifications" icon={<BellOutlined />}>
+            <Link href="/notifications">
+              <a>
+                Notificaciones
               </a>
             </Link>
           </Menu.Item>

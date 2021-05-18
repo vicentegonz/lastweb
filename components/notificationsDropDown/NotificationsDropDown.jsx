@@ -1,6 +1,6 @@
 import { Menu } from 'antd';
 
-const Notifications = () => (
+const NotificationsDropDown = () => (
   <Menu theme="dark">
     <Menu.Item>
       Notification 1
@@ -14,4 +14,4 @@ const Notifications = () => (
   </Menu>
 );
 
-export default Notifications;
+export default NotificationsDropDown;
