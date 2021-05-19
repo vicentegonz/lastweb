@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import {
   Row, Col, Space, Typography,
 } from 'antd';
@@ -75,7 +74,7 @@ const Login = () => {
       <Row justify="center" align="middle" className={styles.rowCentered}>
         <Col>
           <Space direction="vertical" size={30} align="center">
-            <Image src="/images/logo.png" alt="me" width="256" height="140" />
+            <img src="/images/logo.png" alt="me" width="256" height="140" />
             {showCorrectContent(successfulLogin, refreshOnceLogged, user)}
           </Space>
         </Col>

@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import NotificationsDropDown from '@/components/notificationsDropDown/NotificationsDropDown.jsx';
-import Image from 'next/image';
 import Settings from '@/components/settings/Settings.jsx';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser, clear } from '@/store/user/userReducer';
@@ -42,7 +41,7 @@ const Navbar = () => {
         <Col span={5}>
           <Link href="/">
             <a>
-              <Image src="/images/logo.png" alt="me" width="130" height="70" />
+              <img src="/images/logo.png" alt="me" width="130" height="70" />
             </a>
           </Link>
         </Col>
