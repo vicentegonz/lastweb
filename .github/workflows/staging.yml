@@ -39,4 +39,4 @@ jobs:
         run: npx next build && npx next export
 
       - name: Sync application with S3
-        run: aws s3 sync out s3://${{ secrets.STAGING_DOMAIN }} --delete
+        run: aws s3 sync out s3://${{ secrets.STAGING_DOMAIN }} --delete --acl bucket-owner-full-control
