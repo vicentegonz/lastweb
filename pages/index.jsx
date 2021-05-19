@@ -16,7 +16,7 @@ const { Title } = Typography;
 
 const showCorrectContent = (successfulLogin, refreshFunction, user) => {
   let currentMessage = '';
-  if (successfulLogin === 'Logged' || user.givenName) {
+  if (user.givenName) {
     currentMessage = `Bienvenido, ${user.givenName}`;
   } else if (successfulLogin === 'Failed') {
     currentMessage = 'Se ha producido un error. Inténtalo de nuevo.';
@@ -27,7 +27,7 @@ const showCorrectContent = (successfulLogin, refreshFunction, user) => {
   return (
     <>
       <Title level={2}>{currentMessage}</Title>
-      {successfulLogin || user.givenName
+      { user.givenName
         ? null
         : (
           <GoogleLogin
@@ -71,7 +71,7 @@ const Login = () => {
   };
 
   return (
-    <PageLayout home>
+    <PageLayout>
       <Row justify="center" align="middle" className={styles.rowCentered}>
         <Col>
           <Space direction="vertical" size={30} align="center">
