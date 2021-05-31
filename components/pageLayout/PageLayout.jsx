@@ -22,6 +22,24 @@ const PageLayout = ({ children }) => {
       <Head>
         <title>{siteTitle}</title>
       </Head>
+      <link
+        rel="preload"
+        href="/fonts/roboto/Roboto-Regular.ttf"
+        as="font"
+        crossOrigin=""
+      />
+      <link
+        rel="preload"
+        href="/fonts/roboto/Roboto-Italic.ttf"
+        as="font"
+        crossOrigin=""
+      />
+      <link
+        rel="preload"
+        href="/fonts/roboto/Roboto-Bold.ttf"
+        as="font"
+        crossOrigin=""
+      />
       {user.givenName ? (
         <Navbar />
       ) : (
