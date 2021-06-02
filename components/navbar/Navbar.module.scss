@@ -1,28 +1,15 @@
-.userInfoContainer {
-  align-items: center;
-  border: 0.1rem solid black;
-  display: flex;
+.menuColor {
+  background-color: #05426f;
+  border-bottom: 0 !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-weight: bold;
+  height: 90%;
+}
+
+.menuColor .fontColor {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.parentHeight {
   height: 100%;
-  margin: 0.5rem 0;
-  width: 14rem;
-}
-
-.userInfo {
-  display: flex;
-  flex-direction: column;
-}
-
-.userProfilePic {
-  margin: 0.8rem;
-}
-
-.navIcons {
-  svg {
-    font-size: 30px !important;
-  }
-}
-
-.orangeAvatar {
-  background-color: #f56a00;
-  vertical-align: middle;
 }

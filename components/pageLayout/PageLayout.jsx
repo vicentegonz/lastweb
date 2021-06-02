@@ -7,7 +7,6 @@ import { Layout } from 'antd';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 
-import utilStyles from '@/styles/utils.module.scss';
 import styles from './PageLayout.module.scss';
 
 const appName = 'Arcoprime';
@@ -41,9 +40,11 @@ const PageLayout = ({ children }) => {
         crossOrigin=""
       />
       {user.givenName ? (
-        <Navbar />
+        <Header className={styles.fixNavBar}>
+          <Navbar />
+        </Header>
       ) : (
-        <Header>
+        <Header className={styles.fixNavBar}>
           <Link href="/">
             <a>
               <img src="/images/logo.png" alt="me" width="130" height="70" />
@@ -52,13 +53,13 @@ const PageLayout = ({ children }) => {
         </Header>
       )}
 
-      <Layout className={`${styles.pageContainer} layout`}>
+      <Layout className={`${styles.pageContainer} site-layout`}>
         <Content className={styles.container}>
           <div className="site-layout-content">
             {children}
           </div>
         </Content>
-        <Footer className={utilStyles.alignCenter}>
+        <Footer className={styles.footer}>
           {`${appName} ©2021`}
         </Footer>
       </Layout>
