@@ -1,4 +1,3 @@
-import 'antd/dist/antd.css';
 import {
   Row, Col, Typography, Divider, DatePicker, Space, Card,
 } from 'antd';
