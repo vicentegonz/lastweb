@@ -8,7 +8,7 @@ import {
 
 const { Title, Text } = Typography;
 
-const LandingReports = ({ name, value, createdAt }) => {
+const ReportCard = ({ name, value, createdAt }) => {
   const timestamp = parseInt(createdAt, 10);
   const date = new Date(timestamp * 1000).toLocaleDateString();
   const time = new Date(timestamp * 1000).toLocaleTimeString();
@@ -25,10 +25,10 @@ const LandingReports = ({ name, value, createdAt }) => {
   );
 };
 
-LandingReports.propTypes = {
+ReportCard.propTypes = {
   name: string.isRequired,
   value: number.isRequired,
   createdAt: string.isRequired,
 };
 
-export default LandingReports;
+export default ReportCard;

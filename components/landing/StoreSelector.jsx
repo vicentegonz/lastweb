@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import { changeStore } from '@/store/storeStats/storeStatsReducer';
 import {
-  Typography, Select,
+  Typography, Select, Space,
 } from 'antd';
 import {
   ShopOutlined,
@@ -28,17 +28,16 @@ const StoreSelector = () => {
   return (
     <>
       <Title level={5}>
-        Seleccionar tienda:
+        Seleccionar:
       </Title>
-      {' '}
       <Select size="large" value={selected} onChange={handleChange}>
         {stores.map((e) => (
           <Option key={e} value={e}>
-            <ShopOutlined />
-            {' '}
-            Tienda:
-            {' '}
-            {e}
+            <Space>
+              <ShopOutlined />
+              Tienda:
+              {e}
+            </Space>
           </Option>
         ))}
       </Select>

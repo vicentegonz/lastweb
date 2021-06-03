@@ -4,11 +4,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import { selectStoreStats, save, clearStoreData } from '@/store/storeStats/storeStatsReducer';
 import {
-  Row, Col, Typography, Divider,
+  Row, Col, Typography, Divider, Space,
 } from 'antd';
-
 import styles from '@/styles/landing.module.scss';
 import StoreSelector from './StoreSelector.jsx';
+import StoreStats from './Stats.jsx';
 
 const { Title } = Typography;
 
@@ -39,33 +39,40 @@ const LoggedLanding = () => {
 
   return (
     <PageLayout>
-      <Row justify="center" align="top" className={styles.rowCentered}>
-        <Col>
-          <Title level={2}>
-            Bienvenido,
-            {' '}
-            {user.givenName}
+      <Row justify="start" align="top">
+        <Col offset={1}>
+          <Title level={2} className={styles.bottomAligned}>
+            <Space>
+              Bienvenido,
+              {user.givenName}
+            </Space>
           </Title>
         </Col>
       </Row>
-      <Row justify="center" align="top">
-        <Col flex={1} offset={1}>
+      <Row justify="start" align="bottom">
+        <Col span={18} offset={1}>
+          <Title level={3} className={styles.bottomAligned}>
+            <Space>
+              Estadísticas recientes de la tienda
+              {storeStats.selectedStore}
+            </Space>
+          </Title>
+        </Col>
+        <Col span={4} offset={1}>
           <StoreSelector />
         </Col>
-        <Col flex={6} />
       </Row>
       <Divider />
-      <Row justify="center" align="top">
-        <Col flex={2} offset={1}>
-          Tarjetas para tienda:
-          {' '}
-          {storeStats.selectedStore}
+      <Row justify="start" align="top">
+        <Col span={9} offset={1}>
+          <StoreStats />
         </Col>
         <Divider type="vertical" />
-        <Col flex={3}>
-          Gráfico para tienda:
-          {' '}
-          {storeStats.selectedStore}
+        <Col span={13}>
+          <Space>
+            Gráfico para tienda:
+            {storeStats.selectedStore}
+          </Space>
         </Col>
       </Row>
     </PageLayout>
