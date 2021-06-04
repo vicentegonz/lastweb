@@ -42,7 +42,7 @@ const Navbar = () => {
             </a>
           </Link>
         </Col>
-        <Col span={12}>
+        <Col span={12} className={styles.parentHeight}>
           <Menu mode="horizontal" className={styles.menuColor}>
             <Menu.Item key="reports" icon={<PieChartOutlined />}>
               <Link href="/reports">
@@ -74,7 +74,7 @@ const Navbar = () => {
             </Menu.Item>
           </Menu>
         </Col>
-        <Col span={4} offset={5}>
+        <Col span={4} offset={5} className={styles.parentHeight}>
           {logoutMenu}
         </Col>
       </Row>
