@@ -9,6 +9,7 @@ import {
 import styles from '@/styles/landing.module.scss';
 import StoreSelector from './StoreSelector.jsx';
 import StoreStats from './Stats.jsx';
+import StoreChart from './ChartContainer.jsx';
 
 const { Title } = Typography;
 
@@ -68,11 +69,8 @@ const LoggedLanding = () => {
           <StoreStats />
         </Col>
         <Divider type="vertical" />
-        <Col span={13}>
-          <Space>
-            Gráfico para tienda:
-            {storeStats.selectedStore}
-          </Space>
+        <Col span={13} className={styles.chartContainer}>
+          <StoreChart />
         </Col>
       </Row>
     </PageLayout>
