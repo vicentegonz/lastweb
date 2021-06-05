@@ -40,39 +40,40 @@ const LoggedLanding = () => {
 
   return (
     <PageLayout>
-      <Row justify="start" align="top">
-        <Col offset={1}>
-          <Title level={2} className={styles.bottomAligned}>
-            <Space>
-              Bienvenido,
-              {user.givenName}
-            </Space>
-          </Title>
-        </Col>
-      </Row>
-      <Row justify="start" align="bottom">
-        <Col span={18} offset={1}>
-          <Title level={3} className={styles.bottomAligned}>
-            <Space>
-              Estadísticas recientes de la tienda
-              {storeStats.selectedStore}
-            </Space>
-          </Title>
-        </Col>
-        <Col span={4} offset={1}>
-          <StoreSelector />
-        </Col>
-      </Row>
-      <Divider />
-      <Row justify="start" align="top">
-        <Col span={9} offset={1}>
-          <StoreStats />
-        </Col>
-        <Divider type="vertical" />
-        <Col span={13} className={styles.chartContainer}>
-          <StoreChart />
-        </Col>
-      </Row>
+      <div>
+        <Row justify="start" align="top">
+          <Col>
+            <Title level={2} className={styles.bottomAligned}>
+              <Space>
+                Bienvenido,
+                {user.givenName}
+              </Space>
+            </Title>
+          </Col>
+        </Row>
+        <Row justify="space-between" align="bottom">
+          <Col flex="auto">
+            <Title level={3} className={styles.bottomAligned}>
+              <Space>
+                Estadísticas recientes de la tienda
+                {storeStats.selectedStore}
+              </Space>
+            </Title>
+          </Col>
+          <Col>
+            <StoreSelector />
+          </Col>
+        </Row>
+        <Divider />
+        <Row justify="space-between" align="top">
+          <Col span={13} className={styles.chartContainer}>
+            <StoreChart />
+          </Col>
+          <Col span={10}>
+            <StoreStats />
+          </Col>
+        </Row>
+      </div>
     </PageLayout>
   );
 };

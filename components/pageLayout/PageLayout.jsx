@@ -55,7 +55,7 @@ const PageLayout = ({ children }) => {
 
       <Layout className={`${styles.pageContainer} site-layout`}>
         <Content className={styles.container}>
-          <div className="site-layout-content">
+          <div className={`site-layout-content ${styles.containerHorizontalMargin}`}>
             {children}
           </div>
         </Content>

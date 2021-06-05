@@ -39,7 +39,7 @@ const AdminNotifications = () => {
   }, [dispatch, user.stores]);
 
   return (
-    <div className={notificationsStyles.container}>
+    <div>
       <Row justify="space-around">
         <Col span={20}>
           <Title level={2}>

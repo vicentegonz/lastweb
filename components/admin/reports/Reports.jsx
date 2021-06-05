@@ -10,7 +10,7 @@ import reportsStyles from './Reports.module.scss';
 const { Title } = Typography;
 
 const AdminReports = () => (
-  <div className={reportsStyles.containerHorizontalMargin}>
+  <div>
 
     <Row justify="space-between">
 

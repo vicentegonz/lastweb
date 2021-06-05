@@ -9,7 +9,7 @@ const { TabPane } = Tabs;
 const { Search } = Input;
 
 const AdminContacts = () => (
-  <div className={contactsStyles.containerHorizontalMargin}>
+  <div>
 
     <Row justify="space-around">
 

@@ -7,7 +7,7 @@ import storeStyles from './Stores.module.scss';
 const { Title } = Typography;
 
 const AdminStore = () => (
-  <div className={storeStyles.containerHorizontalMargin}>
+  <div>
 
     <Row justify="space-around">
       <Col span={2}>
