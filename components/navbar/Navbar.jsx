@@ -8,8 +8,8 @@ import {
   Menu, Row, Col,
 } from 'antd';
 import {
-  PieChartOutlined, TeamOutlined, ShopOutlined,
-  LogoutOutlined, AlertOutlined,
+  // PieChartOutlined, TeamOutlined,
+  ShopOutlined, LogoutOutlined, AlertOutlined,
 } from '@ant-design/icons';
 
 import styles from './Navbar.module.scss';
@@ -44,13 +44,13 @@ const Navbar = () => {
         </Col>
         <Col span={12} className={styles.parentHeight}>
           <Menu mode="horizontal" className={styles.menuColor}>
-            <Menu.Item key="reports" icon={<PieChartOutlined />}>
+            {/* <Menu.Item key="reports" icon={<PieChartOutlined />}>
               <Link href="/reports">
                 <a className={styles.fontColor}>
                   REPORTES
                 </a>
               </Link>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="notifications" icon={<AlertOutlined />}>
               <Link href="/notifications">
                 <a className={styles.fontColor}>
@@ -58,13 +58,13 @@ const Navbar = () => {
                 </a>
               </Link>
             </Menu.Item>
-            <Menu.Item key="contacts" icon={<TeamOutlined />}>
+            {/* <Menu.Item key="contacts" icon={<TeamOutlined />}>
               <Link href="/contacts">
                 <a className={styles.fontColor}>
                   CONTACTOS
                 </a>
               </Link>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="stores" icon={<ShopOutlined />}>
               <Link href="/stores">
                 <a className={styles.fontColor}>
