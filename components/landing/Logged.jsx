@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PageLayout from '@/components/pageLayout/PageLayout.jsx';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
@@ -8,7 +8,7 @@ import {
 } from 'antd';
 import styles from '@/styles/landing.module.scss';
 import StoreSelector from './StoreSelector.jsx';
-import StoreStats from './Stats.jsx';
+import StoreStats from './StatsContainer.jsx';
 import StoreChart from './ChartContainer.jsx';
 
 const { Title } = Typography;
@@ -18,6 +18,7 @@ const data = require('./storeData.json');
 const LoggedLanding = () => {
   const user = useSelector(selectUser);
   const storeStats = useSelector(selectStoreStats);
+  const [dateRange, setDateRange] = useState([null, null]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,7 +27,10 @@ const LoggedLanding = () => {
         await user.stores.map(async (store) => {
           const response = {};
           response.store = store;
-          response.data = data;
+          response.data = data.slice().sort(
+            (a, b) => new Date(b.created_at * 1000).toLocaleDateString()
+            - new Date(a.created_at * 1000).toLocaleDateString(),
+          );
           dispatch(save(response));
         });
         return true;
@@ -38,9 +42,22 @@ const LoggedLanding = () => {
     storeStatsData();
   }, [dispatch, user.stores]);
 
+  useEffect(() => {
+    if (!storeStats.statsData
+      || Object.keys(storeStats.statsData).length === 0
+      || !storeStats.selectedStore) {
+      return;
+    }
+    const stats = storeStats.statsData[storeStats.selectedStore];
+    const initialDate = new Date(stats[0].created_at * 1000).toLocaleDateString();
+    const finalDate = new Date(stats[stats.length - 1].created_at * 1000).toLocaleDateString();
+    setDateRange([initialDate, finalDate]);
+  }, [storeStats.selectedStore, storeStats.statsData]);
+
   return (
     <PageLayout>
       <div>
+
         <Row justify="start" align="top">
           <Col>
             <Title level={2} className={styles.bottomAligned}>
@@ -51,20 +68,38 @@ const LoggedLanding = () => {
             </Title>
           </Col>
         </Row>
+
         <Row justify="space-between" align="bottom">
           <Col flex="auto">
-            <Title level={3} className={styles.bottomAligned}>
-              <Space>
-                Estadísticas recientes de la tienda
-                {storeStats.selectedStore}
-              </Space>
-            </Title>
+
+            <Row>
+              <Title level={3} className={styles.bottomAligned}>
+                <Space>
+                  Estadísticas recientes de la tienda
+                  {storeStats.selectedStore}
+                </Space>
+              </Title>
+            </Row>
+
+            <Row>
+              <Title level={4} className={styles.bottomAligned}>
+                <Space>
+                  Entre las fechas:
+                  {dateRange[0]}
+                  -
+                  {dateRange[1]}
+                </Space>
+              </Title>
+            </Row>
+
           </Col>
           <Col>
             <StoreSelector />
           </Col>
         </Row>
+
         <Divider />
+
         <Row justify="space-between" align="top">
           <Col span={13} className={styles.chartContainer}>
             <StoreChart />
@@ -73,6 +108,7 @@ const LoggedLanding = () => {
             <StoreStats />
           </Col>
         </Row>
+
       </div>
     </PageLayout>
   );
