@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectStoreStats } from '@/store/storeStats/storeStatsReducer';
+
+import { Carousel, Space } from 'antd';
+import styles from '@/styles/landing.module.scss';
+
 import ReportCard from './ReportsCard.jsx';
 
 const StoreStats = () => {
@@ -23,9 +27,12 @@ const StoreStats = () => {
     setCardData(finalData);
   }, [storeStats]);
 
+  const lastKpi = cardData.pop();
+
   return (
-    <>
-      {
+    <Space direction="vertical" className={styles.parentWidth} size="large">
+      <Carousel className={styles.customCarousel} autoplay>
+        {
           cardData.map((item) => (
             <ReportCard
               key={item.name}
@@ -34,8 +41,20 @@ const StoreStats = () => {
               createdAt={item.created_at}
             />
           ))
-      }
-    </>
+        }
+      </Carousel>
+
+      {lastKpi
+        && (
+        <ReportCard
+          key={lastKpi.name}
+          name={lastKpi.name}
+          value={lastKpi.value}
+          createdAt={lastKpi.created_at}
+        />
+        )}
+
+    </Space>
   );
 };
 

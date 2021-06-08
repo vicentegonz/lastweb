@@ -11,5 +11,11 @@ module.exports = {
     'font-family-name-quotes': 'always-unless-keyword',
     'no-empty-first-line': true,
     'string-quotes': 'double',
+    'selector-pseudo-class-no-unknown': [
+      true,
+      {
+        ignorePseudoClasses: ['global'],
+      },
+    ],
   },
 };

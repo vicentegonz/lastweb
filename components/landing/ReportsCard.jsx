@@ -3,8 +3,11 @@ import {
 } from 'prop-types';
 
 import {
-  Typography, Card,
+  Typography, Card, Space, Row, Col,
 } from 'antd';
+import { ArrowDownOutlined } from '@ant-design/icons';
+
+import styles from '@/styles/landing.module.scss';
 
 const { Title, Text } = Typography;
 
@@ -20,7 +23,32 @@ const ReportCard = ({ name, value, createdAt }) => {
       title={name}
       extra={<Text strong type="secondary">{formattedDate}</Text>}
     >
-      <Title type="success">{formattedValue}</Title>
+      <Title type="success">{`$ ${formattedValue}`}</Title>
+
+      <Row justify="space-between">
+
+        <Col>
+          <Title className={styles.percentageTitle} level={3} type="danger">
+            <Space>
+              <ArrowDownOutlined />
+              25%
+            </Space>
+          </Title>
+          <Text className={styles.sinceText} strong type="secondary">Desde ayer</Text>
+        </Col>
+
+        <Col>
+          <Title className={styles.percentageTitle} level={3} type="danger">
+            <Space>
+              <ArrowDownOutlined />
+              10%
+            </Space>
+          </Title>
+          <Text className={styles.sinceText} strong type="secondary">Desde la semana pasada</Text>
+        </Col>
+
+      </Row>
+
     </Card>
   );
 };

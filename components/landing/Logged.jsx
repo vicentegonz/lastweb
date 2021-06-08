@@ -101,10 +101,10 @@ const LoggedLanding = () => {
         <Divider />
 
         <Row justify="space-between" align="top">
-          <Col span={13} className={styles.chartContainer}>
+          <Col span={15} className={styles.chartContainer}>
             <StoreChart />
           </Col>
-          <Col span={10}>
+          <Col span={8}>
             <StoreStats />
           </Col>
         </Row>

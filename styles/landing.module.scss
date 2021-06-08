@@ -18,3 +18,34 @@
 .parentHeight {
   height: 100%;
 }
+
+.parentWidth {
+  width: 100%;
+}
+
+.customCarousel {
+  ul {
+    li {
+      button {
+        background: #05426f !important;
+      }
+    }
+
+    :global(li.slick-active) {
+      width: 30px !important;
+
+      button {
+        background: #05426f !important;
+      }
+    }
+  }
+}
+
+.percentageTitle {
+  margin-bottom: 0 !important;
+}
+
+.sinceText {
+  display: block;
+  margin-bottom: 10px !important;
+}
