@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import { selectStoreStats, save, clearStoreData } from '@/store/storeStats/storeStatsReducer';
 import {
-  Row, Col, Typography, Divider, Space,
+  Row, Col, Typography, Divider, Space, Affix,
 } from 'antd';
 import styles from '@/styles/landing.module.scss';
 import StoreSelector from './StoreSelector.jsx';
@@ -69,34 +69,36 @@ const LoggedLanding = () => {
           </Col>
         </Row>
 
-        <Row justify="space-between" align="bottom">
-          <Col flex="auto">
+        <Affix offsetTop={64}>
+          <Row justify="space-between" align="bottom" className={styles.fixedRow}>
+            <Col flex="auto">
 
-            <Row>
-              <Title level={3} className={styles.bottomAligned}>
-                <Space>
-                  Estadísticas recientes de la tienda
-                  {storeStats.selectedStore}
-                </Space>
-              </Title>
-            </Row>
+              <Row>
+                <Title level={3} className={styles.bottomAligned}>
+                  <Space>
+                    Estadísticas recientes de la tienda
+                    {storeStats.selectedStore}
+                  </Space>
+                </Title>
+              </Row>
 
-            <Row>
-              <Title level={4} className={styles.bottomAligned}>
-                <Space>
-                  Entre las fechas:
-                  {dateRange[0]}
-                  -
-                  {dateRange[1]}
-                </Space>
-              </Title>
-            </Row>
+              <Row>
+                <Title level={4} className={styles.bottomAligned}>
+                  <Space>
+                    Entre las fechas:
+                    {dateRange[0]}
+                    -
+                    {dateRange[1]}
+                  </Space>
+                </Title>
+              </Row>
 
-          </Col>
-          <Col>
-            <StoreSelector />
-          </Col>
-        </Row>
+            </Col>
+            <Col>
+              <StoreSelector />
+            </Col>
+          </Row>
+        </Affix>
 
         <Divider />
 
