@@ -23,3 +23,8 @@
   border: 1px solid;
   min-height: 60vh;
 }
+
+.notificationContainer {
+  max-height: 60vh;
+  overflow-y: auto;
+}

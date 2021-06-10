@@ -6,7 +6,7 @@ const account = {
   validate: (token) => CLIENT.post('/v1/authentication/token/validate/', { token }),
   refresh: (refresh) => CLIENT.post('/v1/authentication/token/refresh/', { refresh }),
   accountData: () => CLIENT.get('v1/account'),
-  eventsData: (id) => CLIENT.get(`/v1/operations/stores/${id}/events`),
+  eventsData: (id) => CLIENT.get(`/v1/operations/stores/${id}/events?size=15`),
   kpiData: (id) => CLIENT.get(`/v1/operations/stores/${id}/kpis`),
 };
 

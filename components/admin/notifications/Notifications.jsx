@@ -27,7 +27,7 @@ const AdminNotifications = () => {
       try {
         await user.stores.map(async (store) => {
           const response = await api.account.eventsData(store);
-          dispatch(save(response.data));
+          dispatch(save(response.data.results));
         });
         return true;
       } catch (err) {
@@ -69,7 +69,7 @@ const AdminNotifications = () => {
               <Search placeholder="Buscar Notificación" enterButton />
             </Row>
 
-            <Row>
+            <Row className={notificationsStyles.notificationContainer}>
               <GetNotifications />
             </Row>
 
