@@ -19,15 +19,17 @@ const StoreStats = () => {
     }
     const initialData = storeStats.statsData[storeStats.selectedStore];
     const uniqueStats = [...new Set(initialData.map((item) => item.name))];
+
     const finalData = [];
     uniqueStats.forEach((item) => {
       const latestItem = initialData.filter((el) => el.name === item).pop();
       finalData.push(latestItem);
     });
+
     setCardData(finalData);
   }, [storeStats]);
 
-  const lastKpi = cardData.pop();
+  const lastKpi = cardData[cardData.length - 1];
 
   return (
     <Space direction="vertical" className={styles.parentWidth} size="large">
@@ -38,7 +40,7 @@ const StoreStats = () => {
               key={item.name}
               name={item.name}
               value={item.value}
-              createdAt={item.created_at}
+              createdAt={item.date}
             />
           ))
         }
@@ -50,7 +52,7 @@ const StoreStats = () => {
           key={lastKpi.name}
           name={lastKpi.name}
           value={lastKpi.value}
-          createdAt={lastKpi.created_at}
+          createdAt={lastKpi.date}
         />
         )}
 

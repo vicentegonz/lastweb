@@ -7,6 +7,7 @@ const account = {
   refresh: (refresh) => CLIENT.post('/v1/authentication/token/refresh/', { refresh }),
   accountData: () => CLIENT.get('v1/account'),
   eventsData: (id) => CLIENT.get(`/v1/operations/stores/${id}/events`),
+  kpiData: (id) => CLIENT.get(`/v1/operations/stores/${id}/kpis`),
 };
 
 // Interceptor for refreshing tokens automatically

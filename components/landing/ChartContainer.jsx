@@ -13,7 +13,14 @@ const StoreChart = () => {
       || !storeStats.selectedStore) {
       return;
     }
-    setChartData(storeStats.statsData[storeStats.selectedStore]);
+
+    const currentData = storeStats.statsData[storeStats.selectedStore];
+    const filtered = currentData.filter(
+      (el) => new Date(el.date) >= new Date(storeStats.dateRange[0])
+              && new Date(el.date) <= new Date(storeStats.dateRange[1]),
+    );
+
+    setChartData(filtered);
   }, [storeStats]);
 
   return (

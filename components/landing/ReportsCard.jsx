@@ -12,9 +12,8 @@ import styles from '@/styles/landing.module.scss';
 const { Title, Text } = Typography;
 
 const ReportCard = ({ name, value, createdAt }) => {
-  const timestamp = parseInt(createdAt, 10);
-  const date = new Date(timestamp * 1000).toLocaleDateString();
-  const time = new Date(timestamp * 1000).toLocaleTimeString();
+  const date = new Date(createdAt).toLocaleDateString();
+  const time = new Date(createdAt).toLocaleTimeString();
   const formattedDate = `${date} ${time}`;
   const formattedValue = new Intl.NumberFormat().format(value);
 

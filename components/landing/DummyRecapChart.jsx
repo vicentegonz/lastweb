@@ -8,27 +8,30 @@ const formatChartData = (chartData) => {
   const halfwayChartData = {};
 
   chartData.forEach((kpiData) => {
-    if (!Object.keys(halfwayChartData).includes(kpiData.created_at)) {
-      halfwayChartData[kpiData.created_at] = {};
+    if (!Object.keys(halfwayChartData).includes(kpiData.date)) {
+      halfwayChartData[kpiData.date] = {};
     }
-    halfwayChartData[kpiData.created_at][kpiData.name] = kpiData.value;
+    halfwayChartData[kpiData.date][kpiData.name] = kpiData.value;
   });
 
   Object.entries(halfwayChartData).forEach((chartGroupData) => {
     const [timestamp, kpiValues] = chartGroupData;
-    const formattedDate = new Date(timestamp * 1000).toLocaleDateString();
+    const formattedDate = new Date(timestamp).toLocaleDateString();
+
     const formattedChartGroup = { ...{ date: formattedDate }, ...kpiValues };
     formattedChartData.push(formattedChartGroup);
   });
+
   return formattedChartData;
 };
 
 const DummyRecapChart = ({ chartData }) => {
   const formattedChartData = formatChartData(chartData);
+
   return (
     <ResponsiveBar
       indexBy="date"
-      keys={['Venta total', 'Venta neta', 'Margen']}
+      keys={[...new Set(chartData.map((item) => item.name))]}
       data={formattedChartData}
       margin={{
         top: 50, right: 130, bottom: 50, left: 100,
@@ -100,7 +103,7 @@ DummyRecapChart.propTypes = {
     id: number,
     name: string,
     value: number,
-    created_at: string,
+    date: string,
   })).isRequired,
 };
 

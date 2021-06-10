@@ -5,6 +5,7 @@ import {
 const initialState = {
   statsData: {},
   selectedStore: null,
+  dateRange: [null, null],
 };
 
 export const storeStatsSlice = createSlice({
@@ -22,6 +23,9 @@ export const storeStatsSlice = createSlice({
     changeStore: (state, action) => {
       state.selectedStore = action.payload;
     },
+    changeDateRange: (state, action) => {
+      state.dateRange = action.payload;
+    },
   },
 });
 
@@ -29,6 +33,7 @@ export const {
   save,
   clearStoreData,
   changeStore,
+  changeDateRange,
 } = storeStatsSlice.actions;
 
 export const selectStoreStats = (state) => state.storeStats;
