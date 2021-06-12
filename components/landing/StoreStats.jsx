@@ -17,15 +17,54 @@ const StoreStats = () => {
       || !storeStats.selectedStore) {
       return;
     }
+    const getDayData = (uniqueStats, initialData, day) => {
+      const result = [];
+      uniqueStats.forEach((stat) => {
+        const item = initialData.filter(
+          (el) => el.name === stat
+        && new Date(el.date).toLocaleDateString() === day.toLocaleDateString(),
+        ).pop();
+        result.push(item);
+      });
+      return result;
+    };
+
+    const addValueToObject = (data, value) => ({
+      ...data,
+      ...value,
+    });
     const initialData = storeStats.statsData[storeStats.selectedStore];
     const uniqueStats = [...new Set(initialData.map((item) => item.name))];
+    const today = new Date(Math.max.apply(null, initialData.map((e) => new Date(e.date))));
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    const lastWeek = new Date(today);
+    lastWeek.setDate(today.getDate() - 7);
 
-    const finalData = [];
-    uniqueStats.forEach((item) => {
-      const latestItem = initialData.filter((el) => el.name === item).pop();
-      finalData.push(latestItem);
+    const finalData = getDayData(uniqueStats, initialData, today);
+    const yesterdayData = getDayData(uniqueStats, initialData, yesterday);
+    const lastWeekData = getDayData(uniqueStats, initialData, lastWeek);
+
+    finalData.forEach((data, i) => {
+      const YesterdayPctDiff = {
+        differenceYesterdayPct: data.value / yesterdayData[i].value
+        - 1,
+      };
+      const LastWeekPctDiff = { differenceLastWeekPct: data.value / lastWeekData[i].value - 1 };
+      const YesterdayValDiff = {
+        differenceYesterdayVal:
+        Math.abs(data.value - yesterdayData[i].value),
+      };
+      const LastWeekValDiff = {
+        differenceLastWeekVal:
+        Math.abs(data.value - lastWeekData[i].value),
+      };
+
+      finalData[i] = addValueToObject(data, YesterdayPctDiff);
+      finalData[i] = addValueToObject(finalData[i], LastWeekPctDiff);
+      finalData[i] = addValueToObject(finalData[i], YesterdayValDiff);
+      finalData[i] = addValueToObject(finalData[i], LastWeekValDiff);
     });
-
     setCardData(finalData);
   }, [storeStats]);
 
@@ -41,6 +80,10 @@ const StoreStats = () => {
               name={item.name}
               value={item.value}
               createdAt={item.date}
+              differenceYesterdayPct={item.differenceYesterdayPct}
+              differenceLastWeekPct={item.differenceLastWeekPct}
+              differenceYesterdayVal={item.differenceYesterdayVal}
+              differenceLastWeekVal={item.differenceLastWeekVal}
             />
           ))
         }
@@ -53,6 +96,10 @@ const StoreStats = () => {
           name={lastKpi.name}
           value={lastKpi.value}
           createdAt={lastKpi.date}
+          differenceYesterdayPct={lastKpi.differenceYesterdayPct}
+          differenceLastWeekPct={lastKpi.differenceLastWeekPct}
+          differenceYesterdayVal={lastKpi.differenceYesterdayVal}
+          differenceLastWeekVal={lastKpi.differenceLastWeekVal}
         />
         )}
 
