@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined, MinusOutlined } from '@ant-design/icons';
 
-import styles from './landing.module.scss';
+import styles from '../landing.module.scss';
 
 const { Title, Text } = Typography;
 

@@ -3,9 +3,26 @@ import { useSelector } from 'react-redux';
 import { selectStoreStats } from '@/store/storeStats/storeStatsReducer';
 
 import { Carousel, Space } from 'antd';
-import styles from './landing.module.scss';
+import styles from '../landing.module.scss';
 
 import ReportCard from './ReportsCard.jsx';
+
+const getDayData = (uniqueStats, initialData, day) => {
+  const result = [];
+  uniqueStats.forEach((stat) => {
+    const item = initialData.filter(
+      (el) => el.name === stat
+        && new Date(el.date).toLocaleDateString() === day.toLocaleDateString(),
+    ).pop();
+    result.push(item);
+  });
+  return result;
+};
+
+const addValueToObject = (data, value) => ({
+  ...data,
+  ...value,
+});
 
 const StoreStats = () => {
   const storeStats = useSelector(selectStoreStats);
@@ -17,22 +34,7 @@ const StoreStats = () => {
       || !storeStats.selectedStore) {
       return;
     }
-    const getDayData = (uniqueStats, initialData, day) => {
-      const result = [];
-      uniqueStats.forEach((stat) => {
-        const item = initialData.filter(
-          (el) => el.name === stat
-        && new Date(el.date).toLocaleDateString() === day.toLocaleDateString(),
-        ).pop();
-        result.push(item);
-      });
-      return result;
-    };
 
-    const addValueToObject = (data, value) => ({
-      ...data,
-      ...value,
-    });
     const initialData = storeStats.statsData[storeStats.selectedStore];
     const uniqueStats = [...new Set(initialData.map((item) => item.name))];
     const today = new Date(Math.max.apply(null, initialData.map((e) => new Date(e.date))));
@@ -68,8 +70,6 @@ const StoreStats = () => {
     setCardData(finalData);
   }, [storeStats]);
 
-  const lastKpi = cardData[cardData.length - 1];
-
   return (
     <Space direction="vertical" className={styles.parentWidth} size="large">
       <Carousel className={styles.customCarousel} autoplay>
@@ -89,19 +89,22 @@ const StoreStats = () => {
         }
       </Carousel>
 
-      {lastKpi
-        && (
-        <ReportCard
-          key={lastKpi.name}
-          name={lastKpi.name}
-          value={lastKpi.value}
-          createdAt={lastKpi.date}
-          differenceYesterdayPct={lastKpi.differenceYesterdayPct}
-          differenceLastWeekPct={lastKpi.differenceLastWeekPct}
-          differenceYesterdayVal={lastKpi.differenceYesterdayVal}
-          differenceLastWeekVal={lastKpi.differenceLastWeekVal}
-        />
-        )}
+      <Carousel className={styles.customCarousel} autoplay>
+        {
+          cardData.map((item) => (
+            <ReportCard
+              key={item.name}
+              name={item.name}
+              value={item.value}
+              createdAt={item.date}
+              differenceYesterdayPct={item.differenceYesterdayPct}
+              differenceLastWeekPct={item.differenceLastWeekPct}
+              differenceYesterdayVal={item.differenceYesterdayVal}
+              differenceLastWeekVal={item.differenceLastWeekVal}
+            />
+          ))
+        }
+      </Carousel>
 
     </Space>
   );

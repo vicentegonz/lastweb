@@ -6,10 +6,9 @@ import GoogleLogin from 'react-google-login';
 import { useDispatch } from 'react-redux';
 import { save } from '@/store/user/userReducer';
 import continueWithGoogle from '@/actions/GoogleAuth';
-import PageLayout from '@/components/pageLayout/PageLayout.jsx';
 import api from '@/api';
 
-import styles from '@/styles/landing.module.scss';
+import styles from './landing.module.scss';
 
 const { Title } = Typography;
 
@@ -66,7 +65,7 @@ const GuestLanding = () => {
   };
 
   return (
-    <PageLayout>
+    <div>
       <Row justify="center" align="middle" className={styles.rowCentered}>
         <Col>
           <Space direction="vertical" size={30} align="center">
@@ -75,7 +74,7 @@ const GuestLanding = () => {
           </Space>
         </Col>
       </Row>
-    </PageLayout>
+    </div>
   );
 };
 

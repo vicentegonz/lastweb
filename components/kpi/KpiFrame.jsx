@@ -8,14 +8,14 @@ import {
   Row, Col, Typography, Divider, Space, Affix,
 } from 'antd';
 import api from '@/api';
+import StoreSelector from '@/components/landing/StoreSelector.jsx';
 import styles from './landing.module.scss';
-import StoreSelector from './StoreSelector.jsx';
-import StoreStats from './StoreStats.jsx';
-import StoreChart from './StoreChart.jsx';
+import StoreStats from './stats/StoreStats.jsx';
+import StoreChart from './chart/StoreChart.jsx';
 
 const { Title } = Typography;
 
-const LoggedLanding = () => {
+const KpiFrame = () => {
   const user = useSelector(selectUser);
   const storeStats = useSelector(selectStoreStats);
   const dispatch = useDispatch();
@@ -68,7 +68,6 @@ const LoggedLanding = () => {
 
   return (
     <div>
-
       <Row justify="start" align="top">
         <Col>
           <Title level={2} className={styles.bottomAligned}>
@@ -143,4 +142,4 @@ const LoggedLanding = () => {
   );
 };
 
-export default LoggedLanding;
+export default KpiFrame;
