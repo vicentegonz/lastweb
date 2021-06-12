@@ -11,8 +11,8 @@ import {
 import api from '@/api';
 import styles from '@/styles/landing.module.scss';
 import StoreSelector from './StoreSelector.jsx';
-import StoreStats from './StatsContainer.jsx';
-import StoreChart from './ChartContainer.jsx';
+import StoreStats from './StoreStats.jsx';
+import StoreChart from './StoreChart.jsx';
 
 const { Title } = Typography;
 
