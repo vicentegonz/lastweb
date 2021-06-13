@@ -57,7 +57,7 @@ const LoggedLanding = () => {
       initialDate.setDate(initialDate.getDate() - 7);
 
       dispatch(
-        changeDateRange([initialDate.toLocaleDateString(), finalDate.toLocaleDateString()]),
+        changeDateRange([initialDate.toLocaleDateString('en-ZA'), finalDate.toLocaleDateString('en-ZA')]),
       );
     } else {
       dispatch(

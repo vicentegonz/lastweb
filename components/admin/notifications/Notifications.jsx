@@ -27,7 +27,12 @@ const AdminNotifications = () => {
       try {
         await user.stores.map(async (store) => {
           const response = await api.account.eventsData(store);
-          dispatch(save(response.data.results));
+          const processedData = {};
+
+          processedData.data = response.data.results;
+          processedData.store = store;
+
+          dispatch(save(processedData));
         });
         return true;
       } catch (err) {

@@ -15,7 +15,7 @@ const NotificationDetail = () => {
   const event = events.eventsData[id];
   const getDate = () => {
     if (event !== null) {
-      return new Date(event.createdAt).toLocaleDateString();
+      return new Date(event.createdAt).toLocaleDateString('en-ZA');
     }
     return null;
   };

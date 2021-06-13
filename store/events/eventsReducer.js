@@ -17,7 +17,7 @@ export const eventsSlice = createSlice({
       state.status = true;
       if (!state.stores.includes(action.payload.store)) {
         state.stores.push(action.payload.store);
-        state.eventsData = state.eventsData.concat(action.payload);
+        state.eventsData = state.eventsData.concat(action.payload.data);
       }
     },
     clear: (state) => {
