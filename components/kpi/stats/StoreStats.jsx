@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux';
 import { selectStoreStats } from '@/store/storeStats/storeStatsReducer';
 
 import { Carousel, Space } from 'antd';
-import styles from '../landing.module.scss';
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import styles from '../kpi.module.scss';
 
 import ReportCard from './ReportsCard.jsx';
 
@@ -72,7 +73,13 @@ const StoreStats = () => {
 
   return (
     <Space direction="vertical" className={styles.parentWidth} size="large">
-      <Carousel className={styles.customCarousel} autoplay>
+      <Carousel
+        className={styles.customCarousel}
+        autoplay
+        arrows
+        nextArrow={<ArrowRightOutlined />}
+        prevArrow={<ArrowLeftOutlined />}
+      >
         {
           cardData.map((item) => (
             <ReportCard
@@ -84,27 +91,25 @@ const StoreStats = () => {
               differenceLastWeekPct={item.differenceLastWeekPct}
               differenceYesterdayVal={item.differenceYesterdayVal}
               differenceLastWeekVal={item.differenceLastWeekVal}
+              category={item.category}
             />
           ))
         }
       </Carousel>
 
-      <Carousel className={styles.customCarousel} autoplay>
-        {
-          cardData.map((item) => (
-            <ReportCard
-              key={item.name}
-              name={item.name}
-              value={item.value}
-              createdAt={item.date}
-              differenceYesterdayPct={item.differenceYesterdayPct}
-              differenceLastWeekPct={item.differenceLastWeekPct}
-              differenceYesterdayVal={item.differenceYesterdayVal}
-              differenceLastWeekVal={item.differenceLastWeekVal}
-            />
-          ))
-        }
-      </Carousel>
+      {cardData[0] && (
+      <ReportCard
+        key={cardData[0].name}
+        name={cardData[0].name}
+        value={cardData[0].value}
+        createdAt={cardData[0].date}
+        differenceYesterdayPct={cardData[0].differenceYesterdayPct}
+        differenceLastWeekPct={cardData[0].differenceLastWeekPct}
+        differenceYesterdayVal={cardData[0].differenceYesterdayVal}
+        differenceLastWeekVal={cardData[0].differenceLastWeekVal}
+        category={cardData[0].category}
+      />
+      )}
 
     </Space>
   );

@@ -44,6 +44,16 @@
       }
     }
   }
+
+  :global .slick-prev,
+  :global .slick-next,
+  :global .slick-prev:hover,
+  :global .slick-next:hover,
+  :global .slick-prev:focus,
+  :global .slick-next:focus, {
+    color: #05426f;
+    font-size: 20px;
+  }
 }
 
 .percentageTitle {
@@ -53,4 +63,8 @@
 .sinceText {
   display: block;
   margin-bottom: 10px !important;
+}
+
+.category {
+  font-style: italic;
 }

@@ -9,7 +9,7 @@ import {
 } from 'antd';
 import api from '@/api';
 import StoreSelector from '@/components/landing/StoreSelector.jsx';
-import styles from './landing.module.scss';
+import styles from './kpi.module.scss';
 import StoreStats from './stats/StoreStats.jsx';
 import StoreChart from './chart/StoreChart.jsx';
 

@@ -7,13 +7,13 @@ import {
 } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined, MinusOutlined } from '@ant-design/icons';
 
-import styles from '../landing.module.scss';
+import styles from '../kpi.module.scss';
 
 const { Title, Text } = Typography;
 
 const ReportCard = ({
   name, value, createdAt, differenceYesterdayPct, differenceLastWeekPct,
-  differenceYesterdayVal, differenceLastWeekVal,
+  differenceYesterdayVal, differenceLastWeekVal, category,
 }) => {
   const date = new Date(createdAt).toLocaleDateString('en-ZA');
   const time = new Date(createdAt).toLocaleTimeString('en-ZA');
@@ -37,142 +37,81 @@ const ReportCard = ({
     const Newitem = lookup.slice().reverse().find((item) => num >= item.value);
     return Newitem ? (num / Newitem.value).toFixed(digits).replace(rx, '$1') + Newitem.symbol : '0';
   };
+
+  let yesterdayComparison = 'secondary';
+  if (differenceYesterdayPct < 0) {
+    yesterdayComparison = 'danger';
+  } else if (differenceYesterdayPct > 0) {
+    yesterdayComparison = 'success';
+  }
+
+  let lastWeekComparison = 'secondary';
+  if (differenceLastWeekPct < 0) {
+    lastWeekComparison = 'danger';
+  } else if (differenceLastWeekPct > 0) {
+    lastWeekComparison = 'success';
+  }
+
+  const cardTitle = (
+    <Space size="middle">
+      <span>{name}</span>
+      <span>
+        <Text className={styles.category} strong type="secondary">{category}</Text>
+      </span>
+    </Space>
+  );
+
   return (
     <Card
-      title={name}
+      title={cardTitle}
       extra={<Text strong type="secondary">{formattedDate}</Text>}
     >
       <Title type="success">{`$ ${formattedValue}`}</Title>
-
       <Row justify="space-between">
-        {(() => {
-          if (differenceYesterdayPct < 0) {
-            return (
-              <Col>
-                <Title className={styles.percentageTitle} level={3} type="danger">
-                  <Space>
-                    <ArrowDownOutlined />
-                    <span>
-                      $
-                      {nFormatter(differenceYesterdayVal, 1)}
-                    </span>
-                    <span>
-                      (
-                      {FormattDifferencePercent(differenceYesterdayPct)}
-                      %)
-                    </span>
-                  </Space>
-                </Title>
-                <Text className={styles.sinceText} strong type="secondary">Desde ayer</Text>
-              </Col>
-            );
-          } if (differenceYesterdayPct > 0) {
-            return (
-              <Col>
-                <Title className={styles.percentageTitle} level={3} type="success">
-                  <Space>
-                    <ArrowUpOutlined />
-                    <span>
-                      $
-                      {nFormatter(differenceYesterdayVal, 1)}
-                    </span>
-                    <span>
-                      (
-                      {FormattDifferencePercent(differenceYesterdayPct)}
-                      %)
-                    </span>
-                  </Space>
-                </Title>
-                <Text className={styles.sinceText} strong type="secondary">Desde ayer</Text>
-              </Col>
-            );
-          }
-          return (
-            <Col>
-              <Title className={styles.percentageTitle} level={3} type="secondary">
-                <Space>
-                  <MinusOutlined />
-                  <span>
-                    $
-                    {nFormatter(differenceYesterdayVal, 1)}
-                  </span>
-                  <span>
-                    (
-                    {FormattDifferencePercent(differenceYesterdayPct)}
-                    %)
-                  </span>
-                </Space>
-              </Title>
-              <Text className={styles.sinceText} strong type="secondary">Desde ayer</Text>
-            </Col>
-          );
-        })()}
+        <Col>
+          <Title className={styles.percentageTitle} level={3} type={yesterdayComparison}>
+            <Space>
+              {differenceYesterdayPct < 0 && <ArrowDownOutlined />}
+              {differenceYesterdayPct > 0 && <ArrowUpOutlined />}
+              {differenceYesterdayPct === 0 && <MinusOutlined />}
+              <span>
+                $
+                {nFormatter(differenceYesterdayVal, 1)}
+              </span>
+              {differenceYesterdayPct !== 0 && (
+              <span>
+                (
+                {FormattDifferencePercent(differenceYesterdayPct)}
+                %)
+              </span>
+              )}
+            </Space>
+          </Title>
+          <Text className={styles.sinceText} strong type="secondary">Desde ayer</Text>
+        </Col>
 
-        {(() => {
-          if (differenceLastWeekPct < 0) {
-            return (
-              <Col>
-                <Title className={styles.percentageTitle} level={3} type="danger">
-                  <Space>
-                    <ArrowDownOutlined />
-                    <span>
-                      $
-                      {nFormatter(differenceLastWeekVal, 1)}
-                    </span>
-                    <span>
-                      (
-                      {FormattDifferencePercent(differenceLastWeekPct)}
-                      %)
-                    </span>
-                  </Space>
-                </Title>
-                <Text className={styles.sinceText} strong type="secondary">Desde la semana pasada</Text>
-              </Col>
-            );
-          } if (differenceLastWeekPct > 0) {
-            return (
-              <Col>
-                <Title className={styles.percentageTitle} level={3} type="success">
-                  <Space>
-                    <ArrowUpOutlined />
-                    <span>
-                      $
-                      {nFormatter(differenceLastWeekVal, 1)}
-                    </span>
-                    <span>
-                      (
-                      {FormattDifferencePercent(differenceLastWeekPct)}
-                      %)
-                    </span>
-                  </Space>
-                </Title>
-                <Text className={styles.sinceText} strong type="secondary">Desde la semana pasada</Text>
-              </Col>
-            );
-          }
-          return (
-            <Col>
-              <Title className={styles.percentageTitle} level={3} type="secondary">
-                <Space>
-                  <MinusOutlined />
-                  <span>
-                    $
-                    {nFormatter(differenceLastWeekVal, 1)}
-                  </span>
-                  <span>
-                    (
-                    {FormattDifferencePercent(differenceLastWeekPct)}
-                    %)
-                  </span>
-                </Space>
-              </Title>
-              <Text className={styles.sinceText} strong type="secondary">Desde la semana pasada</Text>
-            </Col>
-          );
-        })()}
-
+        <Col>
+          <Title className={styles.percentageTitle} level={3} type={lastWeekComparison}>
+            <Space>
+              {differenceLastWeekPct < 0 && <ArrowDownOutlined />}
+              {differenceLastWeekPct > 0 && <ArrowUpOutlined />}
+              {differenceLastWeekPct === 0 && <MinusOutlined />}
+              <span>
+                $
+                {nFormatter(differenceLastWeekVal, 1)}
+              </span>
+              {differenceLastWeekPct !== 0 && (
+              <span>
+                (
+                {FormattDifferencePercent(differenceLastWeekPct)}
+                %)
+              </span>
+              )}
+            </Space>
+          </Title>
+          <Text className={styles.sinceText} strong type="secondary">Desde la semana pasada</Text>
+        </Col>
       </Row>
-
     </Card>
   );
 };
@@ -185,6 +124,7 @@ ReportCard.propTypes = {
   differenceLastWeekPct: number.isRequired,
   differenceYesterdayVal: number.isRequired,
   differenceLastWeekVal: number.isRequired,
+  category: string.isRequired,
 };
 
 export default ReportCard;
