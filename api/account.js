@@ -8,6 +8,7 @@ const account = {
   accountData: () => CLIENT.get('v1/account'),
   eventsData: (id) => CLIENT.get(`/v1/operations/stores/${id}/events?size=15`),
   kpiData: (id) => CLIENT.get(`/v1/operations/stores/${id}/kpis`),
+  ksiData: (id) => CLIENT.get(`/v1/operations/stores/${id}/service-indicators`),
 };
 
 // Interceptor for refreshing tokens automatically
