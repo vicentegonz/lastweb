@@ -10,8 +10,8 @@ import {
 import api from '@/api';
 import styles from './landing.module.scss';
 import StoreSelector from './StoreSelector.jsx';
-import StoreStats from './StoreStats.jsx';
-import StoreChart from './StoreChart.jsx';
+import KPIStats from './stats/StoreKPIStats.jsx';
+import KSIStats from './stats/StoreKSIStats.jsx';
 
 const { Title } = Typography;
 
@@ -115,29 +115,38 @@ const LoggedLanding = () => {
 
       <Divider />
 
-      <Row justify="space-between" align="top">
-        { Object.keys(storeStats.statsData).length
+      { Object.keys(storeStats.statsData).length
             && storeStats.statsData[storeStats.selectedStore]
             && storeStats.statsData[storeStats.selectedStore].length
-          ? (
-            <>
-              <Col span={13} className={styles.chartContainer}>
-                <StoreChart />
-              </Col>
-              <Col span={10}>
-                <StoreStats />
-              </Col>
-            </>
-          )
-          : (
+        ? (
+          <>
+            <div className={styles.paddedDiv}>
+              <Title level={3}>
+                Indicadores de desempeño:
+              </Title>
+              <Row justify="space-between" align="top">
+                <KPIStats />
+              </Row>
+            </div>
+            <div className={styles.paddedDiv}>
+              <Title level={3}>
+                Indicadores de servicio:
+              </Title>
+              <Row justify="space-around" align="top">
+                <KSIStats />
+              </Row>
+            </div>
+          </>
+        )
+        : (
+          <Row justify="space-between" align="top">
             <Title level={3}>
               <Space>
                 No hay estadísticas para esta tienda.
               </Space>
             </Title>
-          )}
-
-      </Row>
+          </Row>
+        )}
 
     </div>
   );

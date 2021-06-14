@@ -1,13 +1,46 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectStoreStats } from '@/store/storeStats/storeStatsReducer';
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 
 import { Carousel, Space } from 'antd';
-import styles from './landing.module.scss';
 
-import ReportCard from './ReportsCard.jsx';
+import ReportCard from '@/components/kpi/stats/ReportsCard.jsx';
+import styles from '../landing.module.scss';
 
-const StoreStats = () => {
+const getDayData = (uniqueStats, initialData, day) => {
+  const result = [];
+  uniqueStats.forEach((stat) => {
+    const item = initialData.filter(
+      (el) => el.name === stat
+        && new Date(el.date).toLocaleDateString() === day.toLocaleDateString(),
+    ).pop();
+    result.push(item);
+  });
+  return result;
+};
+
+const addValueToObject = (data, value) => ({
+  ...data,
+  ...value,
+});
+
+const NextArrow = ({ currentSlide, slideCount, ...props }) => (
+  // eslint-disable-next-line react/jsx-props-no-spreading
+  <div {...props}>
+    <ArrowRightOutlined />
+  </div>
+);
+
+const PrevArrow = ({ currentSlide, slideCount, ...props }) => (
+  // eslint-disable-next-line react/jsx-props-no-spreading
+  <div {...props}>
+    <ArrowLeftOutlined />
+  </div>
+);
+
+const KSIStats = () => {
   const storeStats = useSelector(selectStoreStats);
   const [cardData, setCardData] = useState([]);
 
@@ -17,26 +50,13 @@ const StoreStats = () => {
       || !storeStats.selectedStore) {
       return;
     }
-    const getDayData = (uniqueStats, initialData, day) => {
-      const result = [];
-      uniqueStats.forEach((stat) => {
-        const item = initialData.filter(
-          (el) => el.name === stat
-        && new Date(el.date).toLocaleDateString() === day.toLocaleDateString(),
-        ).pop();
-        result.push(item);
-      });
-      return result;
-    };
 
-    const addValueToObject = (data, value) => ({
-      ...data,
-      ...value,
-    });
     const initialData = storeStats.statsData[storeStats.selectedStore];
     const uniqueStats = [...new Set(initialData.map((item) => item.name))];
+
     const today = new Date(Math.max.apply(null, initialData.map((e) => new Date(e.date))));
     const yesterday = new Date(today);
+
     yesterday.setDate(today.getDate() - 1);
     const lastWeek = new Date(today);
     lastWeek.setDate(today.getDate() - 7);
@@ -68,11 +88,18 @@ const StoreStats = () => {
     setCardData(finalData);
   }, [storeStats]);
 
-  const lastKpi = cardData[cardData.length - 1];
-
   return (
     <Space direction="vertical" className={styles.parentWidth} size="large">
-      <Carousel className={styles.customCarousel} autoplay>
+      <Carousel
+        className={styles.landingCarousel}
+        autoplay
+        arrows
+        nextArrow={<NextArrow />}
+        prevArrow={<PrevArrow />}
+        slidesToShow={2}
+        dots={false}
+        frameOverflow="invisible"
+      >
         {
           cardData.map((item) => (
             <ReportCard
@@ -84,27 +111,13 @@ const StoreStats = () => {
               differenceLastWeekPct={item.differenceLastWeekPct}
               differenceYesterdayVal={item.differenceYesterdayVal}
               differenceLastWeekVal={item.differenceLastWeekVal}
+              category={item.category}
             />
           ))
         }
       </Carousel>
-
-      {lastKpi
-        && (
-        <ReportCard
-          key={lastKpi.name}
-          name={lastKpi.name}
-          value={lastKpi.value}
-          createdAt={lastKpi.date}
-          differenceYesterdayPct={lastKpi.differenceYesterdayPct}
-          differenceLastWeekPct={lastKpi.differenceLastWeekPct}
-          differenceYesterdayVal={lastKpi.differenceYesterdayVal}
-          differenceLastWeekVal={lastKpi.differenceLastWeekVal}
-        />
-        )}
-
     </Space>
   );
 };
 
-export default StoreStats;
+export default KSIStats;

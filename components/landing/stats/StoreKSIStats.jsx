@@ -2,12 +2,9 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectStoreStats } from '@/store/storeStats/storeStatsReducer';
 
-/* eslint-disable react/prop-types */
-import { Carousel, Space } from 'antd';
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
-import styles from '../kpi.module.scss';
+import { Col } from 'antd';
 
-import ReportCard from './ReportsCard.jsx';
+import ReportCard from '@/components/kpi/stats/ReportsCard.jsx';
 
 const getDayData = (uniqueStats, initialData, day) => {
   const result = [];
@@ -26,21 +23,7 @@ const addValueToObject = (data, value) => ({
   ...value,
 });
 
-const NextArrow = ({ currentSlide, slideCount, ...props }) => (
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  <div {...props}>
-    <ArrowRightOutlined />
-  </div>
-);
-
-const PrevArrow = ({ currentSlide, slideCount, ...props }) => (
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  <div {...props}>
-    <ArrowLeftOutlined />
-  </div>
-);
-
-const StoreStats = () => {
+const KSIStats = () => {
   const storeStats = useSelector(selectStoreStats);
   const [cardData, setCardData] = useState([]);
 
@@ -53,8 +36,10 @@ const StoreStats = () => {
 
     const initialData = storeStats.statsData[storeStats.selectedStore];
     const uniqueStats = [...new Set(initialData.map((item) => item.name))];
+
     const today = new Date(Math.max.apply(null, initialData.map((e) => new Date(e.date))));
     const yesterday = new Date(today);
+
     yesterday.setDate(today.getDate() - 1);
     const lastWeek = new Date(today);
     lastWeek.setDate(today.getDate() - 7);
@@ -87,31 +72,7 @@ const StoreStats = () => {
   }, [storeStats]);
 
   return (
-    <Space direction="vertical" className={styles.parentWidth} size="large">
-      <Carousel
-        className={styles.customCarousel}
-        autoplay
-        arrows
-        nextArrow={<NextArrow />}
-        prevArrow={<PrevArrow />}
-      >
-        {
-          cardData.map((item) => (
-            <ReportCard
-              key={item.name}
-              name={item.name}
-              value={item.value}
-              createdAt={item.date}
-              differenceYesterdayPct={item.differenceYesterdayPct}
-              differenceLastWeekPct={item.differenceLastWeekPct}
-              differenceYesterdayVal={item.differenceYesterdayVal}
-              differenceLastWeekVal={item.differenceLastWeekVal}
-              category={item.category}
-            />
-          ))
-        }
-      </Carousel>
-
+    <Col span={12}>
       {cardData[0] && (
       <ReportCard
         key={cardData[0].name}
@@ -125,9 +86,8 @@ const StoreStats = () => {
         category={cardData[0].category}
       />
       )}
-
-    </Space>
+    </Col>
   );
 };
 
-export default StoreStats;
+export default KSIStats;

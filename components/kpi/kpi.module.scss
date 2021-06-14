@@ -54,6 +54,11 @@
     color: #05426f;
     font-size: 20px;
   }
+
+  :global .slick-prev::before,
+  :global .slick-next::before {
+    content: none;
+  }
 }
 
 .percentageTitle {
