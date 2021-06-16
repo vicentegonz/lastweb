@@ -16,7 +16,10 @@ const formatChartData = (chartData) => {
 
   Object.entries(halfwayChartData).forEach((chartGroupData) => {
     const [timestamp, kpiValues] = chartGroupData;
-    const formattedDate = new Date(timestamp).toLocaleDateString('en-ZA', { day: 'numeric', month: 'numeric' });
+    let formattedDate = new Date(timestamp);
+    formattedDate = new Date(
+      formattedDate.getTime() + Math.abs(formattedDate.getTimezoneOffset() * 60000),
+    ).toLocaleDateString('en-ZA', { day: 'numeric', month: 'numeric' });
 
     const formattedChartGroup = { ...{ date: formattedDate }, ...kpiValues };
     formattedChartData.push(formattedChartGroup);

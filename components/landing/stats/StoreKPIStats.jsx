@@ -40,7 +40,7 @@ const PrevArrow = ({ currentSlide, slideCount, ...props }) => (
   </div>
 );
 
-const KSIStats = () => {
+const KPIStats = () => {
   const storeStats = useSelector(selectStoreStats);
   const [cardData, setCardData] = useState([]);
 
@@ -54,12 +54,10 @@ const KSIStats = () => {
     const initialData = storeStats.statsData[storeStats.selectedStore];
     const uniqueStats = [...new Set(initialData.map((item) => item.name))];
 
-    const today = new Date(Math.max.apply(null, initialData.map((e) => new Date(e.date))));
+    const today = new Date(storeStats.dateRange[1]);
     const yesterday = new Date(today);
-
     yesterday.setDate(today.getDate() - 1);
-    const lastWeek = new Date(today);
-    lastWeek.setDate(today.getDate() - 7);
+    const lastWeek = new Date(storeStats.dateRange[0]);
 
     const finalData = getDayData(uniqueStats, initialData, today);
     const yesterdayData = getDayData(uniqueStats, initialData, yesterday);
@@ -120,4 +118,4 @@ const KSIStats = () => {
   );
 };
 
-export default KSIStats;
+export default KPIStats;

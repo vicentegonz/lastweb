@@ -15,9 +15,11 @@ const ReportCard = ({
   name, value, createdAt, differenceYesterdayPct, differenceLastWeekPct,
   differenceYesterdayVal, differenceLastWeekVal,
 }) => {
-  const date = new Date(createdAt).toLocaleDateString('en-ZA');
-  const time = new Date(createdAt).toLocaleTimeString('en-ZA');
-  const formattedDate = `${date} ${time}`;
+  let formattedDate = new Date(createdAt);
+  formattedDate = new Date(
+    formattedDate.getTime() + Math.abs(formattedDate.getTimezoneOffset() * 60000),
+  ).toLocaleDateString('en-ZA');
+
   const formattedValue = new Intl.NumberFormat().format(value);
   const FormattDifferencePercent = (val) => {
     const newVal = (val * 100).toFixed(1);

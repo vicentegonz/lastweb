@@ -2,10 +2,25 @@ import {
   createSlice,
 } from '@reduxjs/toolkit';
 
+const getToday = () => {
+  const today = new Date();
+  const offset = today.getTimezoneOffset();
+  const offsetToday = new Date(today.getTime() - (offset * 60 * 1000));
+
+  const lastWeek = new Date();
+  lastWeek.setDate(lastWeek.getDate() - 7);
+  const offsetWeek = new Date(lastWeek.getTime() - (offset * 60 * 1000));
+
+  const parsedToday = offsetToday.toISOString().split('T')[0];
+  const parsedLastWeek = offsetWeek.toISOString().split('T')[0];
+
+  return [parsedLastWeek, parsedToday];
+};
+
 const initialState = {
   statsData: {},
   selectedStore: null,
-  dateRange: [null, null],
+  dateRange: getToday(),
 };
 
 export const storeStatsSlice = createSlice({

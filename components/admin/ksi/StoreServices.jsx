@@ -14,6 +14,7 @@ const getDayData = (uniqueServices, initialData, day) => {
       (el) => el.name === stat
         && new Date(el.date).toLocaleDateString() === day.toLocaleDateString(),
     ).pop();
+
     result.push(item);
   });
   return result;
@@ -37,7 +38,8 @@ const StoreServices = () => {
 
     const initialData = storeServices.servicesData[storeServices.selectedStore];
     const uniqueServices = [...new Set(initialData.map((item) => item.name))];
-    const today = new Date(Math.max.apply(null, initialData.map((e) => new Date(e.date))));
+
+    const today = new Date(storeServices.dateRange[1]);
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
     const lastWeek = new Date(today);
@@ -78,7 +80,7 @@ const StoreServices = () => {
             key="Promedio KSI"
             name="Promedio KSI"
             value={6}
-            createdAt="2021-09-08"
+            createdAt={storeServices.dateRange[1]}
             differenceYesterdayPct={-0.10}
             differenceLastWeekPct={0.15}
             differenceYesterdayVal={0.6}

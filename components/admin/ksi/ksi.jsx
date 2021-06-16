@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import {
-  selectStoreServices, save, clearStoreData, changeDateRange,
+  selectStoreServices, save, clearStoreData,
 } from '@/store/storeServices/storeServicesReducer';
 
 import api from '@/api';
@@ -47,28 +47,6 @@ const Ksi = () => {
     storeServicesData();
   }, [dispatch, user.stores]);
 
-  useEffect(() => {
-    if (!storeServices.servicesData
-      || Object.keys(storeServices.servicesData).length === 0
-      || !storeServices.selectedStore) {
-      return;
-    }
-    const services = storeServices.servicesData[storeServices.selectedStore];
-    if (services && services.length) {
-      const finalDate = new Date(services[services.length - 1].date);
-      const initialDate = new Date(finalDate);
-      initialDate.setDate(initialDate.getDate() - 7);
-
-      dispatch(
-        changeDateRange([initialDate.toLocaleDateString('en-ZA'), finalDate.toLocaleDateString('en-ZA')]),
-      );
-    } else {
-      dispatch(
-        changeDateRange([null, null]),
-      );
-    }
-  }, [dispatch, storeServices.selectedStore, storeServices.servicesData]);
-
   return (
     <div>
       <Affix offsetTop={64}>
@@ -89,9 +67,9 @@ const Ksi = () => {
               <Title level={4} className={styles.bottomAligned}>
                 <Space>
                   Entre las fechas:
-                  {storeServices.dateRange[0]}
+                  {storeServices.dateRange[0].replace(/-/g, '/')}
                   -
-                  {storeServices.dateRange[1]}
+                  {storeServices.dateRange[1].replace(/-/g, '/')}
                 </Space>
               </Title>
             </Row>
