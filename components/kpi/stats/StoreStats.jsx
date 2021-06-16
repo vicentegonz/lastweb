@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
+
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectStoreStats } from '@/store/storeStats/storeStatsReducer';
 
-/* eslint-disable react/prop-types */
 import { Carousel, Space } from 'antd';
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import styles from '../kpi.module.scss';
@@ -13,7 +14,7 @@ const getDayData = (uniqueStats, initialData, day) => {
   const result = [];
   uniqueStats.forEach((stat) => {
     const item = initialData.filter(
-      (el) => el.name === stat
+      (el) => el.category === stat
         && new Date(el.date).toLocaleDateString() === day.toLocaleDateString(),
     ).pop();
     result.push(item);
@@ -47,12 +48,22 @@ const StoreStats = () => {
   useEffect(() => {
     if (!storeStats.statsData
       || Object.keys(storeStats.statsData).length === 0
-      || !storeStats.selectedStore) {
+      || !storeStats.selectedStore
+      || !storeStats.selectedKPI) {
       return;
     }
 
-    const initialData = storeStats.statsData[storeStats.selectedStore];
-    const uniqueStats = [...new Set(initialData.map((item) => item.name))];
+    let initialData = storeStats.statsData[storeStats.selectedStore].filter(
+      (el) => el.name === storeStats.selectedKPI,
+    );
+
+    if (storeStats.selectedCategory) {
+      initialData = initialData.filter(
+        (el) => el.category === storeStats.selectedCategory,
+      );
+    }
+
+    const uniqueStats = [...new Set(initialData.map((item) => item.category))];
     const today = new Date(Math.max.apply(null, initialData.map((e) => new Date(e.date))));
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
@@ -84,7 +95,8 @@ const StoreStats = () => {
       finalData[i] = addValueToObject(finalData[i], LastWeekValDiff);
     });
     setCardData(finalData);
-  }, [storeStats]);
+  }, [storeStats.statsData, storeStats.selectedStore,
+    storeStats.selectedKPI, storeStats.selectedCategory]);
 
   return (
     <Space direction="vertical" className={styles.parentWidth} size="large">

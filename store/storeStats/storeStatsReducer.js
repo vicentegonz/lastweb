@@ -20,6 +20,8 @@ const getToday = () => {
 const initialState = {
   statsData: {},
   selectedStore: null,
+  selectedKPI: null,
+  selectedCategory: null,
   dateRange: getToday(),
 };
 
@@ -38,6 +40,12 @@ export const storeStatsSlice = createSlice({
     changeStore: (state, action) => {
       state.selectedStore = action.payload;
     },
+    changeKPI: (state, action) => {
+      state.selectedKPI = action.payload;
+    },
+    changeCategory: (state, action) => {
+      state.selectedCategory = action.payload;
+    },
     changeDateRange: (state, action) => {
       state.dateRange = action.payload;
     },
@@ -48,7 +56,9 @@ export const {
   save,
   clearStoreData,
   changeStore,
+  changeCategory,
   changeDateRange,
+  changeKPI,
 } = storeStatsSlice.actions;
 
 export const selectStoreStats = (state) => state.storeStats;

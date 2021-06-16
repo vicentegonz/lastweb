@@ -10,12 +10,22 @@ const StoreChart = () => {
   useEffect(() => {
     if (!storeStats.statsData
       || Object.keys(storeStats.statsData).length === 0
-      || !storeStats.selectedStore) {
+      || !storeStats.selectedStore
+      || !storeStats.selectedKPI) {
       return;
     }
 
-    const currentData = storeStats.statsData[storeStats.selectedStore];
-    const filtered = currentData.filter(
+    let initialData = storeStats.statsData[storeStats.selectedStore].filter(
+      (el) => el.name === storeStats.selectedKPI,
+    );
+
+    if (storeStats.selectedCategory) {
+      initialData = initialData.filter(
+        (el) => el.category === storeStats.selectedCategory,
+      );
+    }
+
+    const filtered = initialData.filter(
       (el) => new Date(el.date) >= new Date(storeStats.dateRange[0])
               && new Date(el.date) <= new Date(storeStats.dateRange[1]),
     );

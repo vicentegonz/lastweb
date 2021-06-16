@@ -11,7 +11,7 @@ const formatChartData = (chartData) => {
     if (!Object.keys(halfwayChartData).includes(kpiData.date)) {
       halfwayChartData[kpiData.date] = {};
     }
-    halfwayChartData[kpiData.date][kpiData.name] = kpiData.value;
+    halfwayChartData[kpiData.date][kpiData.category] = kpiData.value;
   });
 
   Object.entries(halfwayChartData).forEach((chartGroupData) => {
@@ -28,16 +28,31 @@ const formatChartData = (chartData) => {
   return formattedChartData;
 };
 
+const nFormatter = (num, digits) => {
+  const lookup = [
+    { value: 1, symbol: '' },
+    { value: 1e3, symbol: 'k' },
+    { value: 1e6, symbol: 'M' },
+    { value: 1e9, symbol: 'G' },
+    { value: 1e12, symbol: 'T' },
+    { value: 1e15, symbol: 'P' },
+    { value: 1e18, symbol: 'E' },
+  ];
+  const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+  const Newitem = lookup.slice().reverse().find((item) => num >= item.value);
+  return Newitem ? (num / Newitem.value).toFixed(digits).replace(rx, '$1') + Newitem.symbol : '0';
+};
+
 const DummyRecapChart = ({ chartData }) => {
   const formattedChartData = formatChartData(chartData);
 
   return (
     <ResponsiveBar
       indexBy="date"
-      keys={[...new Set(chartData.map((item) => item.name))]}
+      keys={[...new Set(chartData.map((item) => item.category))]}
       data={formattedChartData}
       margin={{
-        top: 50, right: 130, bottom: 50, left: 100,
+        top: 50, right: 170, bottom: 50, left: 80,
       }}
       padding={0.3}
       groupMode="grouped"
@@ -52,18 +67,12 @@ const DummyRecapChart = ({ chartData }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'Fecha',
-        legendPosition: 'middle',
-        legendOffset: 32,
       }}
       axisLeft={{
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'Monto',
-        legendPosition: 'middle',
-        legendOffset: -90,
-        format: (value) => `$ ${Number(value).toLocaleString()}`,
+        format: (value) => `$ ${nFormatter(value, 1)}`,
       }}
       tooltipFormat={(value) => `$ ${Number(value).toLocaleString()}`}
       enableLabel={false}
@@ -78,8 +87,8 @@ const DummyRecapChart = ({ chartData }) => {
           justify: false,
           translateX: 120,
           translateY: 0,
-          itemsSpacing: 2,
-          itemWidth: 100,
+          itemsSpacing: 1,
+          itemWidth: 120,
           itemHeight: 20,
           itemDirection: 'left-to-right',
           itemOpacity: 0.85,
@@ -105,6 +114,8 @@ DummyRecapChart.propTypes = {
   chartData: arrayOf(shape({
     id: number,
     name: string,
+    store: number,
+    category: string,
     value: number,
     date: string,
   })).isRequired,

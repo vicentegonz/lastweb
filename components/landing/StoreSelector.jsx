@@ -26,9 +26,9 @@ const StoreSelector = () => {
   }, [dispatch, selected]);
 
   return (
-    <>
+    <Space direction="vertical">
       <Title level={5}>
-        Seleccionar:
+        Seleccionar tienda:
       </Title>
       <Select size="large" value={selected} onChange={handleChange}>
         {stores.map((e) => (
@@ -41,7 +41,7 @@ const StoreSelector = () => {
           </Option>
         ))}
       </Select>
-    </>
+    </Space>
   );
 };
 

@@ -9,6 +9,8 @@ import {
 } from 'antd';
 import api from '@/api';
 import StoreSelector from '@/components/landing/StoreSelector.jsx';
+import KPISelector from './selectors/KPISelector.jsx';
+import CategorySelector from './selectors/CategorySelector.jsx';
 import styles from './kpi.module.scss';
 import StoreStats from './stats/StoreStats.jsx';
 import StoreChart from './chart/StoreChart.jsx';
@@ -63,17 +65,6 @@ const KpiFrame = () => {
 
   return (
     <div>
-      <Row justify="start" align="top">
-        <Col>
-          <Title level={2} className={styles.bottomAligned}>
-            <Space>
-              Bienvenido,
-              {user.givenName}
-            </Space>
-          </Title>
-        </Col>
-      </Row>
-
       <Affix offsetTop={64}>
 
         <Row justify="space-between" align="bottom" className={styles.fixedRow}>
@@ -100,8 +91,13 @@ const KpiFrame = () => {
             </Row>
 
           </Col>
+
           <Col>
-            <StoreSelector />
+            <Space>
+              <StoreSelector />
+              <KPISelector />
+              <CategorySelector />
+            </Space>
           </Col>
         </Row>
 
