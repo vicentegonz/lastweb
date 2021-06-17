@@ -28,11 +28,14 @@ const addValueToObject = (data, value) => ({
 const StoreServices = () => {
   const storeServices = useSelector(selectStoreServices);
   const [cardData, setCardData] = useState([]);
+  const [summaryData, setSummaryData] = useState();
 
   useEffect(() => {
     if (!storeServices.servicesData
       || Object.keys(storeServices.servicesData).length === 0
-      || !storeServices.selectedStore) {
+      || !storeServices.selectedStore
+      || !storeServices.summaryKsi
+      || Object.keys(storeServices.summaryKsi).length === 0) {
       return;
     }
 
@@ -69,24 +72,36 @@ const StoreServices = () => {
       finalData[i] = addValueToObject(finalData[i], YesterdayValDiff);
       finalData[i] = addValueToObject(finalData[i], LastWeekValDiff);
     });
+    const sumData = storeServices.summaryKsi;
+    let nanValue = true;
+    Object.entries(sumData).forEach(([key, value]) => {
+      if (!(['name', 'date'].includes(key))) {
+        if (Number.isNaN(Number(value))) {
+          nanValue = false;
+        }
+      }
+    });
+    if (nanValue) {
+      setSummaryData(sumData);
+    }
     setCardData(finalData);
   }, [storeServices]);
-
   return (
     <>
       <Row justify="space-around" align="top">
+        {(summaryData) && (
         <Col span={11} className={styles.servicesCard}>
           <ReportCard
-            key="Promedio KSI"
-            name="Promedio KSI"
-            value={6}
-            createdAt={storeServices.dateRange[1]}
-            differenceYesterdayPct={-0.10}
-            differenceLastWeekPct={0.15}
-            differenceYesterdayVal={0.6}
-            differenceLastWeekVal={0.9}
+            name={summaryData.name}
+            value={parseFloat(summaryData.value)}
+            createdAt={summaryData.date}
+            differenceYesterdayPct={summaryData.differenceYesterdayPct}
+            differenceLastWeekPct={summaryData.differenceLastWeekPct}
+            differenceYesterdayVal={summaryData.differenceYesterdayVal}
+            differenceLastWeekVal={summaryData.differenceLastWeekVal}
           />
         </Col>
+        )}
       </Row>
       <Row justify="space-between" align="top">
         {

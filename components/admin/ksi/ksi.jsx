@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import {
-  selectStoreServices, save, clearStoreData,
+  selectStoreServices, saveServices, clearStoreServiceData, calculateSumData,
 } from '@/store/storeServices/storeServicesReducer';
 
 import api from '@/api';
@@ -12,8 +12,8 @@ import {
   Row, Col, Divider, Space, Affix, Typography,
 } from 'antd';
 
+import StoreSelector from '@/components/landing/StoreSelector.jsx';
 import styles from './ksi.module.scss';
-import StoreSelector from './StoreSelector.jsx';
 import StoreServices from './StoreServices.jsx';
 
 const { Title } = Typography;
@@ -35,18 +35,26 @@ const Ksi = () => {
             (a, b) => new Date(b.date).toLocaleDateString()
             - new Date(a.date).toLocaleDateString(),
           );
-
-          dispatch(save(processedData));
+          dispatch(saveServices(processedData));
         });
         return true;
       } catch (err) {
         return false;
       }
     };
-    dispatch(clearStoreData());
+    dispatch(clearStoreServiceData());
     storeServicesData();
   }, [dispatch, user.stores]);
 
+  useEffect(() => {
+    if (!storeServices.servicesData
+      || Object.keys(storeServices.servicesData).length === 0
+      || !storeServices.selectedStore) {
+      return;
+    }
+    dispatch(calculateSumData());
+  }, [dispatch, user.stores, storeServices.dateRange,
+    storeServices.selectedStore, storeServices.servicesData]);
   return (
     <div>
       <Affix offsetTop={64}>

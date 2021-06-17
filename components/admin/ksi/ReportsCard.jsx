@@ -1,9 +1,11 @@
+import { useRouter } from 'next/router';
+
 import {
   string, number,
 } from 'prop-types';
 
 import {
-  Typography, Card, Space, Row, Col,
+  Typography, Card, Space, Row, Col, Button,
 } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined, MinusOutlined } from '@ant-design/icons';
 
@@ -15,6 +17,7 @@ const ReportCard = ({
   name, value, createdAt, differenceYesterdayPct, differenceLastWeekPct,
   differenceYesterdayVal, differenceLastWeekVal,
 }) => {
+  const router = useRouter();
   let formattedDate = new Date(createdAt);
   formattedDate = new Date(
     formattedDate.getTime() + Math.abs(formattedDate.getTimezoneOffset() * 60000),
@@ -45,8 +48,18 @@ const ReportCard = ({
   }
   return (
     <Card
-      title={name}
-      extra={<Text strong type="secondary">{formattedDate}</Text>}
+      title={(
+        <Space size="middle">
+          <span>{name}</span>
+        </Space>
+      )}
+      extra={(
+        <Space size="middle">
+          {router.pathname === '/'
+           && <Button href="/ksi" type="primary" shape="round">Ver detalle</Button>}
+          <Text strong type="secondary">{formattedDate}</Text>
+        </Space>
+      )}
     >
       <Title type="success">{formattedValue}</Title>
 

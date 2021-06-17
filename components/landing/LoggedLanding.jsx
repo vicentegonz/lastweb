@@ -5,6 +5,9 @@ import {
   selectStoreStats, save, clearStoreData,
 } from '@/store/storeStats/storeStatsReducer';
 import {
+  selectStoreServices, saveServices, clearStoreServiceData, calculateSumData,
+} from '@/store/storeServices/storeServicesReducer';
+import {
   Row, Col, Typography, Divider, Space, Affix,
 } from 'antd';
 import api from '@/api';
@@ -18,6 +21,7 @@ const { Title } = Typography;
 const LoggedLanding = () => {
   const user = useSelector(selectUser);
   const storeStats = useSelector(selectStoreStats);
+  const storeServices = useSelector(selectStoreServices);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -61,6 +65,39 @@ const LoggedLanding = () => {
     storeStatsData();
   }, [dispatch, user.stores, storeStats.dateRange]);
 
+  useEffect(() => {
+    const storeServicesData = async () => {
+      try {
+        await user.stores.map(async (store) => {
+          const response = await api.account.ksiData(store);
+          const processedData = {};
+
+          processedData.store = store;
+          processedData.data = response.data.sort(
+            (a, b) => new Date(b.date).toLocaleDateString()
+            - new Date(a.date).toLocaleDateString(),
+          );
+          dispatch(saveServices(processedData));
+        });
+        return true;
+      } catch (err) {
+        return false;
+      }
+    };
+    dispatch(clearStoreServiceData());
+    storeServicesData();
+  }, [dispatch, user.stores, storeServices.dateRange]);
+
+  useEffect(() => {
+    if (!storeServices.servicesData
+      || Object.keys(storeServices.servicesData).length === 0
+      || !storeServices.selectedStore) {
+      return;
+    }
+
+    dispatch(calculateSumData());
+  }, [dispatch, user.stores, storeServices.dateRange,
+    storeServices.selectedStore, storeServices.servicesData]);
   return (
     <div>
 

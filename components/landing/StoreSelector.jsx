@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import { changeStore } from '@/store/storeStats/storeStatsReducer';
+import { changeStatStore } from '@/store/storeServices/storeServicesReducer';
 import {
   Typography, Select, Space,
 } from 'antd';
@@ -23,6 +24,7 @@ const StoreSelector = () => {
 
   useEffect(() => {
     dispatch(changeStore(selected));
+    dispatch(changeStatStore(selected));
   }, [dispatch, selected]);
 
   return (

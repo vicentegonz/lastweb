@@ -17,9 +17,33 @@ const getToday = () => {
   return [parsedLastWeek, parsedToday];
 };
 
+const getDataValue = (data) => {
+  let totalSurveys = 0;
+  let totalValue = 0;
+  data.forEach((stat) => {
+    totalSurveys += stat.amountOfSurveys;
+    totalValue += stat.value * stat.amountOfSurveys;
+  });
+  return (totalValue / totalSurveys).toFixed(2);
+};
+
+const getDayData = (uniqueServices, initialData, day) => {
+  const result = [];
+  uniqueServices.forEach((stat) => {
+    const item = initialData.filter(
+      (el) => el.name === stat
+      && new Date(el.date).toLocaleDateString() === day.toLocaleDateString(),
+    ).pop();
+
+    result.push(item);
+  });
+  return getDataValue(result);
+};
+
 const initialState = {
   servicesData: {},
   selectedStore: null,
+  summaryKsi: {},
   dateRange: getToday(),
 };
 
@@ -27,15 +51,50 @@ export const storeServicesSlice = createSlice({
   name: 'storeServices',
   initialState,
   reducers: {
-    save: (state, action) => {
+    calculateSumData: (state) => {
+      const today = new Date(state.dateRange[1]);
+      const initialData = state.servicesData[state.selectedStore];
+      if (!state.servicesData
+              || Object.keys(state.servicesData).length === 0
+              || !state.selectedStore
+              || !initialData) {
+        return;
+      }
+      const uniqueServices = [...new Set(initialData.map((item) => item.name))];
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+      const lastWeek = new Date(today);
+      lastWeek.setDate(today.getDate() - 7);
+
+      const todayData = getDayData(uniqueServices, initialData, today);
+      const yesterdayData = getDayData(uniqueServices, initialData, yesterday);
+      const lastWeekData = getDayData(uniqueServices, initialData, lastWeek);
+
+      const YesterdayPctDiff = todayData / yesterdayData - 1;
+      const LastWeekPctDiff = todayData / lastWeekData - 1;
+      const YesterdayValDiff = Math.abs(todayData - yesterdayData);
+
+      const LastWeekValDiff = Math.abs(todayData - lastWeekData);
+      state.summaryKsi = {
+        name: 'Nota Final',
+        value: todayData,
+        date: state.dateRange[1],
+        store: state.selectedStore,
+        differenceYesterdayPct: YesterdayPctDiff,
+        differenceLastWeekPct: LastWeekPctDiff,
+        differenceYesterdayVal: YesterdayValDiff,
+        differenceLastWeekVal: LastWeekValDiff,
+      };
+    },
+    saveServices: (state, action) => {
       if (!state.servicesData[action.payload.store]) {
         state.servicesData[action.payload.store] = action.payload.data;
       }
     },
-    clearStoreData: (state) => {
+    clearStoreServiceData: (state) => {
       state.servicesData = {};
     },
-    changeStore: (state, action) => {
+    changeStatStore: (state, action) => {
       state.selectedStore = action.payload;
     },
     changeDateRange: (state, action) => {
@@ -45,9 +104,10 @@ export const storeServicesSlice = createSlice({
 });
 
 export const {
-  save,
-  clearStoreData,
-  changeStore,
+  saveServices,
+  calculateSumData,
+  clearStoreServiceData,
+  changeStatStore,
   changeDateRange,
 } = storeServicesSlice.actions;
 
