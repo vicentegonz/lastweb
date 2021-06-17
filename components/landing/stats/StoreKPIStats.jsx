@@ -126,6 +126,7 @@ const KPIStats = () => {
               differenceYesterdayVal={item.differenceYesterdayVal}
               differenceLastWeekVal={item.differenceLastWeekVal}
               category={item.category}
+              unit={item.units}
             />
           ))
         }

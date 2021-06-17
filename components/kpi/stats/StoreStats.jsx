@@ -134,6 +134,7 @@ const StoreStats = () => {
               differenceYesterdayVal={item.differenceYesterdayVal}
               differenceLastWeekVal={item.differenceLastWeekVal}
               category={item.category}
+              unit={item.units}
             />
           ))
         }
@@ -150,6 +151,7 @@ const StoreStats = () => {
         differenceYesterdayVal={cardData[0].differenceYesterdayVal}
         differenceLastWeekVal={cardData[0].differenceLastWeekVal}
         category={cardData[0].category}
+        unit={cardData[0].units}
       />
       )}
 

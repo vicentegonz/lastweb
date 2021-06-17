@@ -44,6 +44,13 @@ const nFormatter = (num, digits) => {
 };
 
 const DummyRecapChart = ({ chartData }) => {
+  let unit = '';
+  if (chartData[0]) {
+    if (chartData[0].units === '$') {
+      unit = chartData[0].units;
+    }
+  }
+
   const formattedChartData = formatChartData(chartData);
 
   return (
@@ -72,9 +79,9 @@ const DummyRecapChart = ({ chartData }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        format: (value) => `$ ${nFormatter(value, 1)}`,
+        format: (value) => `${unit} ${nFormatter(value, 1)}`,
       }}
-      tooltipFormat={(value) => `$ ${Number(value).toLocaleString()}`}
+      tooltipFormat={(value) => `${unit} ${Number(value).toLocaleString()}`}
       enableLabel={false}
       labelSkipWidth={12}
       labelSkipHeight={12}

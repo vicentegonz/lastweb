@@ -15,7 +15,7 @@ const { Title, Text } = Typography;
 
 const ReportCard = ({
   name, value, createdAt, differenceYesterdayPct, differenceLastWeekPct,
-  differenceYesterdayVal, differenceLastWeekVal, category,
+  differenceYesterdayVal, differenceLastWeekVal, category, unit,
 }) => {
   const router = useRouter();
   let formattedDate = new Date(createdAt);
@@ -74,7 +74,10 @@ const ReportCard = ({
         </Space>
       )}
     >
-      <Title type="success">{`$ ${formattedValue}`}</Title>
+      {unit === '$' && <Title type="success">{`${unit} ${formattedValue}`}</Title>}
+      {unit === 'unidades' && <Title type="success">{`${formattedValue} ${unit}`}</Title>}
+      {!unit && <Title type="success">{`${formattedValue}`}</Title>}
+
       <Row justify="space-between">
         <Col>
           <Title className={styles.percentageTitle} level={3} type={yesterdayComparison}>
@@ -82,10 +85,17 @@ const ReportCard = ({
               {differenceYesterdayPct < 0 && <ArrowDownOutlined />}
               {differenceYesterdayPct > 0 && <ArrowUpOutlined />}
               {differenceYesterdayPct === 0 && <MinusOutlined />}
-              <span>
-                $
-                {nFormatter(differenceYesterdayVal, 1)}
-              </span>
+
+              {unit === '$' ? (
+                <span>
+                  {`${unit} ${nFormatter(differenceYesterdayVal, 1)}`}
+                </span>
+              ) : (
+                <span>
+                  {`${nFormatter(differenceYesterdayVal, 1)}`}
+                </span>
+              )}
+
               {differenceYesterdayPct !== 0 && (
               <span>
                 (
@@ -104,10 +114,16 @@ const ReportCard = ({
               {differenceLastWeekPct < 0 && <ArrowDownOutlined />}
               {differenceLastWeekPct > 0 && <ArrowUpOutlined />}
               {differenceLastWeekPct === 0 && <MinusOutlined />}
-              <span>
-                $
-                {nFormatter(differenceLastWeekVal, 1)}
-              </span>
+              {unit === '$' ? (
+                <span>
+                  {`${unit} ${nFormatter(differenceLastWeekVal, 1)}`}
+                </span>
+              ) : (
+                <span>
+                  {`${nFormatter(differenceLastWeekVal, 1)}`}
+                </span>
+              )}
+
               {differenceLastWeekPct !== 0 && (
               <span>
                 (
@@ -133,6 +149,11 @@ ReportCard.propTypes = {
   differenceYesterdayVal: number.isRequired,
   differenceLastWeekVal: number.isRequired,
   category: string.isRequired,
+  unit: string,
+};
+
+ReportCard.defaultProps = {
+  unit: '',
 };
 
 export default ReportCard;
