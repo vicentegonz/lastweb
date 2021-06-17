@@ -12,7 +12,8 @@ import {
 } from 'antd';
 import api from '@/api';
 import styles from './landing.module.scss';
-import StoreSelector from './StoreSelector.jsx';
+import StoreSelector from './selectors/StoreSelector.jsx';
+import DateSelector from './selectors/DateSelector.jsx';
 import KPIStats from './stats/StoreKPIStats.jsx';
 import KSIStats from './stats/StoreKSIStats.jsx';
 
@@ -129,9 +130,7 @@ const LoggedLanding = () => {
             <Row>
               <Title level={4} className={styles.bottomAligned}>
                 <Space>
-                  Entre las fechas:
-                  {storeStats.dateRange[0].replace(/-/g, '/')}
-                  -
+                  Para el día
                   {storeStats.dateRange[1].replace(/-/g, '/')}
                 </Space>
               </Title>
@@ -139,7 +138,10 @@ const LoggedLanding = () => {
 
           </Col>
           <Col>
-            <StoreSelector />
+            <Space>
+              <DateSelector />
+              <StoreSelector />
+            </Space>
           </Col>
         </Row>
 

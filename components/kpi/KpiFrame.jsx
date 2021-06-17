@@ -8,7 +8,8 @@ import {
   Row, Col, Typography, Divider, Space, Affix,
 } from 'antd';
 import api from '@/api';
-import StoreSelector from '@/components/landing/StoreSelector.jsx';
+import StoreSelector from '@/components/landing/selectors/StoreSelector.jsx';
+import DateSelector from '../landing/selectors/DateSelector.jsx';
 import KPISelector from './selectors/KPISelector.jsx';
 import CategorySelector from './selectors/CategorySelector.jsx';
 import styles from './kpi.module.scss';
@@ -67,7 +68,7 @@ const KpiFrame = () => {
     <div>
       <Affix offsetTop={64}>
 
-        <Row justify="space-between" align="bottom" className={styles.fixedRow}>
+        <Row justify="space-between" align="bottom" className={styles.fixedRow} gutter={[0, 24]}>
           <Col flex="auto">
 
             <Row>
@@ -94,6 +95,7 @@ const KpiFrame = () => {
 
           <Col>
             <Space>
+              <DateSelector />
               <StoreSelector />
               <KPISelector />
               <CategorySelector />

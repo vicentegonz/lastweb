@@ -43,10 +43,19 @@ const StoreServices = () => {
     const uniqueServices = [...new Set(initialData.map((item) => item.name))];
 
     const today = new Date(storeServices.dateRange[1]);
+    const minDate = new Date(Math.min.apply(null, initialData.map((e) => new Date(e.date))));
+
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
+    if (yesterday < minDate) {
+      yesterday.setDate(minDate.getDate());
+    }
+
     const lastWeek = new Date(today);
     lastWeek.setDate(today.getDate() - 7);
+    if (lastWeek < minDate) {
+      lastWeek.setDate(minDate.getDate());
+    }
 
     const finalData = getDayData(uniqueServices, initialData, today);
     const yesterdayData = getDayData(uniqueServices, initialData, yesterday);

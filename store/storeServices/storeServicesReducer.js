@@ -61,10 +61,19 @@ export const storeServicesSlice = createSlice({
         return;
       }
       const uniqueServices = [...new Set(initialData.map((item) => item.name))];
+      const minDate = new Date(Math.min.apply(null, initialData.map((e) => new Date(e.date))));
+
       const yesterday = new Date(today);
       yesterday.setDate(today.getDate() - 1);
+      if (yesterday < minDate) {
+        yesterday.setDate(minDate.getDate());
+      }
+
       const lastWeek = new Date(today);
       lastWeek.setDate(today.getDate() - 7);
+      if (lastWeek < minDate) {
+        lastWeek.setDate(minDate.getDate());
+      }
 
       const todayData = getDayData(uniqueServices, initialData, today);
       const yesterdayData = getDayData(uniqueServices, initialData, yesterday);
@@ -97,13 +106,14 @@ export const storeServicesSlice = createSlice({
     changeStatStore: (state, action) => {
       state.selectedStore = action.payload;
     },
-    changeDateRange: (state, action) => {
+    changeDateRangeServices: (state, action) => {
       state.dateRange = action.payload;
     },
   },
 });
 
 export const {
+  changeDateRangeServices,
   saveServices,
   calculateSumData,
   clearStoreServiceData,

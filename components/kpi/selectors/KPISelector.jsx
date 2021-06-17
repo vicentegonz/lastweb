@@ -46,7 +46,7 @@ const KPISelector = () => {
             Seleccionar estadística:
           </Title>
           <Select
-            size="large"
+            size="middle"
             value={selected}
             onChange={handleChange}
             disabled={kpis.length === 0}

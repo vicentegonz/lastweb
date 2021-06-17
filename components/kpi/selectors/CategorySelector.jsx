@@ -44,7 +44,7 @@ const CategorySelector = () => {
           <Title level={5}>
             Seleccionar categoría:
           </Title>
-          <Select size="large" value={selected} onChange={handleChange} disabled={categories.length === 0}>
+          <Select size="middle" value={selected} onChange={handleChange} disabled={categories.length === 0}>
             {
             categories.length !== 0
               && (

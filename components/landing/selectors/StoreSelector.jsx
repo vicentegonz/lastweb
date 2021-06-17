@@ -32,7 +32,7 @@ const StoreSelector = () => {
       <Title level={5}>
         Seleccionar tienda:
       </Title>
-      <Select size="large" value={selected} onChange={handleChange}>
+      <Select size="middle" value={selected} onChange={handleChange}>
         {stores.map((e) => (
           <Option key={e} value={e}>
             <Space>

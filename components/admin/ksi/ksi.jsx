@@ -12,7 +12,10 @@ import {
   Row, Col, Divider, Space, Affix, Typography,
 } from 'antd';
 
-import StoreSelector from '@/components/landing/StoreSelector.jsx';
+
+import DateSelector from '@/components/landing/selectors/DateSelector.jsx';
+import StoreSelector from '@/components/landing/selectors/StoreSelector.jsx';
+
 import styles from './ksi.module.scss';
 import StoreServices from './StoreServices.jsx';
 
@@ -74,9 +77,7 @@ const Ksi = () => {
             <Row>
               <Title level={4} className={styles.bottomAligned}>
                 <Space>
-                  Entre las fechas:
-                  {storeServices.dateRange[0].replace(/-/g, '/')}
-                  -
+                  Para el día
                   {storeServices.dateRange[1].replace(/-/g, '/')}
                 </Space>
               </Title>
@@ -84,7 +85,10 @@ const Ksi = () => {
 
           </Col>
           <Col>
-            <StoreSelector />
+            <Space>
+              <DateSelector />
+              <StoreSelector />
+            </Space>
           </Col>
         </Row>
 
