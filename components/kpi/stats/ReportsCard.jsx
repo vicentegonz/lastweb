@@ -1,9 +1,11 @@
+import { useRouter } from 'next/router';
+
 import {
   string, number,
 } from 'prop-types';
 
 import {
-  Typography, Card, Space, Row, Col,
+  Typography, Card, Space, Row, Col, Button,
 } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined, MinusOutlined } from '@ant-design/icons';
 
@@ -15,6 +17,7 @@ const ReportCard = ({
   name, value, createdAt, differenceYesterdayPct, differenceLastWeekPct,
   differenceYesterdayVal, differenceLastWeekVal, category,
 }) => {
+  const router = useRouter();
   let formattedDate = new Date(createdAt);
   formattedDate = new Date(
     formattedDate.getTime() + Math.abs(formattedDate.getTimezoneOffset() * 60000),
@@ -53,19 +56,23 @@ const ReportCard = ({
     lastWeekComparison = 'success';
   }
 
-  const cardTitle = (
-    <Space size="middle">
-      <span>{name}</span>
-      <span>
-        <Text className={styles.category} strong type="secondary">{category}</Text>
-      </span>
-    </Space>
-  );
-
   return (
     <Card
-      title={cardTitle}
-      extra={<Text strong type="secondary">{formattedDate}</Text>}
+      title={(
+        <Space size="middle">
+          <span>{name}</span>
+          <span>
+            <Text className={styles.category} strong type="secondary">{category}</Text>
+          </span>
+        </Space>
+      )}
+      extra={(
+        <Space size="middle">
+          {router.pathname === '/'
+           && <Button href="/kpi" type="primary" shape="round">Ver detalle</Button>}
+          <Text strong type="secondary">{formattedDate}</Text>
+        </Space>
+      )}
     >
       <Title type="success">{`$ ${formattedValue}`}</Title>
       <Row justify="space-between">
