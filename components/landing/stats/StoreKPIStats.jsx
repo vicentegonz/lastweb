@@ -106,7 +106,6 @@ const KPIStats = () => {
     <Space direction="vertical" className={styles.parentWidth} size="large">
       <Carousel
         className={styles.landingCarousel}
-        autoplay
         arrows
         nextArrow={<NextArrow />}
         prevArrow={<PrevArrow />}

@@ -12,9 +12,9 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const KPISelector = () => {
-  const { selectedStore, statsData } = useSelector(selectStoreStats);
+  const { selectedStore, statsData, selectedKPI } = useSelector(selectStoreStats);
   const [kpis, setKpis] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(selectedKPI);
   const dispatch = useDispatch();
 
   const handleChange = (newValue) => {
@@ -30,12 +30,13 @@ const KPISelector = () => {
     if (storeStats && storeStats.length !== 0) {
       const uniqueStats = [...new Set(storeStats.map((item) => item.name))];
       setKpis(uniqueStats);
-      setSelected(uniqueStats[0]);
+      if (!selected) {
+        setSelected(uniqueStats[0]);
+      }
     } else {
       setKpis([]);
-      setSelected(null);
     }
-  }, [selectedStore, statsData]);
+  }, [selectedStore, statsData, selected]);
 
   return (
     <>

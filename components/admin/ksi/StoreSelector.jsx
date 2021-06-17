@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
-import { changeStore } from '@/store/storeServices/storeServicesReducer';
+import { changeStore } from '@/store/storeStats/storeStatsReducer';
+import { selectStoreServices, changeStatStore } from '@/store/storeServices/storeServicesReducer';
 
 import {
   Typography, Select, Space,
@@ -15,7 +16,9 @@ const { Option } = Select;
 
 const StoreSelector = () => {
   const { stores } = useSelector(selectUser);
-  const [selected, setSelected] = useState(stores[0]);
+  const storeServices = useSelector(selectStoreServices);
+  const [selected, setSelected] = useState(storeServices.selectedStore
+    ? storeServices.selectedStore : stores[0]);
   const dispatch = useDispatch();
 
   const handleChange = (newValue) => {
@@ -24,6 +27,7 @@ const StoreSelector = () => {
 
   useEffect(() => {
     dispatch(changeStore(selected));
+    dispatch(changeStatStore(selected));
   }, [dispatch, selected]);
 
   return (

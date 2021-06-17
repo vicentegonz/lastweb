@@ -1,4 +1,7 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { changeKPI } from '@/store/storeStats/storeStatsReducer';
+import { useDispatch } from 'react-redux';
 
 import {
   string, number,
@@ -17,16 +20,20 @@ const ReportCard = ({
   name, value, createdAt, differenceYesterdayPct, differenceLastWeekPct,
   differenceYesterdayVal, differenceLastWeekVal, category, unit,
 }) => {
+  const dispatch = useDispatch();
   const router = useRouter();
+
   let formattedDate = new Date(createdAt);
   formattedDate = new Date(
     formattedDate.getTime() + Math.abs(formattedDate.getTimezoneOffset() * 60000),
   ).toLocaleDateString('en-ZA');
+
   const formattedValue = new Intl.NumberFormat().format(value);
   const FormattDifferencePercent = (val) => {
     const newVal = (val * 100).toFixed(1);
     return (Math.abs(newVal));
   };
+
   const nFormatter = (num, digits) => {
     const lookup = [
       { value: 1, symbol: '' },
@@ -56,6 +63,10 @@ const ReportCard = ({
     lastWeekComparison = 'success';
   }
 
+  const clickedButton = () => {
+    dispatch(changeKPI(name));
+  };
+
   return (
     <Card
       title={(
@@ -69,7 +80,11 @@ const ReportCard = ({
       extra={(
         <Space size="middle">
           {router.pathname === '/'
-           && <Button href="/kpi" type="primary" shape="round">Ver detalle</Button>}
+           && (
+           <Link href="/kpi">
+             <Button type="primary" shape="round" onClick={clickedButton}>Ver detalle</Button>
+           </Link>
+           )}
           <Text strong type="secondary">{formattedDate}</Text>
         </Space>
       )}

@@ -12,7 +12,6 @@ import {
   Row, Col, Divider, Space, Affix, Typography,
 } from 'antd';
 
-
 import DateSelector from '@/components/landing/selectors/DateSelector.jsx';
 import StoreSelector from '@/components/landing/selectors/StoreSelector.jsx';
 
