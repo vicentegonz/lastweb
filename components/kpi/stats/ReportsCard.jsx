@@ -163,12 +163,13 @@ ReportCard.propTypes = {
   differenceLastWeekPct: number.isRequired,
   differenceYesterdayVal: number.isRequired,
   differenceLastWeekVal: number.isRequired,
-  category: string.isRequired,
+  category: string,
   unit: string,
 };
 
 ReportCard.defaultProps = {
   unit: '',
+  category: '',
 };
 
 export default ReportCard;

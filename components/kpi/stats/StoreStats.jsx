@@ -44,12 +44,14 @@ const PrevArrow = ({ currentSlide, slideCount, ...props }) => (
 const StoreStats = () => {
   const storeStats = useSelector(selectStoreStats);
   const [cardData, setCardData] = useState([]);
+  const [summaryData, setSummaryData] = useState();
 
   useEffect(() => {
     if (!storeStats.statsData
       || Object.keys(storeStats.statsData).length === 0
       || !storeStats.selectedStore
-      || !storeStats.selectedKPI) {
+      || !storeStats.selectedKPI
+      || storeStats.summaryKPIs.length === 0) {
       return;
     }
 
@@ -110,8 +112,12 @@ const StoreStats = () => {
       finalData[i] = addValueToObject(finalData[i], LastWeekValDiff);
     });
     setCardData(finalData);
+    const sumData = storeStats.summaryKPIs.filter(
+      (el) => el.name === storeStats.selectedKPI,
+    ).pop();
+    setSummaryData(sumData);
   }, [storeStats.statsData, storeStats.selectedStore,
-    storeStats.selectedKPI, storeStats.selectedCategory]);
+    storeStats.selectedKPI, storeStats.selectedCategory, storeStats.summaryKPIs]);
 
   return (
     <Space direction="vertical" className={styles.parentWidth} size="large">
@@ -139,18 +145,16 @@ const StoreStats = () => {
         }
       </Carousel>
 
-      {cardData[0] && (
+      {(summaryData) && (
       <ReportCard
-        key={cardData[0].name}
-        name={cardData[0].name}
-        value={cardData[0].value}
-        createdAt={cardData[0].date}
-        differenceYesterdayPct={cardData[0].differenceYesterdayPct}
-        differenceLastWeekPct={cardData[0].differenceLastWeekPct}
-        differenceYesterdayVal={cardData[0].differenceYesterdayVal}
-        differenceLastWeekVal={cardData[0].differenceLastWeekVal}
-        category={cardData[0].category}
-        unit={cardData[0].units}
+        name={summaryData.name}
+        value={parseFloat(summaryData.value)}
+        createdAt={summaryData.date}
+        differenceYesterdayPct={summaryData.differenceYesterdayPct}
+        differenceLastWeekPct={summaryData.differenceLastWeekPct}
+        differenceYesterdayVal={summaryData.differenceYesterdayVal}
+        differenceLastWeekVal={summaryData.differenceLastWeekVal}
+        unit={summaryData.units}
       />
       )}
 

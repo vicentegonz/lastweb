@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import {
-  selectStoreStats, save, clearStoreData,
+  selectStoreStats, save, clearStoreData, calculateStatSumData,
 } from '@/store/storeStats/storeStatsReducer';
 import {
   selectStoreServices, saveServices, clearStoreServiceData, calculateSumData,
@@ -53,7 +53,6 @@ const LoggedLanding = () => {
             requestParams.page += 1;
             allRequested = response.data.links.next;
           }
-
           processedData.data.reverse();
           dispatch(save(processedData));
         });
@@ -99,6 +98,17 @@ const LoggedLanding = () => {
     dispatch(calculateSumData());
   }, [dispatch, user.stores, storeServices.dateRange,
     storeServices.selectedStore, storeServices.servicesData]);
+
+  useEffect(() => {
+    if (!storeStats.statsData
+      || Object.keys(storeStats.statsData).length === 0
+      || !storeStats.selectedStore) {
+      return;
+    }
+    dispatch(calculateStatSumData());
+  }, [dispatch, user.stores, storeStats.dateRange,
+    storeStats.selectedStore, storeStats.statsData]);
+
   return (
     <div>
 
