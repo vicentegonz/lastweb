@@ -3,6 +3,8 @@ import {
   string, arrayOf, number, shape,
 } from 'prop-types';
 
+import round from '@/utils/round';
+
 const formatChartData = (chartData) => {
   const formattedChartData = [];
   const halfwayChartData = {};
@@ -40,7 +42,7 @@ const nFormatter = (num, digits) => {
   ];
   const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
   const Newitem = lookup.slice().reverse().find((item) => num >= item.value);
-  return Newitem ? (num / Newitem.value).toFixed(digits).replace(rx, '$1') + Newitem.symbol : '0';
+  return Newitem ? round((num / Newitem.value), digits).replace(rx, '$1') + Newitem.symbol : '0';
 };
 
 const DummyRecapChart = ({ chartData }) => {
@@ -81,7 +83,7 @@ const DummyRecapChart = ({ chartData }) => {
         tickRotation: 0,
         format: (value) => `${unit} ${nFormatter(value, 1)}`,
       }}
-      tooltipFormat={(value) => `${unit} ${Number(value).toLocaleString()}`}
+      tooltipFormat={(value) => `${unit}${round(Number(value), 1)}`}
       enableLabel={false}
       labelSkipWidth={12}
       labelSkipHeight={12}

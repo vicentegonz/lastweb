@@ -9,6 +9,7 @@ import {
 } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined, MinusOutlined } from '@ant-design/icons';
 
+import round from '@/utils/round';
 import styles from './ksi.module.scss';
 
 const { Title, Text } = Typography;
@@ -23,14 +24,14 @@ const ReportCard = ({
     formattedDate.getTime() + Math.abs(formattedDate.getTimezoneOffset() * 60000),
   ).toLocaleDateString('en-ZA');
 
-  const formattedValue = new Intl.NumberFormat().format(value);
+  const formattedValue = round(value, 2);
   const FormattDifferencePercent = (val) => {
-    const newVal = (val * 100).toFixed(1);
-    return (Math.abs(newVal));
+    const newVal = round(Math.abs((val * 100)), 2);
+    return newVal;
   };
   const nFormatter = (num, digits) => {
-    const newVal = (num).toFixed(digits);
-    return (Math.abs(newVal));
+    const newVal = round((Math.abs(num)), digits);
+    return newVal;
   };
 
   let yesterdayComparison = 'secondary';
@@ -75,7 +76,7 @@ const ReportCard = ({
               {differenceYesterdayPct > 0 && (<ArrowUpOutlined />)}
               {differenceYesterdayPct === 0 && (<MinusOutlined />)}
               <span>
-                {nFormatter(differenceYesterdayVal, 3)}
+                {nFormatter(differenceYesterdayVal, 2)}
               </span>
               {differenceYesterdayPct !== 0 && (
               <span>
@@ -100,7 +101,7 @@ const ReportCard = ({
               {differenceLastWeekPct > 0 && (<ArrowUpOutlined />)}
               {differenceLastWeekPct === 0 && (<MinusOutlined />)}
               <span>
-                {nFormatter(differenceLastWeekVal, 3)}
+                {nFormatter(differenceLastWeekVal, 2)}
               </span>
               {differenceLastWeekPct !== 0 && (
               <span>

@@ -12,6 +12,7 @@ import {
 } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined, MinusOutlined } from '@ant-design/icons';
 
+import round from '@/utils/round';
 import styles from '../kpi.module.scss';
 
 const { Title, Text } = Typography;
@@ -28,10 +29,10 @@ const ReportCard = ({
     formattedDate.getTime() + Math.abs(formattedDate.getTimezoneOffset() * 60000),
   ).toLocaleDateString('en-ZA');
 
-  const formattedValue = new Intl.NumberFormat().format(value);
+  const formattedValue = round(value, 1);
   const FormattDifferencePercent = (val) => {
-    const newVal = (val * 100).toFixed(1);
-    return (Math.abs(newVal));
+    const newVal = round(Math.abs((val * 100)), 2);
+    return newVal;
   };
 
   const nFormatter = (num, digits) => {
@@ -46,7 +47,7 @@ const ReportCard = ({
     ];
     const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
     const Newitem = lookup.slice().reverse().find((item) => num >= item.value);
-    return Newitem ? (num / Newitem.value).toFixed(digits).replace(rx, '$1') + Newitem.symbol : '0';
+    return Newitem ? round((num / Newitem.value), digits).replace(rx, '$1') + Newitem.symbol : '0';
   };
 
   let yesterdayComparison = 'secondary';
