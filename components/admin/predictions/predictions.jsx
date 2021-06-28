@@ -1,13 +1,13 @@
 import {
   Row, Col, Divider, Space, Typography,
 } from 'antd';
+import PaginationFrame from '@/components/admin/predictions/pagination.jsx';
 import styles from './predictions.module.scss';
 
 const { Title } = Typography;
 
 const PredictionsFrame = () => (
   <div>
-
     <Row justify="space-between" align="bottom" className={styles.fixedRow}>
       <Col flex="auto">
 
@@ -21,11 +21,8 @@ const PredictionsFrame = () => (
       </Col>
     </Row>
 
+    <PaginationFrame />
     <Divider />
-
-    <div>
-      Predicciones.
-    </div>
   </div>
 );
 
