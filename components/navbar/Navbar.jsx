@@ -9,7 +9,7 @@ import {
 } from 'antd';
 import {
   // PieChartOutlined, TeamOutlined, ShopOutlined
-  LogoutOutlined, AlertOutlined, SmileOutlined, BarChartOutlined,
+  LogoutOutlined, AlertOutlined, SmileOutlined, BarChartOutlined, RiseOutlined,
 } from '@ant-design/icons';
 
 import styles from './Navbar.module.scss';
@@ -83,6 +83,13 @@ const Navbar = () => {
               <Link href="/ksi">
                 <a className={styles.fontColor}>
                   SERVICIO
+                </a>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="predictions" icon={<RiseOutlined />}>
+              <Link href="/predictions">
+                <a className={styles.fontColor}>
+                  PREDICCIONES
                 </a>
               </Link>
             </Menu.Item>
