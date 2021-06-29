@@ -1,6 +1,8 @@
 import {
   Row, Col, Divider, Space, Typography,
 } from 'antd';
+import PredictionCard from './predictionsCard.jsx';
+
 import styles from './predictions.module.scss';
 
 const { Title } = Typography;
@@ -14,7 +16,7 @@ const PredictionsFrame = () => (
         <Row>
           <Title level={3} className={styles.bottomAligned}>
             <Space>
-              Predicciones
+              Predicciones de ventas
             </Space>
           </Title>
         </Row>
@@ -24,7 +26,13 @@ const PredictionsFrame = () => (
     <Divider />
 
     <div>
-      Predicciones.
+      <PredictionCard
+        productId="123"
+        description="PORCION PAPAS FRITAS V2"
+        date="YYYY/MM/DD"
+        prediction={[100, 200]}
+        days={3}
+      />
     </div>
   </div>
 );

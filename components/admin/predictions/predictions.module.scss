@@ -1,3 +1,24 @@
+.predictionCard {
+  margin: 0 auto;
+  max-width: 70%;
+}
+
+.verticallyCentered {
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.highlightedText {
+  color: #0d72ba;
+}
+
+.highlightedBig {
+  color: #0d72ba;
+  font-size: 1.5rem;
+}
+
 .bottomAligned {
   margin-bottom: 0 !important;
 }
