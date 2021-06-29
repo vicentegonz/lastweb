@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectStoreStats } from '@/store/storeStats/storeStatsReducer';
+import { selectUser } from '@/store/user/userReducer';
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 
 import { Carousel, Space } from 'antd';
@@ -25,15 +26,16 @@ const PrevArrow = ({ currentSlide, slideCount, ...props }) => (
 
 const KPIStats = () => {
   const storeStats = useSelector(selectStoreStats);
+  const user = useSelector(selectUser);
   const [cardData, setCardData] = useState([]);
   useEffect(() => {
     if (storeStats.summaryKPIs.length === 0
-      || !storeStats.selectedStore) {
+      || !user.selectedStore) {
       return;
     }
     const finalData = storeStats.summaryKPIs;
     setCardData(finalData);
-  }, [storeStats.summaryKPIs, storeStats.selectedStore]);
+  }, [storeStats.summaryKPIs, user.selectedStore]);
 
   return (
     <Space direction="vertical" className={styles.parentWidth} size="large">

@@ -12,8 +12,8 @@ import {
   Row, Col, Divider, Space, Affix, Typography,
 } from 'antd';
 
-import DateSelector from '@/components/landing/selectors/DateSelector.jsx';
-import StoreSelector from '@/components/landing/selectors/StoreSelector.jsx';
+import DateSelector from '@/components/selectors/DateSelector.jsx';
+import StoreSelector from '@/components/selectors/StoreSelector.jsx';
 
 import styles from './ksi.module.scss';
 import StoreServices from './StoreServices.jsx';
@@ -51,12 +51,11 @@ const Ksi = () => {
   useEffect(() => {
     if (!storeServices.servicesData
       || Object.keys(storeServices.servicesData).length === 0
-      || !storeServices.selectedStore) {
+      || !user.selectedStore) {
       return;
     }
-    dispatch(calculateSumData());
-  }, [dispatch, user.stores, storeServices.dateRange,
-    storeServices.selectedStore, storeServices.servicesData]);
+    dispatch(calculateSumData(user));
+  }, [dispatch, user, storeServices.servicesData]);
   return (
     <div>
       <Affix offsetTop={64}>
@@ -68,7 +67,7 @@ const Ksi = () => {
               <Title level={3} className={styles.bottomAligned}>
                 <Space>
                   Estadísticas de Servicio de la tienda
-                  {storeServices.selectedStore}
+                  {user.selectedStore}
                 </Space>
               </Title>
             </Row>
@@ -77,7 +76,7 @@ const Ksi = () => {
               <Title level={4} className={styles.bottomAligned}>
                 <Space>
                   Para el día
-                  {storeServices.dateRange[1].replace(/-/g, '/')}
+                  {user.dateRange[1].replace(/-/g, '/')}
                 </Space>
               </Title>
             </Row>
@@ -96,8 +95,8 @@ const Ksi = () => {
       <Divider />
 
       { Object.keys(storeServices.servicesData).length
-                && storeServices.servicesData[storeServices.selectedStore]
-                && storeServices.servicesData[storeServices.selectedStore].length
+                && storeServices.servicesData[user.selectedStore]
+                && storeServices.servicesData[user.selectedStore].length
         ? (
           <>
             <StoreServices />

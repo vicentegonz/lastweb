@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { changeDateRange } from '@/store/storeStats/storeStatsReducer';
-import { changeDateRangeServices } from '@/store/storeServices/storeServicesReducer';
+import { changeDateRange } from '@/store/user/userReducer';
 import {
   Typography, DatePicker, Space,
 } from 'antd';
@@ -35,7 +34,6 @@ const DateSelector = () => {
       const parsedSecond = secondDate.toISOString().split('T')[0];
 
       dispatch(changeDateRange([parsedSecond, parsedFirst]));
-      dispatch(changeDateRangeServices([parsedSecond, parsedFirst]));
     }
   }, [dispatch, value]);
 

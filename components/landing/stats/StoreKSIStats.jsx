@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectStoreServices } from '@/store/storeServices/storeServicesReducer';
+import { selectUser } from '@/store/user/userReducer';
 
 import { Col } from 'antd';
 
@@ -8,11 +9,12 @@ import ReportCard from '@/components/admin/ksi/ReportsCard.jsx';
 
 const KSIStats = () => {
   const storeServices = useSelector(selectStoreServices);
+  const user = useSelector(selectUser);
   const [cardData, setCardData] = useState();
   useEffect(() => {
     if (!storeServices.summaryKsi
       || Object.keys(storeServices.summaryKsi).length === 0
-      || !storeServices.selectedStore) {
+      || !user.selectedStore) {
       return;
     }
     const finalData = storeServices.summaryKsi;
@@ -28,7 +30,7 @@ const KSIStats = () => {
       setCardData(finalData);
     }
     setCardData(finalData);
-  }, [storeServices]);
+  }, [storeServices, user.selectedStore]);
 
   return (
     <>

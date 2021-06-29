@@ -11,9 +11,9 @@ import {
   Row, Col, Typography, Divider, Space, Affix,
 } from 'antd';
 import api from '@/api';
+import StoreSelector from '@/components/selectors/StoreSelector.jsx';
+import DateSelector from '@/components/selectors/DateSelector.jsx';
 import styles from './landing.module.scss';
-import StoreSelector from './selectors/StoreSelector.jsx';
-import DateSelector from './selectors/DateSelector.jsx';
 import KPIStats from './stats/StoreKPIStats.jsx';
 import KSIStats from './stats/StoreKSIStats.jsx';
 
@@ -36,8 +36,8 @@ const LoggedLanding = () => {
 
           const requestParams = {
             id: store,
-            start_date: storeStats.dateRange[0],
-            end_date: storeStats.dateRange[1],
+            start_date: user.dateRange[0],
+            end_date: user.dateRange[1],
             size: 15,
             page: 1,
           };
@@ -63,7 +63,7 @@ const LoggedLanding = () => {
     };
     dispatch(clearStoreData());
     storeStatsData();
-  }, [dispatch, user.stores, storeStats.dateRange]);
+  }, [dispatch, user.stores, user.dateRange]);
 
   useEffect(() => {
     const storeServicesData = async () => {
@@ -86,28 +86,26 @@ const LoggedLanding = () => {
     };
     dispatch(clearStoreServiceData());
     storeServicesData();
-  }, [dispatch, user.stores, storeServices.dateRange]);
+  }, [dispatch, user.stores, user.dateRange]);
 
   useEffect(() => {
     if (!storeServices.servicesData
       || Object.keys(storeServices.servicesData).length === 0
-      || !storeServices.selectedStore) {
+      || !user.selectedStore) {
       return;
     }
 
-    dispatch(calculateSumData());
-  }, [dispatch, user.stores, storeServices.dateRange,
-    storeServices.selectedStore, storeServices.servicesData]);
+    dispatch(calculateSumData(user));
+  }, [dispatch, user, storeServices.servicesData]);
 
   useEffect(() => {
     if (!storeStats.statsData
       || Object.keys(storeStats.statsData).length === 0
-      || !storeStats.selectedStore) {
+      || !user.selectedStore) {
       return;
     }
-    dispatch(calculateStatSumData());
-  }, [dispatch, user.stores, storeStats.dateRange,
-    storeStats.selectedStore, storeStats.statsData]);
+    dispatch(calculateStatSumData(user));
+  }, [dispatch, user, storeStats.statsData]);
 
   return (
     <div>
@@ -132,7 +130,7 @@ const LoggedLanding = () => {
               <Title level={3} className={styles.bottomAligned}>
                 <Space>
                   Estadísticas recientes de la tienda
-                  {storeStats.selectedStore}
+                  {user.selectedStore}
                 </Space>
               </Title>
             </Row>
@@ -141,7 +139,7 @@ const LoggedLanding = () => {
               <Title level={4} className={styles.bottomAligned}>
                 <Space>
                   Para el día
-                  {storeStats.dateRange[1].replace(/-/g, '/')}
+                  {user.dateRange[1].replace(/-/g, '/')}
                 </Space>
               </Title>
             </Row>
@@ -160,8 +158,8 @@ const LoggedLanding = () => {
       <Divider />
 
       { Object.keys(storeStats.statsData).length
-            && storeStats.statsData[storeStats.selectedStore]
-            && storeStats.statsData[storeStats.selectedStore].length
+            && storeStats.statsData[user.selectedStore]
+            && storeStats.statsData[user.selectedStore].length
         ? (
           <>
             <div className={styles.paddedDiv}>

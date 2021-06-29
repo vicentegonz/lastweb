@@ -8,10 +8,10 @@ import {
   Row, Col, Typography, Divider, Space, Affix,
 } from 'antd';
 import api from '@/api';
-import StoreSelector from '@/components/landing/selectors/StoreSelector.jsx';
-import DateSelector from '../landing/selectors/DateSelector.jsx';
-import KPISelector from './selectors/KPISelector.jsx';
-import CategorySelector from './selectors/CategorySelector.jsx';
+import StoreSelector from '@/components/selectors/StoreSelector.jsx';
+import DateSelector from '@/components/selectors/DateSelector.jsx';
+import KPISelector from '@/components/selectors/KPISelector.jsx';
+import CategorySelector from '@/components/selectors/CategorySelector.jsx';
 import styles from './kpi.module.scss';
 import StoreStats from './stats/StoreStats.jsx';
 import StoreChart from './chart/StoreChart.jsx';
@@ -34,8 +34,8 @@ const KpiFrame = () => {
 
           const requestParams = {
             id: store,
-            start_date: storeStats.dateRange[0],
-            end_date: storeStats.dateRange[1],
+            start_date: user.dateRange[0],
+            end_date: user.dateRange[1],
             size: 15,
             page: 1,
           };
@@ -62,17 +62,16 @@ const KpiFrame = () => {
     };
     dispatch(clearStoreData());
     storeStatsData();
-  }, [dispatch, user.stores, storeStats.dateRange]);
+  }, [dispatch, user.stores, user.dateRange]);
 
   useEffect(() => {
     if (!storeStats.statsData
       || Object.keys(storeStats.statsData).length === 0
-      || !storeStats.selectedStore) {
+      || !user.selectedStore) {
       return;
     }
-    dispatch(calculateStatSumData());
-  }, [dispatch, user.stores, storeStats.dateRange,
-    storeStats.selectedStore, storeStats.statsData]);
+    dispatch(calculateStatSumData(user));
+  }, [dispatch, user, storeStats.statsData]);
 
   return (
     <div>
@@ -94,9 +93,9 @@ const KpiFrame = () => {
               <Title level={4} className={styles.bottomAligned}>
                 <Space>
                   Entre las fechas:
-                  {storeStats.dateRange[0].replace(/-/g, '/')}
+                  {user.dateRange[0].replace(/-/g, '/')}
                   -
-                  {storeStats.dateRange[1].replace(/-/g, '/')}
+                  {user.dateRange[1].replace(/-/g, '/')}
                 </Space>
               </Title>
             </Row>
@@ -119,8 +118,8 @@ const KpiFrame = () => {
 
       <Row justify="space-between" align="top">
         { Object.keys(storeStats.statsData).length
-            && storeStats.statsData[storeStats.selectedStore]
-            && storeStats.statsData[storeStats.selectedStore].length
+            && storeStats.statsData[user.selectedStore]
+            && storeStats.statsData[user.selectedStore].length
           ? (
             <>
               <Col span={13} className={styles.chartContainer}>

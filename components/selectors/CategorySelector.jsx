@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectStoreStats, changeCategory } from '@/store/storeStats/storeStatsReducer';
+import { selectUser } from '@/store/user/userReducer';
 import {
   Typography, Select, Space,
 } from 'antd';
@@ -12,7 +13,8 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const CategorySelector = () => {
-  const { selectedStore, statsData } = useSelector(selectStoreStats);
+  const { statsData } = useSelector(selectStoreStats);
+  const { selectedStore } = useSelector(selectUser);
   const [categories, setCategories] = useState([]);
   const [selected, setSelected] = useState(null);
   const dispatch = useDispatch();

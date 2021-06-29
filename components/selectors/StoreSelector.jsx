@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectUser } from '@/store/user/userReducer';
-import { changeStore } from '@/store/storeStats/storeStatsReducer';
-import { selectStoreServices, changeStatStore } from '@/store/storeServices/storeServicesReducer';
-
+import { selectUser, changeStore } from '@/store/user/userReducer';
 import {
   Typography, Select, Space,
 } from 'antd';
@@ -15,10 +12,9 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const StoreSelector = () => {
-  const { stores } = useSelector(selectUser);
-  const storeServices = useSelector(selectStoreServices);
-  const [selected, setSelected] = useState(storeServices.selectedStore
-    ? storeServices.selectedStore : stores[0]);
+  const user = useSelector(selectUser);
+  const [selected, setSelected] = useState(user.selectedStore
+    ? user.selectedStore : user.stores[0]);
   const dispatch = useDispatch();
 
   const handleChange = (newValue) => {
@@ -27,7 +23,6 @@ const StoreSelector = () => {
 
   useEffect(() => {
     dispatch(changeStore(selected));
-    dispatch(changeStatStore(selected));
   }, [dispatch, selected]);
 
   return (
@@ -36,7 +31,7 @@ const StoreSelector = () => {
         Seleccionar tienda:
       </Title>
       <Select size="middle" value={selected} onChange={handleChange}>
-        {stores.map((e) => (
+        {user.stores.map((e) => (
           <Option key={e} value={e}>
             <Space>
               <ShopOutlined />

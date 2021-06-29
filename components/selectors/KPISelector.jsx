@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectStoreStats, changeKPI } from '@/store/storeStats/storeStatsReducer';
+import { selectUser } from '@/store/user/userReducer';
 import {
   Typography, Select, Space,
 } from 'antd';
@@ -12,7 +13,8 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const KPISelector = () => {
-  const { selectedStore, statsData, selectedKPI } = useSelector(selectStoreStats);
+  const { statsData, selectedKPI } = useSelector(selectStoreStats);
+  const { selectedStore } = useSelector(selectUser);
   const [kpis, setKpis] = useState([]);
   const [selected, setSelected] = useState(selectedKPI);
   const dispatch = useDispatch();

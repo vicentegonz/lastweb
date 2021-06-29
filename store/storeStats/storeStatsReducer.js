@@ -2,21 +2,6 @@ import {
   createSlice,
 } from '@reduxjs/toolkit';
 
-const getToday = () => {
-  const today = new Date();
-  const offset = today.getTimezoneOffset();
-  const offsetToday = new Date(today.getTime() - (offset * 60 * 1000));
-
-  const lastWeek = new Date();
-  lastWeek.setDate(lastWeek.getDate() - 7);
-  const offsetWeek = new Date(lastWeek.getTime() - (offset * 60 * 1000));
-
-  const parsedToday = offsetToday.toISOString().split('T')[0];
-  const parsedLastWeek = offsetWeek.toISOString().split('T')[0];
-
-  return [parsedLastWeek, parsedToday];
-};
-
 const getDataValue = (data) => {
   let totalValue = 0;
   data.forEach((stat) => {
@@ -41,10 +26,8 @@ const getDayData = (uniqueCategories, stat, initialData, day) => {
 
 const initialState = {
   statsData: {},
-  selectedStore: null,
   selectedKPI: null,
   selectedCategory: null,
-  dateRange: getToday(),
   summaryKPIs: [],
 };
 
@@ -52,12 +35,12 @@ export const storeStatsSlice = createSlice({
   name: 'storeStats',
   initialState,
   reducers: {
-    calculateStatSumData: (state) => {
-      const today = new Date(state.dateRange[1]);
-      const initialData = state.statsData[state.selectedStore];
+    calculateStatSumData: (state, action) => {
+      const today = new Date(action.payload.dateRange[1]);
+      const initialData = state.statsData[action.payload.selectedStore];
+
       if (!state.statsData
         || Object.keys(state.statsData).length === 0
-        || !state.selectedStore
         || !initialData) {
         return;
       }
@@ -94,7 +77,7 @@ export const storeStatsSlice = createSlice({
           name: stat,
           units: unit,
           value: todayData,
-          date: state.dateRange[1],
+          date: action.payload.dateRange[1],
           store: state.selectedStore,
           differenceYesterdayPct: YesterdayPctDiff,
           differenceLastWeekPct: LastWeekPctDiff,
@@ -112,17 +95,11 @@ export const storeStatsSlice = createSlice({
     clearStoreData: (state) => {
       state.statsData = {};
     },
-    changeStore: (state, action) => {
-      state.selectedStore = action.payload;
-    },
     changeKPI: (state, action) => {
       state.selectedKPI = action.payload;
     },
     changeCategory: (state, action) => {
       state.selectedCategory = action.payload;
-    },
-    changeDateRange: (state, action) => {
-      state.dateRange = action.payload;
     },
   },
 });
@@ -131,9 +108,7 @@ export const {
   save,
   calculateStatSumData,
   clearStoreData,
-  changeStore,
   changeCategory,
-  changeDateRange,
   changeKPI,
 } = storeStatsSlice.actions;
 

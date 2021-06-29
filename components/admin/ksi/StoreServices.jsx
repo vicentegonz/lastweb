@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectStoreServices } from '@/store/storeServices/storeServicesReducer';
+import { selectUser } from '@/store/user/userReducer';
 
 import { Row, Col } from 'antd';
 
@@ -27,22 +28,23 @@ const addValueToObject = (data, value) => ({
 
 const StoreServices = () => {
   const storeServices = useSelector(selectStoreServices);
+  const user = useSelector(selectUser);
   const [cardData, setCardData] = useState([]);
   const [summaryData, setSummaryData] = useState();
 
   useEffect(() => {
     if (!storeServices.servicesData
       || Object.keys(storeServices.servicesData).length === 0
-      || !storeServices.selectedStore
+      || !user.selectedStore
       || !storeServices.summaryKsi
       || Object.keys(storeServices.summaryKsi).length === 0) {
       return;
     }
 
-    const initialData = storeServices.servicesData[storeServices.selectedStore];
+    const initialData = storeServices.servicesData[user.selectedStore];
     const uniqueServices = [...new Set(initialData.map((item) => item.name))];
 
-    const today = new Date(storeServices.dateRange[1]);
+    const today = new Date(user.dateRange[1]);
     const minDate = new Date(Math.min.apply(null, initialData.map((e) => new Date(e.date))));
 
     const yesterday = new Date(today);
@@ -82,19 +84,9 @@ const StoreServices = () => {
       finalData[i] = addValueToObject(finalData[i], LastWeekValDiff);
     });
     const sumData = storeServices.summaryKsi;
-    let nanValue = true;
-    Object.entries(sumData).forEach(([key, value]) => {
-      if (!(['name', 'date'].includes(key))) {
-        if (Number.isNaN(Number(value))) {
-          nanValue = false;
-        }
-      }
-    });
-    if (nanValue) {
-      setSummaryData(sumData);
-    }
+    setSummaryData(sumData);
     setCardData(finalData);
-  }, [storeServices]);
+  }, [storeServices, user]);
   return (
     <>
       <Row justify="space-around" align="top">

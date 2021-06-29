@@ -2,21 +2,6 @@ import {
   createSlice,
 } from '@reduxjs/toolkit';
 
-const getToday = () => {
-  const today = new Date();
-  const offset = today.getTimezoneOffset();
-  const offsetToday = new Date(today.getTime() - (offset * 60 * 1000));
-
-  const lastWeek = new Date();
-  lastWeek.setDate(lastWeek.getDate() - 7);
-  const offsetWeek = new Date(lastWeek.getTime() - (offset * 60 * 1000));
-
-  const parsedToday = offsetToday.toISOString().split('T')[0];
-  const parsedLastWeek = offsetWeek.toISOString().split('T')[0];
-
-  return [parsedLastWeek, parsedToday];
-};
-
 const getDataValue = (data) => {
   let totalSurveys = 0;
   let totalValue = 0;
@@ -42,21 +27,19 @@ const getDayData = (uniqueServices, initialData, day) => {
 
 const initialState = {
   servicesData: {},
-  selectedStore: null,
   summaryKsi: {},
-  dateRange: getToday(),
 };
 
 export const storeServicesSlice = createSlice({
   name: 'storeServices',
   initialState,
   reducers: {
-    calculateSumData: (state) => {
-      const today = new Date(state.dateRange[1]);
-      const initialData = state.servicesData[state.selectedStore];
+    calculateSumData: (state, action) => {
+      const today = new Date(action.payload.dateRange[1]);
+      const initialData = state.servicesData[action.payload.selectedStore];
       if (!state.servicesData
               || Object.keys(state.servicesData).length === 0
-              || !state.selectedStore
+              || !action.payload
               || !initialData) {
         return;
       }
@@ -87,7 +70,7 @@ export const storeServicesSlice = createSlice({
       state.summaryKsi = {
         name: 'Nota Final',
         value: todayData,
-        date: state.dateRange[1],
+        date: action.payload.dateRange[1],
         store: state.selectedStore,
         differenceYesterdayPct: YesterdayPctDiff,
         differenceLastWeekPct: LastWeekPctDiff,
@@ -103,22 +86,13 @@ export const storeServicesSlice = createSlice({
     clearStoreServiceData: (state) => {
       state.servicesData = {};
     },
-    changeStatStore: (state, action) => {
-      state.selectedStore = action.payload;
-    },
-    changeDateRangeServices: (state, action) => {
-      state.dateRange = action.payload;
-    },
   },
 });
 
 export const {
-  changeDateRangeServices,
   saveServices,
   calculateSumData,
   clearStoreServiceData,
-  changeStatStore,
-  changeDateRange,
 } = storeServicesSlice.actions;
 
 export const selectStoreServices = (state) => state.storeServices;

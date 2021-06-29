@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectStoreStats } from '@/store/storeStats/storeStatsReducer';
+import { selectUser } from '@/store/user/userReducer';
 
 import { Carousel, Space } from 'antd';
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
@@ -43,19 +44,20 @@ const PrevArrow = ({ currentSlide, slideCount, ...props }) => (
 
 const StoreStats = () => {
   const storeStats = useSelector(selectStoreStats);
+  const user = useSelector(selectUser);
   const [cardData, setCardData] = useState([]);
   const [summaryData, setSummaryData] = useState();
 
   useEffect(() => {
     if (!storeStats.statsData
       || Object.keys(storeStats.statsData).length === 0
-      || !storeStats.selectedStore
+      || !user.selectedStore
       || !storeStats.selectedKPI
       || storeStats.summaryKPIs.length === 0) {
       return;
     }
 
-    let initialData = storeStats.statsData[storeStats.selectedStore].filter(
+    let initialData = storeStats.statsData[user.selectedStore].filter(
       (el) => el.name === storeStats.selectedKPI,
     );
 
@@ -116,7 +118,7 @@ const StoreStats = () => {
       (el) => el.name === storeStats.selectedKPI,
     ).pop();
     setSummaryData(sumData);
-  }, [storeStats.statsData, storeStats.selectedStore,
+  }, [storeStats.statsData, user.selectedStore,
     storeStats.selectedKPI, storeStats.selectedCategory, storeStats.summaryKPIs]);
 
   return (
