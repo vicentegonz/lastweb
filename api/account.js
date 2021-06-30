@@ -9,6 +9,8 @@ const account = {
   eventsData: (id) => CLIENT.get(`/v1/operations/stores/${id}/events?size=15`),
   kpiData: (id) => CLIENT.get(`/v1/operations/stores/${id.id}/kpis/?start_date=${id.start_date}&end_date=${id.end_date}&size=${id.size}&page=${id.page}`),
   ksiData: (id) => CLIENT.get(`/v1/operations/stores/${id}/service-indicators`),
+  productData: (params) => CLIENT.get(`/v1/operations/stores/${params.id}/products/?&size=15&page=${params.page}`),
+  predictionData: (params) => CLIENT.get(`/v1/forecast/predictions/?store=${params.store}&product=${params.product}&date=${params.date}`),
 };
 
 // Interceptor for refreshing tokens automatically
