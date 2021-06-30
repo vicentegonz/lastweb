@@ -1,15 +1,21 @@
 import {
   Row, Col, Divider, Space, Typography,
 } from 'antd';
-import PredictionCard from './predictionsCard.jsx';
+
+import PaginationFrame from './pagination.jsx';
+// import PredictionCard from './predictionsCard.jsx';
 
 import styles from './predictions.module.scss';
 
 const { Title } = Typography;
 
+const listaItems = [];
+for (let i = 0; i < 61; i += 1) {
+  listaItems.push(i);
+}
+
 const PredictionsFrame = () => (
   <div>
-
     <Row justify="space-between" align="bottom" className={styles.fixedRow}>
       <Col flex="auto">
 
@@ -25,15 +31,9 @@ const PredictionsFrame = () => (
 
     <Divider />
 
-    <div>
-      <PredictionCard
-        productId="123"
-        description="PORCION PAPAS FRITAS V2"
-        date="YYYY/MM/DD"
-        prediction={[100, 200]}
-        days={3}
-      />
-    </div>
+    <PaginationFrame
+      itemArray={listaItems}
+    />
   </div>
 );
 
