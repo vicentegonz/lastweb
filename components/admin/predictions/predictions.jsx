@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import {
@@ -7,24 +7,26 @@ import {
 } from '@/store/storePredictions/predictionsReducer';
 import api from '@/api';
 import {
-  Row, Col, Divider, Space, Typography,
+  Row, Col, Divider, Space, Affix, Typography,
 } from 'antd';
 
+import StoreSelector from '@/components/selectors/StoreSelector.jsx';
 import PaginationFrame from './pagination.jsx';
-// import PredictionCard from './predictionsCard.jsx';
 
 import styles from './predictions.module.scss';
 
 const { Title } = Typography;
 
-const listaItems = [];
-for (let i = 0; i < 61; i += 1) {
-  listaItems.push(i);
-}
+const getDateRangeSum = (datearray, days) => {
+  const relevantDays = datearray.slice(0, days + 1);
+  const dataSum = relevantDays.reduce((a, b) => a + b.value, 0);
+  return Math.round(dataSum);
+};
 
 const PredictionsFrame = () => {
   const user = useSelector(selectUser);
   const storePredictions = useSelector(selectStorePredictions);
+  const [formattedPredictionData, setFormattedPredictionData] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -54,6 +56,7 @@ const PredictionsFrame = () => {
           }
 
           dispatch(saveProducts(processedData));
+          return true;
         });
         return true;
       } catch (err) {
@@ -71,14 +74,13 @@ const PredictionsFrame = () => {
     const storePredictionsData = async () => {
       try {
         await user.stores.map(async (store) => {
-          // This has to be changed when backend fixes automation
-          const lastWeek = new Date();
-          lastWeek.setDate(lastWeek.getDate() - 7);
-          const offset = lastWeek.getTimezoneOffset();
-          const offsetWeek = new Date(lastWeek.getTime() - (offset * 60 * 1000));
+          const today = new Date();
+          const offset = today.getTimezoneOffset();
+          const offsetWeek = new Date(today.getTime() - (offset * 60 * 1000));
           const parsedLastWeek = offsetWeek.toISOString().split('T')[0];
 
           let result;
+
           if (storePredictions.storeProducts
             && Object.keys(storePredictions.storeProducts).length !== 0
             && storePredictions.storeProducts[store]
@@ -103,8 +105,6 @@ const PredictionsFrame = () => {
               }
             });
           }
-
-          return true;
         });
         return true;
       } catch (err) {
@@ -114,27 +114,81 @@ const PredictionsFrame = () => {
     storePredictionsData();
   }, [dispatch, user.stores, storePredictions.storeProducts]);
 
+  useEffect(() => {
+    if (!user.selectedStore
+      || Object.keys(storePredictions.storeProducts).length === 0
+      || Object.keys(storePredictions.storePredictions).length === 0) {
+      return;
+    }
+
+    const formattedArray = [];
+    storePredictions.storeProducts[user.selectedStore].forEach((item) => {
+      if (storePredictions.storePredictions[user.selectedStore]
+        && storePredictions.storePredictions[user.selectedStore][item.id]) {
+        const productData = {
+          id: item.id,
+          description: item.description,
+          initialDate: storePredictions.date[0],
+          days: storePredictions.days,
+          min: getDateRangeSum(
+            storePredictions.storePredictions[user.selectedStore][item.id].p10,
+            storePredictions.days,
+          ),
+          max: getDateRangeSum(
+            storePredictions.storePredictions[user.selectedStore][item.id].p90,
+            storePredictions.days,
+          ),
+        };
+
+        formattedArray.push(productData);
+      }
+    });
+
+    setFormattedPredictionData(formattedArray);
+  }, [storePredictions, user.selectedStore]);
+
   return (
     <div>
-      <Row justify="space-between" align="bottom" className={styles.fixedRow}>
-        <Col flex="auto">
+      <Affix offsetTop={64}>
+        <Row justify="space-between" align="bottom" className={styles.fixedRow}>
 
-          <Row>
-            <Title level={3} className={styles.bottomAligned}>
+          <Col flex="auto">
+            <Row>
+              <Title level={3} className={styles.bottomAligned}>
+                <Space>
+                  Predicciones de ventas de la tienda
+                  {user.selectedStore}
+                </Space>
+              </Title>
+            </Row>
+          </Col>
+
+          <Col>
+            <Space>
+              <StoreSelector />
+            </Space>
+          </Col>
+
+        </Row>
+      </Affix>
+      <Divider />
+      { formattedPredictionData.length ? (
+        <PaginationFrame
+          itemArray={formattedPredictionData}
+        />
+      )
+        : (
+          <Row justify="space-between" align="top">
+            <Title level={3}>
               <Space>
-                Predicciones de ventas
+                No hay predicciones para esta tienda.
               </Space>
             </Title>
           </Row>
-        </Col>
-      </Row>
+        )}
 
-      <Divider />
-
-      <PaginationFrame
-        itemArray={listaItems}
-      />
     </div>
   );
 };
+
 export default PredictionsFrame;

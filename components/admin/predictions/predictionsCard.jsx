@@ -3,7 +3,7 @@ import {
 } from 'prop-types';
 
 import {
-  Typography, Card, Space, Row, Col,
+  Typography, Card, Space, Row, Col, Divider,
 } from 'antd';
 
 import styles from './predictions.module.scss';
@@ -17,6 +17,7 @@ const PredictionCard = ({
     title={(
       <Title
         level={5}
+        className={styles.leftAligned}
       >
         Producto #
         {productId}
@@ -30,13 +31,17 @@ const PredictionCard = ({
 
     <Row justify="space-between">
 
-      <Col span={11} className={styles.verticallyCentered}>
-        <Text strong className={styles.highlightedBig}>{description}</Text>
+      <Col span={10} className={styles.verticallyCentered}>
+        <Text strong className={`${styles.highlightedBig} ${styles.leftAligned}`}>{description}</Text>
       </Col>
 
-      <Col span={11} className={styles.verticallyCentered}>
+      <Col>
+        <Divider type="vertical" className={styles.fullHeight} />
+      </Col>
+
+      <Col span={12} className={styles.verticallyCentered}>
         <Row>
-          <Space wrap>
+          <Space wrap className={styles.leftAligned}>
             En los siguientes
             <Text strong className={styles.highlightedText}>{days}</Text>
             días se espera que se vendan entre
@@ -60,7 +65,7 @@ const PredictionCard = ({
 );
 
 PredictionCard.propTypes = {
-  productId: string.isRequired,
+  productId: number.isRequired,
   description: string.isRequired,
   date: string.isRequired,
   days: number.isRequired,

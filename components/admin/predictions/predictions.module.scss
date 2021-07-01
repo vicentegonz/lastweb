@@ -1,6 +1,7 @@
 .predictionCard {
   margin: 0 auto;
-  max-width: 70%;
+  max-width: 40vw;
+  width: 50vw;
 }
 
 .verticallyCentered {
@@ -23,11 +24,29 @@
   margin-bottom: 0 !important;
 }
 
+.leftAligned {
+  text-align: left;
+}
+
+.fixedRow {
+  background-color: #eaedf5;
+  padding: 0.8rem 0;
+}
+
 .paginationContainer {
   margin: 0 auto;
   text-align: center;
 }
 
 .pagination {
+  text-align: center;
+  width: 100%;
+}
+
+.fullHeight {
+  height: 100%;
+}
+
+.fullLength {
   width: 100%;
 }

@@ -7,21 +7,22 @@ const getToday = () => {
   const offset = today.getTimezoneOffset();
   const offsetToday = new Date(today.getTime() - (offset * 60 * 1000));
 
-  const lastWeek = new Date();
-  lastWeek.setDate(lastWeek.getDate() - 7);
-  const offsetWeek = new Date(lastWeek.getTime() - (offset * 60 * 1000));
+  const nextWeek = new Date();
+  nextWeek.setDate(nextWeek.getDate() + 7);
+  const offsetWeek = new Date(nextWeek.getTime() - (offset * 60 * 1000));
 
   const parsedToday = offsetToday.toISOString().split('T')[0];
-  const parsedLastWeek = offsetWeek.toISOString().split('T')[0];
+  const parsedNextWeek = offsetWeek.toISOString().split('T')[0];
 
-  return [parsedLastWeek, parsedToday];
+  return [parsedToday, parsedNextWeek];
 };
 
 const initialState = {
   storeProducts: {},
   storePredictions: {},
-  dateRange: getToday(),
-  summaryKPIs: [],
+  date: getToday(),
+  days: 3,
+  summaryPredictions: {},
 };
 
 export const storePredictionSlice = createSlice({
@@ -38,7 +39,8 @@ export const storePredictionSlice = createSlice({
         state.storePredictions[action.payload.store] = {};
       }
       if (!state.storePredictions[action.payload.store][action.payload.product]) {
-        state.storePredictions[action.payload.store][action.payload.product] = action.payload.data;
+        const data = action.payload.data[0];
+        state.storePredictions[action.payload.store][action.payload.product] = data;
       }
     },
     clearStoreProducts: (state) => {
@@ -47,8 +49,8 @@ export const storePredictionSlice = createSlice({
     changeStore: (state, action) => {
       state.selectedStore = action.payload;
     },
-    changeDateRange: (state, action) => {
-      state.dateRange = action.payload;
+    changeDate: (state, action) => {
+      state.date = action.payload;
     },
   },
 });
@@ -57,7 +59,7 @@ export const {
   saveProducts,
   clearStoreProducts,
   changeStore,
-  changeDateRange,
+  changeDate,
   savePredictions,
 } = storePredictionSlice.actions;
 

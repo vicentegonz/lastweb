@@ -98,9 +98,7 @@ const Ksi = () => {
                 && storeServices.servicesData[user.selectedStore]
                 && storeServices.servicesData[user.selectedStore].length
         ? (
-          <>
-            <StoreServices />
-          </>
+          <StoreServices />
         )
         : (
           <Row justify="space-between" align="top">
