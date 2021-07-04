@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import {
@@ -13,6 +13,7 @@ import {
 import api from '@/api';
 import StoreSelector from '@/components/selectors/StoreSelector.jsx';
 import DateSelector from '@/components/selectors/DateSelector.jsx';
+import Loading from '@/components/global/Loading.jsx';
 import styles from './landing.module.scss';
 import KPIStats from './stats/StoreKPIStats.jsx';
 import KSIStats from './stats/StoreKSIStats.jsx';
@@ -20,6 +21,7 @@ import KSIStats from './stats/StoreKSIStats.jsx';
 const { Title } = Typography;
 
 const LoggedLanding = () => {
+  const [loading, setLoading] = useState(true);
   const user = useSelector(selectUser);
   const storeStats = useSelector(selectStoreStats);
   const storeServices = useSelector(selectStoreServices);
@@ -79,6 +81,7 @@ const LoggedLanding = () => {
           );
           dispatch(saveServices(processedData));
         });
+
         return true;
       } catch (err) {
         return false;
@@ -99,12 +102,14 @@ const LoggedLanding = () => {
   }, [dispatch, user, storeServices.servicesData]);
 
   useEffect(() => {
+    setLoading(true);
     if (!storeStats.statsData
       || Object.keys(storeStats.statsData).length === 0
       || !user.selectedStore) {
       return;
     }
     dispatch(calculateStatSumData(user));
+    setLoading(false);
   }, [dispatch, user, storeStats.statsData]);
 
   return (
@@ -156,8 +161,8 @@ const LoggedLanding = () => {
       </Affix>
 
       <Divider />
-
-      { Object.keys(storeStats.statsData).length
+      {loading && <Loading />}
+      { !loading && (Object.keys(storeStats.statsData).length
             && storeStats.statsData[user.selectedStore]
             && storeStats.statsData[user.selectedStore].length
         ? (
@@ -188,7 +193,7 @@ const LoggedLanding = () => {
               </Space>
             </Title>
           </Row>
-        )}
+        ))}
 
     </div>
   );
