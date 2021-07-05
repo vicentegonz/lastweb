@@ -11,6 +11,7 @@ import {
 } from 'antd';
 
 import StoreSelector from '@/components/selectors/StoreSelector.jsx';
+import Loading from '@/components/global/Loading.jsx';
 import PaginationFrame from './pagination.jsx';
 
 import styles from './predictions.module.scss';
@@ -24,6 +25,7 @@ const getDateRangeSum = (datearray, days) => {
 };
 
 const PredictionsFrame = () => {
+  const [loading, setLoading] = useState(true);
   const user = useSelector(selectUser);
   const storePredictions = useSelector(selectStorePredictions);
   const [formattedPredictionData, setFormattedPredictionData] = useState([]);
@@ -115,6 +117,7 @@ const PredictionsFrame = () => {
   }, [dispatch, user.stores, storePredictions.storeProducts]);
 
   useEffect(() => {
+    setLoading(true);
     if (!user.selectedStore
       || Object.keys(storePredictions.storeProducts).length === 0
       || Object.keys(storePredictions.storePredictions).length === 0) {
@@ -145,6 +148,7 @@ const PredictionsFrame = () => {
     });
 
     setFormattedPredictionData(formattedArray);
+    setLoading(false);
   }, [storePredictions, user.selectedStore]);
 
   return (
@@ -172,7 +176,9 @@ const PredictionsFrame = () => {
         </Row>
       </Affix>
       <Divider />
-      { formattedPredictionData.length ? (
+      {loading && <Loading />}
+
+      { !loading && (formattedPredictionData.length ? (
         <PaginationFrame
           itemArray={formattedPredictionData}
         />
@@ -185,7 +191,7 @@ const PredictionsFrame = () => {
               </Space>
             </Title>
           </Row>
-        )}
+        ))}
 
     </div>
   );

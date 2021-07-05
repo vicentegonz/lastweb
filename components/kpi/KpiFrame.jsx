@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import {
@@ -12,6 +12,7 @@ import StoreSelector from '@/components/selectors/StoreSelector.jsx';
 import DateSelector from '@/components/selectors/DateSelector.jsx';
 import KPISelector from '@/components/selectors/KPISelector.jsx';
 import CategorySelector from '@/components/selectors/CategorySelector.jsx';
+import Loading from '@/components/global/Loading.jsx';
 import styles from './kpi.module.scss';
 import StoreStats from './stats/StoreStats.jsx';
 import StoreChart from './chart/StoreChart.jsx';
@@ -19,6 +20,7 @@ import StoreChart from './chart/StoreChart.jsx';
 const { Title } = Typography;
 
 const KpiFrame = () => {
+  const [loading, setLoading] = useState(true);
   const user = useSelector(selectUser);
   const storeStats = useSelector(selectStoreStats);
   const dispatch = useDispatch();
@@ -65,12 +67,14 @@ const KpiFrame = () => {
   }, [dispatch, user.stores, user.dateRange]);
 
   useEffect(() => {
+    setLoading(true);
     if (!storeStats.statsData
       || Object.keys(storeStats.statsData).length === 0
       || !user.selectedStore) {
       return;
     }
     dispatch(calculateStatSumData(user));
+    setLoading(false);
   }, [dispatch, user, storeStats.statsData]);
 
   return (
@@ -84,7 +88,7 @@ const KpiFrame = () => {
               <Title level={3} className={styles.bottomAligned}>
                 <Space>
                   Estadísticas recientes de la tienda
-                  {storeStats.selectedStore}
+                  {user.selectedStore}
                 </Space>
               </Title>
             </Row>
@@ -115,9 +119,10 @@ const KpiFrame = () => {
       </Affix>
 
       <Divider />
+      {loading && <Loading />}
 
       <Row justify="space-between" align="top">
-        { Object.keys(storeStats.statsData).length
+        { !loading && (Object.keys(storeStats.statsData).length
             && storeStats.statsData[user.selectedStore]
             && storeStats.statsData[user.selectedStore].length
           ? (
@@ -136,7 +141,7 @@ const KpiFrame = () => {
                 No hay estadísticas para esta tienda.
               </Space>
             </Title>
-          )}
+          ))}
 
       </Row>
 

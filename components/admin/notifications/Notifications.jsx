@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import api from '@/api';
@@ -6,19 +6,20 @@ import { save, clear } from '@/store/events/eventsReducer';
 import { selectUser } from '@/store/user/userReducer';
 
 import {
-  Row, Col, Typography, Divider, Tabs, Input, Space,
+  Row, Col, Typography, Divider, Input, Space,
 } from 'antd';
 
+import Loading from '@/components/global/Loading.jsx';
 import NotificationDetail from './NotificationDetail.jsx';
 import GetNotifications from './UserNotifications.jsx';
 
 import notificationsStyles from './Notifications.module.scss';
 
 const { Title } = Typography;
-const { TabPane } = Tabs;
 const { Search } = Input;
 
 const AdminNotifications = () => {
+  const [loading, setLoading] = useState(true);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
@@ -34,6 +35,7 @@ const AdminNotifications = () => {
 
           dispatch(save(processedData));
         });
+        setLoading(false);
         return true;
       } catch (err) {
         return false;
@@ -62,21 +64,16 @@ const AdminNotifications = () => {
           <Space direction="vertical" size="small" className={notificationsStyles.fatherWidth}>
 
             <Row>
-              <Tabs defaultActiveKey="1">
-                <TabPane tab="Todas" key="1" />
-                <TabPane tab="Importante" key="2" />
-                <TabPane tab="Entrega" key="3" />
-                <TabPane tab="Recomendación" key="4" />
-              </Tabs>
-            </Row>
-
-            <Row>
               <Search placeholder="Buscar Notificación" enterButton />
             </Row>
 
+            {loading && <Loading />}
+
+            {!loading && (
             <Row className={notificationsStyles.notificationContainer}>
               <GetNotifications />
             </Row>
+            )}
 
           </Space>
         </Col>

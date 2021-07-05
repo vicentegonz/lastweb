@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
@@ -14,6 +14,7 @@ import {
 
 import DateSelector from '@/components/selectors/DateSelector.jsx';
 import StoreSelector from '@/components/selectors/StoreSelector.jsx';
+import Loading from '@/components/global/Loading.jsx';
 
 import styles from './ksi.module.scss';
 import StoreServices from './StoreServices.jsx';
@@ -21,6 +22,7 @@ import StoreServices from './StoreServices.jsx';
 const { Title } = Typography;
 
 const Ksi = () => {
+  const [loading, setLoading] = useState(true);
   const user = useSelector(selectUser);
   const storeServices = useSelector(selectStoreServices);
   const dispatch = useDispatch();
@@ -49,12 +51,14 @@ const Ksi = () => {
   }, [dispatch, user.stores]);
 
   useEffect(() => {
+    setLoading(true);
     if (!storeServices.servicesData
       || Object.keys(storeServices.servicesData).length === 0
       || !user.selectedStore) {
       return;
     }
     dispatch(calculateSumData(user));
+    setLoading(false);
   }, [dispatch, user, storeServices.servicesData]);
   return (
     <div>
@@ -93,8 +97,9 @@ const Ksi = () => {
       </Affix>
 
       <Divider />
+      {loading && <Loading />}
 
-      { Object.keys(storeServices.servicesData).length
+      { !loading && (Object.keys(storeServices.servicesData).length
                 && storeServices.servicesData[user.selectedStore]
                 && storeServices.servicesData[user.selectedStore].length
         ? (
@@ -108,7 +113,7 @@ const Ksi = () => {
               </Space>
             </Title>
           </Row>
-        )}
+        ))}
 
     </div>
   );
