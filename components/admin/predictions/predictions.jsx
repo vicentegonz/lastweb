@@ -12,6 +12,8 @@ import {
 
 import StoreSelector from '@/components/selectors/StoreSelector.jsx';
 import DaysSelector from '@/components/selectors/DaysSelector.jsx';
+import TextSearch from '@/components/selectors/TextSelector.jsx';
+
 import Loading from '@/components/global/Loading.jsx';
 import PaginationFrame from './pagination.jsx';
 
@@ -30,6 +32,7 @@ const PredictionsFrame = () => {
   const user = useSelector(selectUser);
   const storePredictions = useSelector(selectStorePredictions);
   const [formattedPredictionData, setFormattedPredictionData] = useState([]);
+  const [filteredText, setFilteredText] = useState('');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -114,7 +117,10 @@ const PredictionsFrame = () => {
         return false;
       }
     };
+
+    setLoading(true);
     storePredictionsData();
+    setLoading(false);
   }, [dispatch, user.stores, storePredictions.storeProducts]);
 
   useEffect(() => {
@@ -148,9 +154,13 @@ const PredictionsFrame = () => {
       }
     });
 
-    setFormattedPredictionData(formattedArray);
+    const filteredArray = formattedArray.filter(
+      (f) => f.description.toLowerCase().includes(filteredText.toLowerCase()) || filteredText === '',
+    );
+    setFormattedPredictionData(filteredArray);
+
     setLoading(false);
-  }, [storePredictions, user.selectedStore]);
+  }, [storePredictions, user.selectedStore, filteredText]);
 
   return (
     <div>
@@ -179,6 +189,7 @@ const PredictionsFrame = () => {
 
           <Col>
             <Space size="middle">
+              <TextSearch filteredText={filteredText} setFilteredText={setFilteredText} />
               <DaysSelector />
               <StoreSelector />
             </Space>
@@ -198,7 +209,8 @@ const PredictionsFrame = () => {
           <Row justify="space-between" align="top">
             <Title level={3}>
               <Space>
-                No hay predicciones para esta tienda.
+                {filteredText === '' && 'No hay predicciones para esta tienda.'}
+                {filteredText !== '' && `No hay productos que contengan "${filteredText}"`}
               </Space>
             </Title>
           </Row>
