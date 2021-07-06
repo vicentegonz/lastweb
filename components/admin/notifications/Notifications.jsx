@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import api from '@/api';
-import { save, clear } from '@/store/events/eventsReducer';
+import { save } from '@/store/events/eventsReducer';
 import { selectUser } from '@/store/user/userReducer';
 
 import {
-  Row, Col, Typography, Divider, Input, Space,
+  Row, Col, Typography, Divider, Input, Space, Affix,
 } from 'antd';
 
+import StoreSelector from '@/components/selectors/StoreSelector.jsx';
 import Loading from '@/components/global/Loading.jsx';
 import NotificationDetail from './NotificationDetail.jsx';
 import GetNotifications from './UserNotifications.jsx';
@@ -41,19 +42,33 @@ const AdminNotifications = () => {
         return false;
       }
     };
-    dispatch(clear());
     storeEventsData();
   }, [dispatch, user.stores]);
 
   return (
     <div>
-      <Row justify="space-around">
-        <Col span={20}>
-          <Title level={2}>
-            Notificaciones
-          </Title>
-        </Col>
-      </Row>
+      <Affix offsetTop={64}>
+        <Row justify="space-between" align="bottom" className={notificationsStyles.fixedRow}>
+
+          <Col flex="auto">
+            <Row>
+              <Title level={3} className={notificationsStyles.bottomAligned}>
+                <Space>
+                  Notificaciones de la Tienda:
+                  {user.selectedStore}
+                </Space>
+              </Title>
+            </Row>
+          </Col>
+
+          <Col>
+            <Space>
+              <StoreSelector />
+            </Space>
+          </Col>
+
+        </Row>
+      </Affix>
 
       <div>
         <Divider className={notificationsStyles.dividerA} />

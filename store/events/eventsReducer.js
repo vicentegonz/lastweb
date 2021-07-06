@@ -4,7 +4,7 @@ import {
 
 const initialState = {
   status: null,
-  eventsData: [],
+  eventsData: {},
   stores: [],
   selectedNotification: null,
 };
@@ -15,14 +15,13 @@ export const eventsSlice = createSlice({
   reducers: {
     save: (state, action) => {
       state.status = true;
-      if (!state.stores.includes(action.payload.store)) {
-        state.stores.push(action.payload.store);
-        state.eventsData = state.eventsData.concat(action.payload.data);
+      if (!state.eventsData[action.payload.store]) {
+        state.eventsData[action.payload.store] = action.payload.data;
       }
     },
     clear: (state) => {
       state.status = null;
-      state.eventsData = [];
+      state.eventsData = {};
       state.selectedNotification = null;
       state.stores = [];
     },
