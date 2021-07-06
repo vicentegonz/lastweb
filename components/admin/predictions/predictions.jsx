@@ -11,6 +11,7 @@ import {
 } from 'antd';
 
 import StoreSelector from '@/components/selectors/StoreSelector.jsx';
+import DaysSelector from '@/components/selectors/DaysSelector.jsx';
 import Loading from '@/components/global/Loading.jsx';
 import PaginationFrame from './pagination.jsx';
 
@@ -19,7 +20,7 @@ import styles from './predictions.module.scss';
 const { Title } = Typography;
 
 const getDateRangeSum = (datearray, days) => {
-  const relevantDays = datearray.slice(0, days + 1);
+  const relevantDays = datearray.slice(1, days + 1);
   const dataSum = relevantDays.reduce((a, b) => a + b.value, 0);
   return Math.round(dataSum);
 };
@@ -165,10 +166,20 @@ const PredictionsFrame = () => {
                 </Space>
               </Title>
             </Row>
+
+            <Row>
+              <Title level={4} className={styles.bottomAligned}>
+                <Space>
+                  Desde el día
+                  {storePredictions.date[0].replace(/-/g, '/')}
+                </Space>
+              </Title>
+            </Row>
           </Col>
 
           <Col>
-            <Space>
+            <Space size="middle">
+              <DaysSelector />
               <StoreSelector />
             </Space>
           </Col>

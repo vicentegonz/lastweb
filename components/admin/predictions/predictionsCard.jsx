@@ -41,11 +41,20 @@ const PredictionCard = ({
 
       <Col span={12} className={styles.verticallyCentered}>
         <Row>
-          <Space wrap className={styles.leftAligned}>
-            En los siguientes
-            <Text strong className={styles.highlightedText}>{days}</Text>
-            días se espera que se vendan entre
-          </Space>
+          {days === 1 ? (
+            <Space wrap className={styles.leftAligned}>
+              <Text strong className={styles.highlightedText}>Mañana</Text>
+              se espera que se vendan entre
+            </Space>
+          ) : (
+            <Space wrap className={styles.leftAligned}>
+              En los siguientes
+              <Text strong className={styles.highlightedText}>
+                {`${days} días`}
+              </Text>
+              se espera que se vendan entre
+            </Space>
+          ) }
         </Row>
 
         <Row>

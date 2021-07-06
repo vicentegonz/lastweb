@@ -52,6 +52,9 @@ export const storePredictionSlice = createSlice({
     changeDate: (state, action) => {
       state.date = action.payload;
     },
+    changeDays: (state, action) => {
+      state.days = action.payload;
+    },
   },
 });
 
@@ -60,6 +63,7 @@ export const {
   clearStoreProducts,
   changeStore,
   changeDate,
+  changeDays,
   savePredictions,
 } = storePredictionSlice.actions;
 

@@ -14,7 +14,7 @@ const { Option } = Select;
 const StoreSelector = () => {
   const user = useSelector(selectUser);
   const [selected, setSelected] = useState(user.selectedStore
-    ? user.selectedStore : user.stores[0]);
+    ? user.selectedStore : 'Cargando...');
   const dispatch = useDispatch();
 
   const handleChange = (newValue) => {
@@ -24,6 +24,12 @@ const StoreSelector = () => {
   useEffect(() => {
     dispatch(changeStore(selected));
   }, [dispatch, selected]);
+
+  useEffect(() => {
+    if (!user.selectedStore && user.stores.length !== 0) {
+      setSelected(user.stores[0]);
+    }
+  }, [user.stores, user.selectedStore]);
 
   return (
     <Space direction="vertical">
