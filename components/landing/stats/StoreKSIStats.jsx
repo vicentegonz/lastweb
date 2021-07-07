@@ -2,48 +2,56 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectStoreServices } from '@/store/storeServices/storeServicesReducer';
 import { selectUser } from '@/store/user/userReducer';
-
 import { Col } from 'antd';
-
 import ReportCard from '@/components/admin/ksi/ReportsCard.jsx';
 
 const KSIStats = () => {
   const storeServices = useSelector(selectStoreServices);
   const user = useSelector(selectUser);
-  const [cardData, setCardData] = useState();
+  const [summaryCardData, setSummaryCardData] = useState();
+  const [npsCardData, setNpsCardData] = useState();
+
   useEffect(() => {
     if (!storeServices.summaryKsi
       || Object.keys(storeServices.summaryKsi).length === 0
       || !user.selectedStore) {
       return;
     }
-    const finalData = storeServices.summaryKsi;
-    let nanValue = true;
-    Object.entries(finalData).forEach(([key, value]) => {
-      if (!(['name', 'date'].includes(key))) {
-        if (Number.isNaN(Number(value))) {
-          nanValue = false;
-        }
-      }
-    });
-    if (nanValue) {
-      setCardData(finalData);
+    setSummaryCardData(storeServices.summaryKsi[user.selectedStore]);
+
+    if (!storeServices.npsKsi
+      || Object.keys(storeServices.npsKsi).length === 0
+      || !user.selectedStore) {
+      return;
     }
-    setCardData(finalData);
+    setNpsCardData(storeServices.npsKsi[user.selectedStore]);
   }, [storeServices, user.selectedStore]);
 
   return (
     <>
-      {(cardData) && (
-      <Col span={12}>
+      {(summaryCardData) && (
+      <Col span={10}>
         <ReportCard
-          name={cardData.name}
-          value={parseFloat(cardData.value)}
-          createdAt={cardData.date}
-          differenceYesterdayPct={cardData.differenceYesterdayPct}
-          differenceLastWeekPct={cardData.differenceLastWeekPct}
-          differenceYesterdayVal={cardData.differenceYesterdayVal}
-          differenceLastWeekVal={cardData.differenceLastWeekVal}
+          name={summaryCardData.name}
+          value={parseFloat(summaryCardData.value)}
+          createdAt={user.dateRange[1]}
+          differenceYesterdayPct={summaryCardData.variationYpercentage}
+          differenceLastWeekPct={summaryCardData.variationLWpercentage}
+          differenceYesterdayVal={summaryCardData.variationYNumber}
+          differenceLastWeekVal={summaryCardData.variationLWNumber}
+        />
+      </Col>
+      )}
+      {(npsCardData) && (
+      <Col span={10}>
+        <ReportCard
+          name={npsCardData.name}
+          value={parseFloat(npsCardData.value)}
+          createdAt={user.dateRange[1]}
+          differenceYesterdayPct={npsCardData.variationYpercentage}
+          differenceLastWeekPct={npsCardData.variationLWpercentage}
+          differenceYesterdayVal={npsCardData.variationYNumber}
+          differenceLastWeekVal={npsCardData.variationLWNumber}
         />
       </Col>
       )}

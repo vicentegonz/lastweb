@@ -26,7 +26,7 @@ const ReportCard = ({
 
   const formattedValue = round(value, 2);
   const FormattDifferencePercent = (val) => {
-    const newVal = round(Math.abs((val * 100)), 2);
+    const newVal = round(Math.abs(val), 2);
     return newVal;
   };
   const nFormatter = (num, digits) => {

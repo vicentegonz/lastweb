@@ -1,90 +1,67 @@
 import {
   createSlice,
+  createAsyncThunk,
 } from '@reduxjs/toolkit';
+import api from '@/api';
+import dateDifference from '@/utils/dateFunctions';
+import processKSI from './processKSI';
 
-const getDataValue = (data) => {
-  let totalSurveys = 0;
-  let totalValue = 0;
-  data.forEach((stat) => {
-    totalSurveys += stat.amountOfSurveys;
-    totalValue += stat.value * stat.amountOfSurveys;
-  });
-  return (totalValue / totalSurveys).toFixed(2);
-};
+export const getDataFromApi = createAsyncThunk(
+  'storeServices/getDataFromApi',
+  async (data) => {
+    const [store, startDate, endDate] = data;
+    try {
+      const processedData = {};
+      processedData.store = store;
+      processedData.data = [];
 
-const getDayData = (uniqueServices, initialData, day) => {
-  const result = [];
-  uniqueServices.forEach((stat) => {
-    const item = initialData.filter(
-      (el) => el.name === stat
-      && new Date(el.date).toLocaleDateString() === day.toLocaleDateString(),
-    ).pop();
+      const requestParams = {
+        id: store,
+        start_date: startDate,
+        end_date: endDate,
+        size: Math.min(15, dateDifference(startDate, endDate)),
+        page: 1,
+      };
 
-    result.push(item);
-  });
-  return getDataValue(result);
-};
+      let response;
+      let allRequested = true;
+      processedData.store = store;
+      while (allRequested) {
+        // eslint-disable-next-line no-await-in-loop
+        response = await api.account.ksiData(requestParams);
+        processedData.data.push(...response.data.results);
+
+        requestParams.page += 1;
+        allRequested = null;
+      }
+      return processedData;
+    } catch (err) {
+      return false;
+    }
+  },
+);
 
 const initialState = {
   servicesData: {},
   summaryKsi: {},
+  npsKsi: {},
 };
 
 export const storeServicesSlice = createSlice({
   name: 'storeServices',
   initialState,
   reducers: {
-    calculateSumData: (state, action) => {
-      const today = new Date(action.payload.dateRange[1]);
-      const initialData = state.servicesData[action.payload.selectedStore];
-      if (!state.servicesData
-              || Object.keys(state.servicesData).length === 0
-              || !action.payload
-              || !initialData) {
-        return;
-      }
-      const uniqueServices = [...new Set(initialData.map((item) => item.name))];
-      const minDate = new Date(Math.min.apply(null, initialData.map((e) => new Date(e.date))));
-
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-      if (yesterday < minDate) {
-        yesterday.setDate(minDate.getDate());
-      }
-
-      const lastWeek = new Date(today);
-      lastWeek.setDate(today.getDate() - 7);
-      if (lastWeek < minDate) {
-        lastWeek.setDate(minDate.getDate());
-      }
-
-      const todayData = getDayData(uniqueServices, initialData, today);
-      const yesterdayData = getDayData(uniqueServices, initialData, yesterday);
-      const lastWeekData = getDayData(uniqueServices, initialData, lastWeek);
-
-      const YesterdayPctDiff = todayData / yesterdayData - 1;
-      const LastWeekPctDiff = todayData / lastWeekData - 1;
-      const YesterdayValDiff = Math.abs(todayData - yesterdayData);
-
-      const LastWeekValDiff = Math.abs(todayData - lastWeekData);
-      state.summaryKsi = {
-        name: 'Nota Final',
-        value: todayData,
-        date: action.payload.dateRange[1],
-        store: state.selectedStore,
-        differenceYesterdayPct: YesterdayPctDiff,
-        differenceLastWeekPct: LastWeekPctDiff,
-        differenceYesterdayVal: YesterdayValDiff,
-        differenceLastWeekVal: LastWeekValDiff,
-      };
-    },
-    saveServices: (state, action) => {
-      if (!state.servicesData[action.payload.store]) {
-        state.servicesData[action.payload.store] = action.payload.data;
-      }
-    },
     clearStoreServiceData: (state) => {
       state.servicesData = {};
+    },
+  },
+  extraReducers: {
+    [getDataFromApi.fulfilled]: (state, action) => {
+      const data = action.payload;
+      const { mainService, npsService, aux } = processKSI(data.data);
+      state.servicesData[data.store] = aux;
+      state.summaryKsi[data.store] = mainService;
+      state.npsKsi[data.store] = npsService;
     },
   },
 });

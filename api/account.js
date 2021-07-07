@@ -8,7 +8,7 @@ const account = {
   accountData: () => CLIENT.get('v1/account'),
   eventsData: (id) => CLIENT.get(`/v1/operations/stores/${id}/events?size=15`),
   kpiData: (id) => CLIENT.get(`/v1/operations/stores/${id.id}/kpis/?start_date=${id.start_date}&end_date=${id.end_date}&size=${id.size}&page=${id.page}`),
-  ksiData: (id) => CLIENT.get(`/v1/operations/stores/${id}/service-indicators`),
+  ksiData: (params) => CLIENT.get(`/v1/operations/stores/${params.id}/service-indicators/?start_date=${params.start_date}&end_date=${params.end_date}&size=${params.size}&page=${params.page}`),
   productData: (params) => CLIENT.get(`/v1/operations/stores/${params.id}/products/?&size=15&page=${params.page}`),
   predictionData: (params) => CLIENT.get(`/v1/forecast/predictions/?store=${params.store}&product=${params.product}&date=${params.date}`),
 };

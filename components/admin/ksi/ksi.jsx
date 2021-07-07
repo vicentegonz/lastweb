@@ -3,10 +3,8 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import {
-  selectStoreServices, saveServices, clearStoreServiceData, calculateSumData,
+  selectStoreServices, getDataFromApi, clearStoreServiceData,
 } from '@/store/storeServices/storeServicesReducer';
-
-import api from '@/api';
 
 import {
   Row, Col, Divider, Space, Affix, Typography,
@@ -28,38 +26,17 @@ const Ksi = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const storeServicesData = async () => {
-      try {
-        await user.stores.map(async (store) => {
-          const response = await api.account.ksiData(store);
-          const processedData = {};
-
-          processedData.store = store;
-          processedData.data = response.data.sort(
-            (a, b) => new Date(b.date).toLocaleDateString()
-            - new Date(a.date).toLocaleDateString(),
-          );
-          dispatch(saveServices(processedData));
-        });
-        return true;
-      } catch (err) {
-        return false;
-      }
+    setLoading(true);
+    const storeServicesData = () => {
+      user.stores.forEach((store) => {
+        dispatch(getDataFromApi([store, user.dateRange[0], user.dateRange[1]]));
+      });
     };
     dispatch(clearStoreServiceData());
     storeServicesData();
-  }, [dispatch, user.stores]);
-
-  useEffect(() => {
-    setLoading(true);
-    if (!storeServices.servicesData
-      || Object.keys(storeServices.servicesData).length === 0
-      || !user.selectedStore) {
-      return;
-    }
-    dispatch(calculateSumData(user));
     setLoading(false);
-  }, [dispatch, user, storeServices.servicesData]);
+  }, [dispatch, user.stores, user.dateRange]);
+
   return (
     <div>
       <Affix offsetTop={64}>
