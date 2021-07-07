@@ -21,7 +21,10 @@
 
 .fixedRow {
   background-color: #eaedf5;
-  padding: 0.8rem 0;
+  left: -4rem;
+  padding: 0.8rem 4rem;
+  position: relative;
+  width: 100vw;
 }
 
 .parentWidth {
@@ -30,6 +33,8 @@
 
 .customCarousel {
   ul {
+    z-index: 0 !important;
+
     li {
       button {
         background: #05426f !important;
