@@ -84,7 +84,6 @@ const AdminNotifications = () => {
               <Search
                 placeholder="Buscar Notificación"
                 onChange={changeFilter}
-                setFilteredText={setFilteredText}
                 enterButton
               />
             </Row>

@@ -25,7 +25,7 @@ const GetNotifications = ({ filteredText }) => {
       || !user.selectedStore) {
       return;
     }
-    const initialData = events.eventsData[user.selectedStore];
+    const initialData = events.eventsData[user.selectedStore] || [];
     const filteredArray = initialData.filter(
       (f) => f.data.event.toLowerCase().includes(filteredText.toLowerCase()) || filteredText === '',
     );
