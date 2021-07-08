@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import {
+  string,
+} from 'prop-types';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectEvents, changeNotification } from '@/store/events/eventsReducer';
@@ -10,7 +13,7 @@ import {
 
 import notificationsStyles from './Notifications.module.scss';
 
-const GetNotifications = () => {
+const GetNotifications = ({ filteredText }) => {
   const events = useSelector(selectEvents);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
@@ -23,8 +26,11 @@ const GetNotifications = () => {
       return;
     }
     const initialData = events.eventsData[user.selectedStore];
-    setCardData(initialData);
-  }, [events.eventsData, user.selectedStore]);
+    const filteredArray = initialData.filter(
+      (f) => f.data.event.toLowerCase().includes(filteredText.toLowerCase()) || filteredText === '',
+    );
+    setCardData(filteredArray);
+  }, [events.eventsData, user.selectedStore, filteredText]);
 
   const clickHandle = (idx) => {
     dispatch(changeNotification(idx));
@@ -32,7 +38,7 @@ const GetNotifications = () => {
 
   return (
     <Menu mode="inline">
-      {cardData && cardData.map((event) => (
+      {cardData && (cardData.length ? (cardData.map((event) => (
         <Menu.Item key={event.id}>
           <a role="button" onClick={() => clickHandle(event.id)} onKeyDown={() => clickHandle(event.id)} tabIndex={event.id}>
             <Space size="middle">
@@ -45,9 +51,18 @@ const GetNotifications = () => {
             </Space>
           </a>
         </Menu.Item>
-      ))}
+      )))
+        : (
+          <Menu.Item>
+            {filteredText !== '' && `No hay notificaciones que contengan "${filteredText}"`}
+          </Menu.Item>
+        ))}
     </Menu>
   );
+};
+
+GetNotifications.propTypes = {
+  filteredText: string.isRequired,
 };
 
 export default GetNotifications;

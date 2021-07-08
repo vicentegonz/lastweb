@@ -23,6 +23,7 @@ const AdminNotifications = () => {
   const [loading, setLoading] = useState(true);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
+  const [filteredText, setFilteredText] = useState('');
 
   useEffect(() => {
     const storeEventsData = async () => {
@@ -44,7 +45,9 @@ const AdminNotifications = () => {
     };
     storeEventsData();
   }, [dispatch, user.stores]);
-
+  const changeFilter = (event) => {
+    setFilteredText(event.target.value);
+  };
   return (
     <div>
       <Affix offsetTop={64}>
@@ -77,16 +80,22 @@ const AdminNotifications = () => {
       <Row gutter={32}>
         <Col span={10}>
           <Space direction="vertical" size="small" className={notificationsStyles.fatherWidth}>
-
             <Row>
-              <Search placeholder="Buscar Notificación" enterButton />
+              <Search
+                placeholder="Buscar Notificación"
+                onChange={changeFilter}
+                setFilteredText={setFilteredText}
+                enterButton
+              />
             </Row>
 
             {loading && <Loading />}
 
             {!loading && (
             <Row className={notificationsStyles.notificationContainer}>
-              <GetNotifications />
+              <GetNotifications
+                filteredText={filteredText}
+              />
             </Row>
             )}
 
