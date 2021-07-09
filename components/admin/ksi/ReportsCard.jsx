@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import {
@@ -57,7 +58,11 @@ const ReportCard = ({
       extra={(
         <Space size="middle">
           {router.pathname === '/'
-           && <Button href="/ksi" type="primary" shape="round">Ver detalle</Button>}
+           && (
+           <Link href="/ksi">
+             <Button type="primary" shape="round">Ver detalle</Button>
+           </Link>
+           )}
           <Text strong type="secondary">{formattedDate}</Text>
         </Space>
       )}
