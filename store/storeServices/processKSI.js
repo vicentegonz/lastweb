@@ -9,7 +9,7 @@ import {
   npsGrade,
 } from './storeServicesFormulas';
 
-function makeIndicator(obj) {
+const makeIndicator = (obj) => {
   const experience = experienceGrade(obj);
   const waitingTime = waitingTimeGrade(obj);
   const speed = speedGrade(obj);
@@ -17,7 +17,6 @@ function makeIndicator(obj) {
   const bathroom = bathroomGrade(obj);
   const kindness = kindnessGrade(obj);
   const nps = npsGrade(obj);
-
   const service = experience * 0.125
       + waitingTime * 0.175
       + speed * 0.175
@@ -37,9 +36,9 @@ function makeIndicator(obj) {
   };
 
   return finalObj;
-}
+};
 
-export default function processKSI(data) {
+const processKSI = (data) => {
   const indicators = [];
   data.forEach((obj) => {
     indicators.push(makeIndicator(obj));
@@ -50,31 +49,33 @@ export default function processKSI(data) {
     id: 'mainService',
     value: indicators[0].service,
     data: indicators.map(({ service }) => round(service, 2)),
-    variationYNumber: indicators[1] ? (indicators[1].service - indicators[0].service) : 0,
-    variationLWNumber: indicators.slice(-1)[0].service - indicators[0].service,
+    variationYNumber: indicators[1] ? (indicators[0].service - indicators[1].service) : 0,
+    variationLWNumber: indicators.slice(-1)[0].service
+      ? indicators[0].service - indicators.slice(-1)[0].service : 0,
     variationYpercentage: indicators[1]
-      ? (((indicators[1].service - indicators[0].service) / indicators[1].service) * 100) : 0,
-    variationLWpercentage:
-        (
-          (indicators.slice(-1)[0].service - indicators[0].service)
+      ? (((indicators[0].service - indicators[1].service) / indicators[1].service) * 100) : 0,
+    variationLWpercentage: indicators.slice(-1)[0].service
+      ? (
+        (indicators[0].service - indicators.slice(-1)[0].service)
           / indicators.slice(-1)[0].service
-        ) * 100,
+      ) * 100 : 0,
   };
 
   const npsService = {
     name: 'NPS',
     id: 'nps',
-    value: round(indicators[0].nps, 2),
+    value: indicators[0].nps,
     data: indicators.map(({ nps }) => round(nps, 2)),
-    variationYNumber: indicators[1] ? (indicators[1].nps - indicators[0].nps) : 0,
-    variationLWNumber: indicators.slice(-1)[0].nps - indicators[0].nps,
+    variationYNumber: indicators[1] ? (indicators[0].nps - indicators[1].nps) : 0,
+    variationLWNumber: indicators.slice(-1)[0].nps
+      ? indicators[0].nps - indicators.slice(-1)[0].nps : 0,
     variationYpercentage: indicators[1]
-      ? (((indicators[1].nps - indicators[0].nps) / indicators[1].nps) * 100) : 0,
-    variationLWpercentage:
-      (
-        (indicators.slice(-1)[0].nps - indicators[0].nps)
+      ? (((indicators[0].nps - indicators[1].nps) / indicators[1].nps) * 100) : 0,
+    variationLWpercentage: indicators.slice(-1)[0].nps
+      ? (
+        (indicators[0].nps - indicators.slice(-1)[0].nps)
         / indicators.slice(-1)[0].nps
-      ) * 100,
+      ) * 100 : 0,
   };
 
   const serviceNames = [
@@ -122,17 +123,20 @@ export default function processKSI(data) {
       id: name,
       value: round(serviceArray[0], 2),
       data: serviceArray.map((service) => round(service, 2)),
-      variationYNumber: serviceArray[1] ? (serviceArray[1] - serviceArray[0]) : 0,
-      variationLWNumber: serviceArray.slice(-1)[0] - serviceArray[0],
+      variationYNumber: serviceArray[1] ? (serviceArray[0] - serviceArray[1]) : 0,
+      variationLWNumber: serviceArray.slice(-1)[0]
+        ? serviceArray[0] - serviceArray.slice(-1)[0] : 0,
       variationYpercentage: serviceArray[1]
-        ? (((serviceArray[1] - serviceArray[0]) / serviceArray[1]) * 100) : 0,
-      variationLWpercentage: (
-        (serviceArray.slice(-1)[0] - serviceArray[0])
+        ? (((serviceArray[0] - serviceArray[1]) / serviceArray[1]) * 100) : 0,
+      variationLWpercentage: serviceArray.slice(-1)[0] ? (
+        (serviceArray[0] - serviceArray.slice(-1)[0])
         / serviceArray.slice(-1)[0]
-      ) * 100,
+      ) * 100 : 0,
     };
 
     aux.push(subService);
   });
   return { mainService, npsService, aux };
-}
+};
+
+export default processKSI;

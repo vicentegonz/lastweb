@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
 } from '@reduxjs/toolkit';
 import api from '@/api';
-import dateDifference from '@/utils/dateFunctions';
+import { dateDifference } from '@/utils/dateFunctions';
 import processKSI from './processKSI';
 
 export const getDataFromApi = createAsyncThunk(
@@ -32,7 +32,7 @@ export const getDataFromApi = createAsyncThunk(
         processedData.data.push(...response.data.results);
 
         requestParams.page += 1;
-        allRequested = null;
+        allRequested = response.data.links.next;
       }
       return processedData;
     } catch (err) {
@@ -45,6 +45,7 @@ const initialState = {
   servicesData: {},
   summaryKsi: {},
   npsKsi: {},
+  loading: false,
 };
 
 export const storeServicesSlice = createSlice({
@@ -54,6 +55,9 @@ export const storeServicesSlice = createSlice({
     clearStoreServiceData: (state) => {
       state.servicesData = {};
     },
+    startLoadingKSI: (state) => {
+      state.loading = true;
+    },
   },
   extraReducers: {
     [getDataFromApi.fulfilled]: (state, action) => {
@@ -62,14 +66,14 @@ export const storeServicesSlice = createSlice({
       state.servicesData[data.store] = aux;
       state.summaryKsi[data.store] = mainService;
       state.npsKsi[data.store] = npsService;
+      state.loading = false;
     },
   },
 });
 
 export const {
-  saveServices,
-  calculateSumData,
   clearStoreServiceData,
+  startLoadingKSI,
 } = storeServicesSlice.actions;
 
 export const selectStoreServices = (state) => state.storeServices;

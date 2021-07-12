@@ -29,11 +29,11 @@ const KPIStats = () => {
   const user = useSelector(selectUser);
   const [cardData, setCardData] = useState([]);
   useEffect(() => {
-    if (storeStats.summaryKPIs.length === 0
-      || !user.selectedStore) {
+    if (!user.selectedStore || !storeStats.summaryKPIs[user.selectedStore]
+    ) {
       return;
     }
-    const finalData = storeStats.summaryKPIs;
+    const finalData = storeStats.summaryKPIs[user.selectedStore];
     setCardData(finalData);
   }, [storeStats.summaryKPIs, user.selectedStore]);
 
@@ -54,11 +54,11 @@ const KPIStats = () => {
               key={item.name}
               name={item.name}
               value={item.value}
-              createdAt={item.date}
-              differenceYesterdayPct={item.differenceYesterdayPct}
-              differenceLastWeekPct={item.differenceLastWeekPct}
-              differenceYesterdayVal={item.differenceYesterdayVal}
-              differenceLastWeekVal={item.differenceLastWeekVal}
+              createdAt={user.dateRange[1]}
+              differenceYesterdayPct={item.variationYpercentage}
+              differenceLastWeekPct={item.variationLWpercentage}
+              differenceYesterdayVal={item.variationYNumber}
+              differenceLastWeekVal={item.variationLWNumber}
               category={item.category}
               unit={item.units}
             />

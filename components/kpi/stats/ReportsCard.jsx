@@ -29,9 +29,9 @@ const ReportCard = ({
     formattedDate.getTime() + Math.abs(formattedDate.getTimezoneOffset() * 60000),
   ).toLocaleDateString('en-ZA');
 
-  const formattedValue = round(value, 1);
+  const formattedValue = round(value, 2);
   const FormattDifferencePercent = (val) => {
-    const newVal = round(Math.abs((val * 100)), 2);
+    const newVal = round(Math.abs(val), 2);
     return newVal;
   };
 
@@ -46,7 +46,7 @@ const ReportCard = ({
       { value: 1e18, symbol: 'E' },
     ];
     const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-    const Newitem = lookup.slice().reverse().find((item) => num >= item.value);
+    const Newitem = lookup.slice().reverse().find((item) => Math.abs(num) >= item.value);
     return Newitem ? round((num / Newitem.value), digits).replace(rx, '$1') + Newitem.symbol : '0';
   };
 

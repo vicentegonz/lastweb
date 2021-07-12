@@ -28,15 +28,14 @@ const KPISelector = () => {
   }, [dispatch, selected]);
 
   useEffect(() => {
-    const storeStats = statsData[selectedStore];
-    if (storeStats && storeStats.length !== 0) {
-      const uniqueStats = [...new Set(storeStats.map((item) => item.name))];
-      setKpis(uniqueStats);
-      if (!selected) {
-        setSelected(uniqueStats[0]);
-      }
-    } else {
-      setKpis([]);
+    if (!statsData || !selectedStore || !statsData[selectedStore]) {
+      return;
+    }
+    const storeStats = Object.keys(statsData[selectedStore]);
+
+    setKpis(storeStats);
+    if (!selected && storeStats.length !== 0) {
+      setSelected(storeStats[0]);
     }
   }, [selectedStore, statsData, selected]);
 

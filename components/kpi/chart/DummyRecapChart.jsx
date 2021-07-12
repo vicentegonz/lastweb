@@ -13,6 +13,7 @@ const formatChartData = (chartData) => {
     if (!Object.keys(halfwayChartData).includes(kpiData.date)) {
       halfwayChartData[kpiData.date] = {};
     }
+
     halfwayChartData[kpiData.date][kpiData.category] = kpiData.value;
   });
 

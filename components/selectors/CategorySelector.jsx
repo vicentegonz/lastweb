@@ -13,7 +13,7 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const CategorySelector = () => {
-  const { statsData } = useSelector(selectStoreStats);
+  const { statsData, selectedKPI } = useSelector(selectStoreStats);
   const { selectedStore } = useSelector(selectUser);
   const [categories, setCategories] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -28,15 +28,18 @@ const CategorySelector = () => {
   }, [dispatch, selected]);
 
   useEffect(() => {
-    const storeStats = statsData[selectedStore];
+    if (!statsData || !selectedStore || !selectedKPI
+      || !statsData[selectedStore] || !statsData[selectedStore][selectedKPI]) {
+      return;
+    }
+    const storeStats = Object.keys(statsData[selectedStore][selectedKPI]);
     if (storeStats && storeStats.length !== 0) {
-      const uniqueStats = [...new Set(storeStats.map((item) => item.category))];
-      setCategories(uniqueStats);
+      setCategories(storeStats);
     } else {
       setCategories([]);
       setSelected(null);
     }
-  }, [selectedStore, statsData]);
+  }, [selectedStore, statsData, selectedKPI]);
 
   return (
     <>

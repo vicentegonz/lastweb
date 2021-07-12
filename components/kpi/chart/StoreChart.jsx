@@ -10,24 +10,44 @@ const StoreChart = () => {
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    if (!storeStats.statsData
-      || Object.keys(storeStats.statsData).length === 0
+    if (!storeStats.chartKPIs
+      || Object.keys(storeStats.chartKPIs).length === 0
       || !selectedStore
       || !storeStats.selectedKPI) {
       return;
     }
 
-    let initialData = storeStats.statsData[selectedStore].filter(
-      (el) => el.name === storeStats.selectedKPI,
-    );
+    const initialData = storeStats.chartKPIs[selectedStore];
+
+    let processedData = [];
+
+    const kpis = {
+      Contribución: 'contribution',
+      'Venta Bruta': 'grossSale',
+      'Venta Neta': 'netSale',
+      'Ticket promedio': 'averageTicket',
+      Transacciones: 'transactions',
+    };
+
+    initialData.forEach((dategroup) => {
+      dategroup.forEach((item) => {
+        processedData.push({
+          id: item.id,
+          name: storeStats.selectedKPI,
+          category: item.category,
+          value: item[kpis[storeStats.selectedKPI]],
+          date: item.date,
+        });
+      });
+    });
 
     if (storeStats.selectedCategory) {
-      initialData = initialData.filter(
+      processedData = processedData.filter(
         (el) => el.category === storeStats.selectedCategory,
       );
     }
 
-    const filtered = initialData.filter(
+    const filtered = processedData.filter(
       (el) => new Date(el.date) >= new Date(dateRange[0])
               && new Date(el.date) <= new Date(dateRange[1]),
     );

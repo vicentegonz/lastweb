@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import {
-  selectStoreServices, getDataFromApi, clearStoreServiceData,
+  selectStoreServices, getDataFromApi, clearStoreServiceData, startLoadingKSI,
 } from '@/store/storeServices/storeServicesReducer';
 
 import {
@@ -26,16 +26,22 @@ const Ksi = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setLoading(true);
     const storeServicesData = () => {
       user.stores.forEach((store) => {
         dispatch(getDataFromApi([store, user.dateRange[0], user.dateRange[1]]));
       });
     };
+    dispatch(startLoadingKSI());
     dispatch(clearStoreServiceData());
     storeServicesData();
-    setLoading(false);
   }, [dispatch, user.stores, user.dateRange]);
+
+  useEffect(() => {
+    setLoading(true);
+    if (!storeServices.loading) {
+      setLoading(false);
+    }
+  }, [storeServices.loading]);
 
   return (
     <div>

@@ -1,98 +1,60 @@
 import {
   createSlice,
+  createAsyncThunk,
 } from '@reduxjs/toolkit';
+import api from '@/api';
+import { processStoreKpis } from './processKPI';
 
-const getDataValue = (data) => {
-  let totalValue = 0;
-  data.forEach((stat) => {
-    totalValue += stat.value;
-  });
-  return totalValue;
-};
+export const getKPIDataFromApi = createAsyncThunk(
+  'storeServices/getKPIDataFromApi',
+  async (data) => {
+    const [store, startDate, endDate] = data;
+    try {
+      const processedData = {};
+      processedData.store = store;
+      processedData.dates = [startDate, endDate];
+      processedData.data = [];
 
-const getDayData = (uniqueCategories, stat, initialData, day) => {
-  const result = [];
-  uniqueCategories.forEach((category) => {
-    const item = initialData.filter(
-      (el) => el.name === stat
-      && el.category === category
-      && new Date(el.date).toLocaleDateString() === day.toLocaleDateString(),
-    ).pop();
+      const requestParams = {
+        id: store,
+        start_date: startDate,
+        end_date: endDate,
+        size: 15,
+        page: 1,
+      };
 
-    result.push(item);
-  });
-  return getDataValue(result);
-};
+      let response;
+      let allRequested = true;
+      processedData.store = store;
+      while (allRequested) {
+        // eslint-disable-next-line no-await-in-loop
+        response = await api.account.kpiData(requestParams);
+        processedData.data.push(...response.data.results);
+
+        requestParams.page += 1;
+        allRequested = response.data.links.next;
+      }
+      return processedData;
+    } catch (err) {
+      return false;
+    }
+  },
+);
 
 const initialState = {
   statsData: {},
   selectedKPI: null,
   selectedCategory: null,
-  summaryKPIs: [],
+  summaryKPIs: {},
+  chartKPIs: {},
+  loading: true,
 };
 
 export const storeStatsSlice = createSlice({
   name: 'storeStats',
   initialState,
   reducers: {
-    calculateStatSumData: (state, action) => {
-      const today = new Date(action.payload.dateRange[1]);
-      const initialData = state.statsData[action.payload.selectedStore];
-
-      if (!state.statsData
-        || Object.keys(state.statsData).length === 0
-        || !initialData) {
-        return;
-      }
-      const uniqueCategories = [...new Set(initialData.map((item) => item.category))];
-      const uniqueStat = [...new Set(initialData.map((item) => item.name))];
-      const minDate = new Date(Math.min.apply(null, initialData.map((e) => new Date(e.date))));
-
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-      if (yesterday < minDate) {
-        yesterday.setDate(minDate.getDate());
-      }
-
-      const lastWeek = new Date(today);
-      lastWeek.setDate(today.getDate() - 7);
-      if (lastWeek < minDate) {
-        lastWeek.setDate(minDate.getDate());
-      }
-      const result = [];
-      uniqueStat.forEach((stat) => {
-        const unit = initialData.filter(
-          (el) => el.name === stat,
-        ).pop().units;
-        const todayData = getDayData(uniqueCategories, stat, initialData, today);
-        const yesterdayData = getDayData(uniqueCategories, stat, initialData, yesterday);
-        const lastWeekData = getDayData(uniqueCategories, stat, initialData, lastWeek);
-
-        const YesterdayPctDiff = todayData / yesterdayData - 1;
-        const LastWeekPctDiff = todayData / lastWeekData - 1;
-        const YesterdayValDiff = Math.abs(todayData - yesterdayData);
-        const LastWeekValDiff = Math.abs(todayData - lastWeekData);
-
-        result.push({
-          name: stat,
-          units: unit,
-          value: todayData,
-          date: action.payload.dateRange[1],
-          store: state.selectedStore,
-          differenceYesterdayPct: YesterdayPctDiff,
-          differenceLastWeekPct: LastWeekPctDiff,
-          differenceYesterdayVal: YesterdayValDiff,
-          differenceLastWeekVal: LastWeekValDiff,
-        });
-      });
-      state.summaryKPIs = result;
-    },
-    save: (state, action) => {
-      if (!state.statsData[action.payload.store]) {
-        state.statsData[action.payload.store] = action.payload.data;
-      }
-    },
-    clearStoreData: (state) => {
+    clearStoreStatsData: (state) => {
       state.statsData = {};
     },
     changeKPI: (state, action) => {
@@ -101,15 +63,27 @@ export const storeStatsSlice = createSlice({
     changeCategory: (state, action) => {
       state.selectedCategory = action.payload;
     },
+    startLoadingKPI: (state) => {
+      state.loading = true;
+    },
+  },
+  extraReducers: {
+    [getKPIDataFromApi.fulfilled]: (state, action) => {
+      const data = action.payload;
+      const processedIndividualKPI = processStoreKpis(data);
+      state.chartKPIs[data.store] = processedIndividualKPI.filteredArray.reverse();
+      state.statsData[data.store] = processedIndividualKPI.filteredData;
+      state.summaryKPIs[data.store] = processedIndividualKPI.mainKPI;
+      state.loading = false;
+    },
   },
 });
 
 export const {
-  save,
-  calculateStatSumData,
-  clearStoreData,
+  clearStoreStatsData,
   changeCategory,
   changeKPI,
+  startLoadingKPI,
 } = storeStatsSlice.actions;
 
 export const selectStoreStats = (state) => state.storeStats;

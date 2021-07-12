@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-escape */
-function zeroDecimal(value) {
+const zeroDecimal = (value) => {
   if (value.slice(-2, -1) === '00') {
     return value.slice(0, -2);
   }
@@ -10,16 +10,16 @@ function zeroDecimal(value) {
     return value.slice(0, -1);
   }
   return value;
-}
+};
 
-function stripMinus(value) {
+const stripMinus = (value) => {
   if (value.slice(0, 1) === '-') {
     return value.slice(1);
   }
   return value;
-}
+};
 
-export default function round(value, precision) {
+const round = (value, precision) => {
   const number = stripMinus(
     zeroDecimal(
       value
@@ -29,4 +29,6 @@ export default function round(value, precision) {
     ),
   );
   return number;
-}
+};
+
+export default round;
