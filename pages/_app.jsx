@@ -4,7 +4,7 @@
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import store from '@/store';
-import { AuthProvider } from '@/contexts/withAuth.jsx';
+import AuthProvider from '@/components/global/Authentication.jsx';
 
 import '@/styles/global.scss';
 import 'antd/dist/antd.css';
