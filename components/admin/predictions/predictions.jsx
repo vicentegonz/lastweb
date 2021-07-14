@@ -7,12 +7,10 @@ import {
 } from '@/store/storePredictions/predictionsReducer';
 import api from '@/api';
 import {
-  Row, Col, Divider, Space, Affix, Typography,
+  Row, Col, Divider, Space, Affix, Typography, Input,
 } from 'antd';
 
 import StoreSelector from '@/components/selectors/StoreSelector.jsx';
-import DaysSelector from '@/components/selectors/DaysSelector.jsx';
-import TextSearch from '@/components/selectors/TextSelector.jsx';
 
 import Loading from '@/components/global/Loading.jsx';
 import PaginationFrame from './pagination.jsx';
@@ -20,18 +18,19 @@ import PaginationFrame from './pagination.jsx';
 import styles from './predictions.module.scss';
 
 const { Title } = Typography;
+const { Search } = Input;
 
-const getDateRangeSum = (datearray, days) => {
-  const relevantDays = datearray.slice(1, days + 1);
-  const dataSum = relevantDays.reduce((a, b) => a + b.value, 0);
-  return Math.round(dataSum);
-};
+// const getDateRangeSum = (datearray, days) => {
+//   const relevantDays = datearray.slice(1, days + 1);
+//   const dataSum = relevantDays.reduce((a, b) => a + b.value, 0);
+//   return Math.round(dataSum);
+// };
 
 const PredictionsFrame = () => {
   const [loading, setLoading] = useState(true);
   const user = useSelector(selectUser);
   const storePredictions = useSelector(selectStorePredictions);
-  const [formattedPredictionData, setFormattedPredictionData] = useState([]);
+  const [formattedProductData, setFormattedProductData] = useState([]);
   const [filteredText, setFilteredText] = useState('');
   const dispatch = useDispatch();
 
@@ -126,41 +125,22 @@ const PredictionsFrame = () => {
   useEffect(() => {
     setLoading(true);
     if (!user.selectedStore
-      || Object.keys(storePredictions.storeProducts).length === 0
-      || Object.keys(storePredictions.storePredictions).length === 0) {
+      || Object.keys(storePredictions.storeProducts).length === 0) {
       return;
     }
 
-    const formattedArray = [];
-    storePredictions.storeProducts[user.selectedStore].forEach((item) => {
-      if (storePredictions.storePredictions[user.selectedStore]
-        && storePredictions.storePredictions[user.selectedStore][item.id]) {
-        const productData = {
-          id: item.id,
-          description: item.description,
-          initialDate: storePredictions.date[0],
-          days: storePredictions.days,
-          min: getDateRangeSum(
-            storePredictions.storePredictions[user.selectedStore][item.id].p10,
-            storePredictions.days,
-          ),
-          max: getDateRangeSum(
-            storePredictions.storePredictions[user.selectedStore][item.id].p90,
-            storePredictions.days,
-          ),
-        };
-
-        formattedArray.push(productData);
-      }
-    });
-
+    const formattedArray = storePredictions.storeProducts[user.selectedStore] || [];
     const filteredArray = formattedArray.filter(
-      (f) => f.description.toLowerCase().includes(filteredText.toLowerCase()) || filteredText === '',
+      (f) => f.description.toLowerCase().includes(filteredText.toLowerCase())
+    || filteredText === '',
     );
-    setFormattedPredictionData(filteredArray);
+    setFormattedProductData(filteredArray);
 
     setLoading(false);
   }, [storePredictions, user.selectedStore, filteredText]);
+  const changeFilter = (event) => {
+    setFilteredText(event.target.value);
+  };
 
   return (
     <div>
@@ -189,8 +169,6 @@ const PredictionsFrame = () => {
 
           <Col>
             <Space size="middle">
-              <TextSearch filteredText={filteredText} setFilteredText={setFilteredText} />
-              <DaysSelector />
               <StoreSelector />
             </Space>
           </Col>
@@ -199,22 +177,50 @@ const PredictionsFrame = () => {
       </Affix>
       <Divider />
       {loading && <Loading />}
+      <Row gutter={32}>
+        <Col span={8}>
+          <Space direction="vertical" size="small" className={styles.fatherWidth}>
+            <Row>
+              <Title level={4} className={styles.bottomAligned}>
+                <Space>
+                  Seleccionar un Producto:
+                </Space>
+              </Title>
+            </Row>
+            <Row>
+              <Search
+                placeholder="Buscar Producto"
+                onChange={changeFilter}
+                enterButton
+              />
+            </Row>
 
-      { !loading && (formattedPredictionData.length ? (
-        <PaginationFrame
-          itemArray={formattedPredictionData}
-        />
-      )
-        : (
-          <Row justify="space-between" align="top">
-            <Title level={3}>
-              <Space>
-                {filteredText === '' && 'No hay predicciones para esta tienda.'}
-                {filteredText !== '' && `No hay productos que contengan "${filteredText}"`}
-              </Space>
-            </Title>
-          </Row>
-        ))}
+            {loading && <Loading />}
+
+            <Row className={styles.notificationContainer}>
+              { !loading && (formattedProductData.length ? (
+                <PaginationFrame
+                  itemArray={formattedProductData}
+                />
+              )
+                : (
+                  <Row justify="space-between" align="top">
+                    <Title level={3}>
+                      <Space>
+                        {filteredText === '' && 'No hay predicciones para esta tienda.'}
+                        {filteredText !== '' && `No hay productos que contengan "${filteredText}"`}
+                      </Space>
+                    </Title>
+                  </Row>
+                ))}
+            </Row>
+
+          </Space>
+        </Col>
+
+        <Col span={16} className={styles.colContainer} />
+
+      </Row>
 
     </div>
   );

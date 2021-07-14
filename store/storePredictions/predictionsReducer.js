@@ -23,6 +23,7 @@ const initialState = {
   date: getToday(),
   days: 3,
   summaryPredictions: {},
+  selectedProduct: null,
 };
 
 export const storePredictionSlice = createSlice({
@@ -55,6 +56,9 @@ export const storePredictionSlice = createSlice({
     changeDays: (state, action) => {
       state.days = action.payload;
     },
+    changeProduct: (state, action) => {
+      state.selectedProduct = action.payload;
+    },
   },
 });
 
@@ -65,8 +69,8 @@ export const {
   changeDate,
   changeDays,
   savePredictions,
+  changeProduct,
 } = storePredictionSlice.actions;
 
 export const selectStorePredictions = (state) => state.storePredictions;
-
 export default storePredictionSlice.reducer;
