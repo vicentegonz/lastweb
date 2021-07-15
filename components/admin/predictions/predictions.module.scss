@@ -1,0 +1,69 @@
+.container {
+  margin: 0 4rem;
+}
+
+.notificationContainer {
+  min-height: 50vh;
+}
+
+.colContainer {
+  border: 1px solid;
+  min-height: 50vh;
+}
+
+.fatherWidth {
+  width: 100%;
+}
+
+.predictionCard {
+  margin: 0 auto;
+  max-width: 40vw;
+  width: 50vw;
+}
+
+.verticallyCentered {
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.highlightedText {
+  color: #0d72ba;
+}
+
+.highlightedBig {
+  color: #0d72ba;
+  font-size: 1.5rem;
+}
+
+.bottomAligned {
+  margin-bottom: 0 !important;
+}
+
+.leftAligned {
+  text-align: left;
+}
+
+.fixedRow {
+  background-color: #eaedf5;
+  padding: 0.8rem 0;
+}
+
+.paginationContainer {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pagination {
+  text-align: center;
+  width: 100%;
+}
+
+.fullHeight {
+  height: 100%;
+}
+
+.fullLength {
+  width: 100%;
+}

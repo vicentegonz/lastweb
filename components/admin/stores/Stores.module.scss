@@ -1,0 +1,27 @@
+.dividerA {
+  border-top: 2px solid rgb(173, 173, 173);
+}
+
+.containerHorizontalMargin {
+  margin: 0 4rem;
+}
+
+.carouselTemplate {
+  background: #364d79;
+  color: #ffffff;
+  font-size: x-large;
+  height: 30rem;
+  line-height: 30rem;
+  text-align: center;
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.orangeAvatar {
+  background-color: #f56a00;
+  vertical-align: middle;
+}

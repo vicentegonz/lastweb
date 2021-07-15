@@ -1,0 +1,83 @@
+.googleButton {
+  font-size: 1.5rem !important;
+  width: 17rem;
+}
+
+.rowCentered {
+  min-height: 10vh;
+}
+
+.bottomAligned {
+  margin-bottom: 0 !important;
+}
+
+.chartContainer {
+  height: 33rem;
+}
+
+.parentHeight {
+  height: 100%;
+}
+
+.fixedRow {
+  background-color: #eaedf5;
+  left: -4rem;
+  padding: 0.8rem 4rem;
+  position: relative;
+  width: 100vw;
+}
+
+.parentWidth {
+  width: 100%;
+}
+
+.landingCarousel {
+  ul {
+    li {
+      button {
+        background: #05426f !important;
+      }
+    }
+
+    :global(li.slick-active) {
+      width: 30px !important;
+
+      button {
+        background: #05426f !important;
+      }
+    }
+  }
+
+  :global .slick-prev,
+  :global .slick-next,
+  :global .slick-prev:hover,
+  :global .slick-next:hover,
+  :global .slick-prev:focus,
+  :global .slick-next:focus, {
+    color: #05426f;
+    font-size: 20px;
+  }
+
+  :global .slick-prev::before,
+  :global .slick-next::before {
+    content: none;
+  }
+
+  :global .slick-slide {
+    box-sizing: border-box;
+    padding: 0 1rem;
+  }
+}
+
+.percentageTitle {
+  margin-bottom: 0 !important;
+}
+
+.sinceText {
+  display: block;
+  margin-bottom: 10px !important;
+}
+
+.paddedDiv {
+  padding: 10px 0 5px;
+}
