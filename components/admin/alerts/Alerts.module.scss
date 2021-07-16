@@ -12,7 +12,10 @@
 
 .orangeAvatar {
   background-color: #f56a00;
-  vertical-align: middle;
+}
+
+.centeredIcon {
+  margin: 0 auto !important;
 }
 
 .contactTitle {
@@ -24,7 +27,7 @@
   min-height: 60vh;
 }
 
-.notificationContainer {
+.alertContainer {
   max-height: 60vh;
   overflow-y: auto;
 }

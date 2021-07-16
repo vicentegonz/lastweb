@@ -6,7 +6,7 @@ const account = {
   validate: (token) => CLIENT.post('/v1/authentication/token/validate/', { token }),
   refresh: (refresh) => CLIENT.post('/v1/authentication/token/refresh/', { refresh }),
   accountData: () => CLIENT.get('v1/account'),
-  eventsData: (id) => CLIENT.get(`/v1/operations/stores/${id}/events?size=15`),
+  alertsData: (params) => CLIENT.get(`/v1/operations/stores/${params.id}/events/?&size=${params.size}&page=${params.page}`),
   kpiData: (params) => CLIENT.get(`/v1/operations/stores/${params.id}/kpis/?start_date=${params.start_date}&end_date=${params.end_date}&size=${params.size}&page=${params.page}`),
   ksiData: (params) => CLIENT.get(`/v1/operations/stores/${params.id}/service-indicators/?start_date=${params.start_date}&end_date=${params.end_date}&size=${params.size}&page=${params.page}`),
   productData: (params) => CLIENT.get(`/v1/operations/stores/${params.id}/products/?&size=15&page=${params.page}`),

@@ -51,10 +51,10 @@ const Navbar = () => {
                 </a>
               </Link>
             </Menu.Item> */}
-            <Menu.Item key="notifications" icon={<AlertOutlined />}>
-              <Link href="/notifications">
+            <Menu.Item key="alerts" icon={<AlertOutlined />}>
+              <Link href="/alerts">
                 <a className={styles.fontColor}>
-                  NOTIFICACIONES
+                  ALERTAS
                 </a>
               </Link>
             </Menu.Item>

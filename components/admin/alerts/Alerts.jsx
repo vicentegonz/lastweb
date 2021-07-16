@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import api from '@/api';
-import { save } from '@/store/events/eventsReducer';
+import {
+  selectAlerts, getAlertDataFromApi, clearAlerts, startLoadingAlerts,
+} from '@/store/alerts/alertsReducer';
 import { selectUser } from '@/store/user/userReducer';
 
 import {
@@ -11,53 +12,53 @@ import {
 
 import StoreSelector from '@/components/selectors/StoreSelector.jsx';
 import Loading from '@/components/global/Loading.jsx';
-import NotificationDetail from './NotificationDetail.jsx';
-import GetNotifications from './UserNotifications.jsx';
+import AlertDetail from './AlertDetail.jsx';
+import GetAlerts from './UserAlerts.jsx';
 
-import notificationsStyles from './Notifications.module.scss';
+import alertStyles from './Alerts.module.scss';
 
 const { Title } = Typography;
 const { Search } = Input;
 
-const AdminNotifications = () => {
+const AdminAlerts = () => {
   const [loading, setLoading] = useState(true);
   const user = useSelector(selectUser);
+  const alerts = useSelector(selectAlerts);
   const dispatch = useDispatch();
   const [filteredText, setFilteredText] = useState('');
 
   useEffect(() => {
-    const storeEventsData = async () => {
-      try {
-        await user.stores.map(async (store) => {
-          const response = await api.account.eventsData(store);
-          const processedData = {};
-
-          processedData.data = response.data.results;
-          processedData.store = store;
-
-          dispatch(save(processedData));
-        });
-        setLoading(false);
-        return true;
-      } catch (err) {
-        return false;
-      }
+    const storeAlertsData = async () => {
+      user.stores.forEach((store) => {
+        dispatch(getAlertDataFromApi(store));
+      });
     };
-    storeEventsData();
+    dispatch(startLoadingAlerts());
+    dispatch(clearAlerts());
+    storeAlertsData();
   }, [dispatch, user.stores]);
+
+  useEffect(() => {
+    setLoading(true);
+    if (!alerts.loading) {
+      setLoading(false);
+    }
+  }, [alerts.loading]);
+
   const changeFilter = (event) => {
     setFilteredText(event.target.value);
   };
+
   return (
     <div>
       <Affix offsetTop={64}>
-        <Row justify="space-between" align="bottom" className={notificationsStyles.fixedRow}>
+        <Row justify="space-between" align="bottom" className={alertStyles.fixedRow}>
 
           <Col flex="auto">
             <Row>
-              <Title level={3} className={notificationsStyles.bottomAligned}>
+              <Title level={3} className={alertStyles.bottomAligned}>
                 <Space>
-                  Notificaciones de la Tienda:
+                  Alertas de la Tienda:
                   {user.selectedStore}
                 </Space>
               </Title>
@@ -74,15 +75,15 @@ const AdminNotifications = () => {
       </Affix>
 
       <div>
-        <Divider className={notificationsStyles.dividerA} />
+        <Divider className={alertStyles.dividerA} />
       </div>
 
       <Row gutter={32}>
         <Col span={10}>
-          <Space direction="vertical" size="small" className={notificationsStyles.fatherWidth}>
+          <Space direction="vertical" size="small" className={alertStyles.fatherWidth}>
             <Row>
               <Search
-                placeholder="Buscar Notificación"
+                placeholder="Buscar Alerta"
                 onChange={changeFilter}
                 enterButton
               />
@@ -91,8 +92,8 @@ const AdminNotifications = () => {
             {loading && <Loading />}
 
             {!loading && (
-            <Row className={notificationsStyles.notificationContainer}>
-              <GetNotifications
+            <Row className={alertStyles.alertContainer}>
+              <GetAlerts
                 filteredText={filteredText}
               />
             </Row>
@@ -101,8 +102,8 @@ const AdminNotifications = () => {
           </Space>
         </Col>
 
-        <Col span={14} className={notificationsStyles.colContainer}>
-          <NotificationDetail />
+        <Col span={14} className={alertStyles.colContainer}>
+          <AlertDetail />
         </Col>
 
       </Row>
@@ -110,4 +111,4 @@ const AdminNotifications = () => {
   );
 };
 
-export default AdminNotifications;
+export default AdminAlerts;

@@ -197,7 +197,7 @@ const PredictionsFrame = () => {
 
             {loading && <Loading />}
 
-            <Row className={styles.notificationContainer}>
+            <Row className={styles.alertContainer}>
               { !loading && (formattedProductData.length ? (
                 <PaginationFrame
                   itemArray={formattedProductData}
