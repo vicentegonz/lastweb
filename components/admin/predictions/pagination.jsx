@@ -52,7 +52,7 @@ const PaginationFrame = ({ itemArray }) => {
           (state - 1) * elemsForPage,
           elemsForPage * (state),
         )).map((item) => (
-          <div className={styles.alertContainer}>
+          <div className={styles.productsContainer} key={item[0].id}>
             <Menu mode="inline" key={`row-${item[0].id}`}>
               {item.map((subitem) => (
                 <Menu.Item key={subitem.id} icon={<DollarCircleOutlined />}>

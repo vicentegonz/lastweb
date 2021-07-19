@@ -14,11 +14,38 @@ import StoreSelector from '@/components/selectors/StoreSelector.jsx';
 
 import Loading from '@/components/global/Loading.jsx';
 import PaginationFrame from './pagination.jsx';
+import PredictionLineChart from './LineChart/PredictionLineChart.jsx';
 
 import styles from './predictions.module.scss';
 
 const { Title } = Typography;
 const { Search } = Input;
+
+const dummyData = [
+  {
+    id: 'Unidades',
+    data: [
+      { x: '2018-01-01', y: 7 },
+      { x: '2018-01-02', y: 5 },
+      { x: '2018-01-03', y: 11 },
+      { x: '2018-01-04', y: 9 },
+      { x: '2018-01-05', y: 12 },
+      { x: '2018-01-06', y: 16 },
+      { x: '2018-01-07', y: 13 },
+      { x: '2018-01-08', y: 13 },
+    ],
+  },
+];
+const dummyRange = {
+  '2018-01-01': [5, 50],
+  '2018-01-02': [5, 40],
+  '2018-01-03': [5, 40],
+  '2018-01-04': [5, 40],
+  '2018-01-05': [5, 40],
+  '2018-01-06': [5, 40],
+  '2018-01-07': [5, 40],
+  '2018-01-08': [5, 40],
+};
 
 // const getDateRangeSum = (datearray, days) => {
 //   const relevantDays = datearray.slice(1, days + 1);
@@ -177,7 +204,7 @@ const PredictionsFrame = () => {
       </Affix>
       <Divider />
       {loading && <Loading />}
-      <Row gutter={32}>
+      <Row gutter={[32, 32]}>
         <Col span={8}>
           <Space direction="vertical" size="small" className={styles.fatherWidth}>
             <Row>
@@ -218,7 +245,12 @@ const PredictionsFrame = () => {
           </Space>
         </Col>
 
-        <Col span={16} className={styles.colContainer} />
+        <Col span={16} className={styles.colContainer}>
+          <Title className={styles.chartTitle} level={4}>
+            Predicciones de venta de [Inserte nombre del item]
+          </Title>
+          <PredictionLineChart chartData={dummyData} chartRange={dummyRange} />
+        </Col>
 
       </Row>
 
