@@ -100,28 +100,18 @@ const LoggedLanding = () => {
 
       <Divider />
       {loading && <Loading />}
-      { !loading && (Object.keys(storeServices.servicesData).length
-            && storeServices.servicesData[user.selectedStore]
-            && storeServices.servicesData[user.selectedStore].length
+      { !loading && (Object.keys(storeStats.statsData).length
+            && storeStats.statsData[user.selectedStore]
+            && Object.keys(storeStats.statsData[user.selectedStore]).length
         ? (
-          <>
-            <div className={styles.paddedDiv}>
-              <Title level={3}>
-                Indicadores de desempeño:
-              </Title>
-              <Row justify="space-between" align="top">
-                <KPIStats />
-              </Row>
-            </div>
-            <div className={styles.paddedDiv}>
-              <Title level={3}>
-                Indicadores de servicio:
-              </Title>
-              <Row justify="space-around" align="top">
-                <KSIStats />
-              </Row>
-            </div>
-          </>
+          <div className={styles.paddedDiv}>
+            <Title level={3}>
+              Indicadores de desempeño:
+            </Title>
+            <Row justify="space-between" align="top">
+              <KPIStats />
+            </Row>
+          </div>
         )
         : (
           <Row justify="space-between" align="top">
@@ -131,7 +121,30 @@ const LoggedLanding = () => {
               </Space>
             </Title>
           </Row>
-        ))}
+        )) }
+      { !loading && (Object.keys(storeServices.servicesData).length
+            && storeServices.servicesData[user.selectedStore]
+            && Object.keys(storeServices.servicesData[user.selectedStore]).length
+        ? (
+          <div className={styles.paddedDiv}>
+            <Title level={3}>
+              Indicadores de servicio:
+            </Title>
+            <Row justify="space-around" align="top">
+              <KSIStats />
+            </Row>
+          </div>
+        )
+        : (
+          <Row justify="space-between" align="top">
+            <Title level={3}>
+              <Space>
+                No hay evaluaciones para esta tienda.
+              </Space>
+            </Title>
+          </Row>
+        )
+      )}
 
     </div>
   );

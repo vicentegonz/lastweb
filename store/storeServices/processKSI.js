@@ -10,6 +10,7 @@ import {
 } from './storeServicesFormulas';
 
 const makeIndicator = (obj) => {
+  const { date } = obj;
   const experience = experienceGrade(obj);
   const waitingTime = waitingTimeGrade(obj);
   const speed = speedGrade(obj);
@@ -33,32 +34,70 @@ const makeIndicator = (obj) => {
     kindness,
     service,
     nps,
+    date,
   };
 
   return finalObj;
 };
 
 const processKSI = (data) => {
-  const indicators = [];
-  data.forEach((obj) => {
+  let indicators = [];
+  data.data.forEach((obj) => {
     indicators.push(makeIndicator(obj));
   });
+
+  indicators = indicators.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  if (indicators.length === 0) {
+    return undefined;
+  }
+
+  let yesterdayAvailable = true;
+  let lwAvailable = true;
+
+  if (indicators.length === 1) {
+    yesterdayAvailable = true;
+    lwAvailable = true;
+  } else {
+    const today = new Date(data.endDate);
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+    const lastWeek = new Date(data.startDate);
+
+    const dataToday = new Date(indicators[0].date);
+    const dataYesterday = new Date(indicators[1].date);
+    const dataLW = new Date(indicators.slice(-1)[0].date);
+
+    if (dataToday.getDate() !== today.getDate()) {
+      return undefined;
+    }
+
+    if (dataYesterday.getDate() !== yesterday.getDate()) {
+      yesterdayAvailable = false;
+    }
+
+    if (dataLW.getDate() !== lastWeek.getDate()) {
+      lwAvailable = false;
+    }
+  }
 
   const mainService = {
     name: 'Nota Final',
     id: 'mainService',
     value: indicators[0].service,
     data: indicators.map(({ service }) => round(service, 2)),
-    variationYNumber: indicators[1] ? (indicators[0].service - indicators[1].service) : 0,
-    variationLWNumber: indicators.slice(-1)[0].service
-      ? indicators[0].service - indicators.slice(-1)[0].service : 0,
-    variationYpercentage: indicators[1]
-      ? (((indicators[0].service - indicators[1].service) / indicators[1].service) * 100) : 0,
-    variationLWpercentage: indicators.slice(-1)[0].service
+    variationYNumber: yesterdayAvailable ? (indicators[0].service - indicators[1].service)
+      : undefined,
+    variationLWNumber: lwAvailable
+      ? indicators[0].service - indicators.slice(-1)[0].service : undefined,
+    variationYpercentage: yesterdayAvailable
+      ? (((indicators[0].service - indicators[1].service) / indicators[1].service) * 100)
+      : undefined,
+    variationLWpercentage: lwAvailable
       ? (
         (indicators[0].service - indicators.slice(-1)[0].service)
           / indicators.slice(-1)[0].service
-      ) * 100 : 0,
+      ) * 100 : undefined,
   };
 
   const npsService = {
@@ -66,16 +105,16 @@ const processKSI = (data) => {
     id: 'nps',
     value: indicators[0].nps,
     data: indicators.map(({ nps }) => round(nps, 2)),
-    variationYNumber: indicators[1] ? (indicators[0].nps - indicators[1].nps) : 0,
-    variationLWNumber: indicators.slice(-1)[0].nps
-      ? indicators[0].nps - indicators.slice(-1)[0].nps : 0,
-    variationYpercentage: indicators[1]
-      ? (((indicators[0].nps - indicators[1].nps) / indicators[1].nps) * 100) : 0,
-    variationLWpercentage: indicators.slice(-1)[0].nps
+    variationYNumber: yesterdayAvailable ? (indicators[0].nps - indicators[1].nps) : undefined,
+    variationLWNumber: lwAvailable
+      ? indicators[0].nps - indicators.slice(-1)[0].nps : undefined,
+    variationYpercentage: yesterdayAvailable
+      ? (((indicators[0].nps - indicators[1].nps) / indicators[1].nps) * 100) : undefined,
+    variationLWpercentage: lwAvailable
       ? (
         (indicators[0].nps - indicators.slice(-1)[0].nps)
         / indicators.slice(-1)[0].nps
-      ) * 100 : 0,
+      ) * 100 : undefined,
   };
 
   const serviceNames = [
@@ -123,15 +162,15 @@ const processKSI = (data) => {
       id: name,
       value: round(serviceArray[0], 2),
       data: serviceArray.map((service) => round(service, 2)),
-      variationYNumber: serviceArray[1] ? (serviceArray[0] - serviceArray[1]) : 0,
-      variationLWNumber: serviceArray.slice(-1)[0]
-        ? serviceArray[0] - serviceArray.slice(-1)[0] : 0,
-      variationYpercentage: serviceArray[1]
-        ? (((serviceArray[0] - serviceArray[1]) / serviceArray[1]) * 100) : 0,
-      variationLWpercentage: serviceArray.slice(-1)[0] ? (
+      variationYNumber: yesterdayAvailable ? (serviceArray[0] - serviceArray[1]) : undefined,
+      variationLWNumber: lwAvailable
+        ? serviceArray[0] - serviceArray.slice(-1)[0] : undefined,
+      variationYpercentage: yesterdayAvailable
+        ? (((serviceArray[0] - serviceArray[1]) / serviceArray[1]) * 100) : undefined,
+      variationLWpercentage: lwAvailable ? (
         (serviceArray[0] - serviceArray.slice(-1)[0])
         / serviceArray.slice(-1)[0]
-      ) * 100 : 0,
+      ) * 100 : undefined,
     };
 
     aux.push(subService);

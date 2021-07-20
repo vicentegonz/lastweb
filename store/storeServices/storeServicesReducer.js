@@ -26,6 +26,8 @@ export const getDataFromApi = createAsyncThunk(
       let response;
       let allRequested = true;
       processedData.store = store;
+      processedData.startDate = startDate;
+      processedData.endDate = endDate;
       while (allRequested) {
         // eslint-disable-next-line no-await-in-loop
         response = await api.account.ksiData(requestParams);
@@ -34,6 +36,7 @@ export const getDataFromApi = createAsyncThunk(
         requestParams.page += 1;
         allRequested = response.data.links.next;
       }
+
       return processedData;
     } catch (err) {
       return false;
@@ -62,10 +65,14 @@ export const storeServicesSlice = createSlice({
   extraReducers: {
     [getDataFromApi.fulfilled]: (state, action) => {
       const data = action.payload;
-      const { mainService, npsService, aux } = processKSI(data.data);
-      state.servicesData[data.store] = aux;
-      state.summaryKsi[data.store] = mainService;
-      state.npsKsi[data.store] = npsService;
+
+      const processedKSI = processKSI(data);
+
+      if (processedKSI) {
+        state.servicesData[data.store] = processedKSI.aux;
+        state.summaryKsi[data.store] = processedKSI.mainService;
+        state.npsKsi[data.store] = processedKSI.npsService;
+      }
       state.loading = false;
     },
   },

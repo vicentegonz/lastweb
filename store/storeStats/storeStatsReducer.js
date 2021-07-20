@@ -56,6 +56,8 @@ export const storeStatsSlice = createSlice({
   reducers: {
     clearStoreStatsData: (state) => {
       state.statsData = {};
+      state.summaryKPIs = {};
+      state.chartKPIs = {};
     },
     changeKPI: (state, action) => {
       state.selectedKPI = action.payload;
@@ -71,9 +73,11 @@ export const storeStatsSlice = createSlice({
     [getKPIDataFromApi.fulfilled]: (state, action) => {
       const data = action.payload;
       const processedIndividualKPI = processStoreKpis(data);
-      state.chartKPIs[data.store] = processedIndividualKPI.filteredArray.reverse();
-      state.statsData[data.store] = processedIndividualKPI.filteredData;
-      state.summaryKPIs[data.store] = processedIndividualKPI.mainKPI;
+      if (processedIndividualKPI) {
+        state.chartKPIs[data.store] = processedIndividualKPI.filteredArray.reverse();
+        state.statsData[data.store] = processedIndividualKPI.filteredData;
+        state.summaryKPIs[data.store] = processedIndividualKPI.mainKPI;
+      }
       state.loading = false;
     },
   },

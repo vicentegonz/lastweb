@@ -79,14 +79,14 @@ const ReportCard = ({
             <Space>
               {differenceYesterdayPct < 0 && (<ArrowDownOutlined />)}
               {differenceYesterdayPct > 0 && (<ArrowUpOutlined />)}
-              {differenceYesterdayPct === 0 && (<MinusOutlined />)}
+              {(!differenceYesterdayPct || differenceYesterdayPct === 0) && (<MinusOutlined />)}
               <span>
-                {nFormatter(differenceYesterdayVal, 2)}
+                {differenceYesterdayVal && nFormatter(differenceYesterdayVal, 2)}
               </span>
               {differenceYesterdayPct !== 0 && (
               <span>
                 (
-                {FormattDifferencePercent(differenceYesterdayPct)}
+                {differenceYesterdayVal && FormattDifferencePercent(differenceYesterdayPct)}
                 %)
               </span>
               )}
@@ -104,17 +104,17 @@ const ReportCard = ({
             <Space>
               {differenceLastWeekPct < 0 && (<ArrowDownOutlined />)}
               {differenceLastWeekPct > 0 && (<ArrowUpOutlined />)}
-              {differenceLastWeekPct === 0 && (<MinusOutlined />)}
+              {(!differenceLastWeekPct || differenceLastWeekPct === 0) && (<MinusOutlined />)}
               <span>
-                {nFormatter(differenceLastWeekVal, 2)}
+                {differenceLastWeekVal && nFormatter(differenceLastWeekVal, 2)}
               </span>
-              {differenceLastWeekPct !== 0 && (
+              {differenceLastWeekPct ? (differenceLastWeekPct !== 0 && (
               <span>
                 (
-                {FormattDifferencePercent(differenceLastWeekPct)}
+                {differenceLastWeekVal && FormattDifferencePercent(differenceLastWeekPct)}
                 %)
               </span>
-              )}
+              )) : null}
             </Space>
           </Title>
           <Text className={styles.sinceText} strong type="secondary">Desde la semana pasada</Text>
@@ -129,10 +129,17 @@ ReportCard.propTypes = {
   name: string.isRequired,
   value: number.isRequired,
   createdAt: string.isRequired,
-  differenceYesterdayPct: number.isRequired,
-  differenceLastWeekPct: number.isRequired,
-  differenceYesterdayVal: number.isRequired,
-  differenceLastWeekVal: number.isRequired,
+  differenceYesterdayPct: number,
+  differenceLastWeekPct: number,
+  differenceYesterdayVal: number,
+  differenceLastWeekVal: number,
+};
+
+ReportCard.defaultProps = {
+  differenceYesterdayPct: undefined,
+  differenceLastWeekPct: undefined,
+  differenceYesterdayVal: undefined,
+  differenceLastWeekVal: undefined,
 };
 
 export default ReportCard;

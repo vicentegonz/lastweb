@@ -2,13 +2,14 @@
   margin: 0 4rem;
 }
 
-.notificationContainer {
-  min-height: 50vh;
+.productsContainer {
+  min-height: 40vh;
 }
 
 .colContainer {
-  border: 1px solid;
-  min-height: 50vh;
+  border: 1px solid #cccccc;
+  max-height: calc(40vh + 140px);
+  min-width: 600px;
 }
 
 .fatherWidth {
@@ -66,4 +67,16 @@
 
 .fullLength {
   width: 100%;
+}
+
+.tooltipBox {
+  background: white;
+  border: 1px solid #cccccc;
+  font-size: 15px;
+  padding: 9px 12px;
+}
+
+.chartTitle {
+  margin: 10px;
+  text-align: center;
 }

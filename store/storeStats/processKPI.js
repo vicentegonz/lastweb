@@ -119,16 +119,22 @@ export const processStoreKpis = (data) => {
   daysArray.forEach((day) => {
     const auxArray = [];
     data.data.forEach((kpi) => {
-      if (new Date(kpi.date).toDateString() === day.toDateString()) {
+      if (new Date(kpi.date).toDateString() === day.toDateString()
+      && kpi.category !== 'POA') {
         const auxKpi = kpi;
         auxKpi.averageTicket = kpi.grossSale / kpi.transactions;
         auxArray.push(auxKpi);
       }
     });
-    baseArray.push(auxArray);
+    if (auxArray.length !== 0) {
+      baseArray.push(auxArray);
+    }
   });
 
   baseArray = baseArray.reverse();
+  if (baseArray.length === 0) {
+    return undefined;
+  }
 
   const aux = {};
 
@@ -178,53 +184,74 @@ export const processStoreKpis = (data) => {
     });
 
     baseArray[1].forEach((kpi) => {
-      let difference;
-      let percentage;
-
+      let difference = '-';
+      let percentage = '-';
       if (name === 'Contribución') {
-        difference = aux[name][kpi.category].value - kpi.contribution;
-        percentage = (difference / kpi.contribution) * 100;
+        if (aux[name][kpi.category]) {
+          difference = aux[name][kpi.category].value - kpi.contribution;
+          percentage = (difference / kpi.contribution) * 100;
+        }
       } else if (name === 'Venta Bruta') {
-        difference = aux[name][kpi.category].value - kpi.grossSale;
-        percentage = (difference / kpi.grossSale) * 100;
+        if (aux[name][kpi.category]) {
+          difference = aux[name][kpi.category].value - kpi.grossSale;
+          percentage = (difference / kpi.grossSale) * 100;
+        }
       } else if (name === 'Venta Neta') {
-        difference = aux[name][kpi.category].value - kpi.netSale;
-        percentage = (difference / kpi.netSale) * 100;
+        if (aux[name][kpi.category]) {
+          difference = aux[name][kpi.category].value - kpi.netSale;
+          percentage = (difference / kpi.netSale) * 100;
+        }
       } else if (name === 'Ticket promedio') {
-        difference = aux[name][kpi.category].value - kpi.averageTicket;
-        percentage = (difference / kpi.averageTicket) * 100;
+        if (aux[name][kpi.category]) {
+          difference = aux[name][kpi.category].value - kpi.averageTicket;
+          percentage = (difference / kpi.averageTicket) * 100;
+        }
       } else if (name === 'Transacciones') {
-        difference = aux[name][kpi.category].value - kpi.transactions;
-        percentage = (difference / kpi.transactions) * 100;
+        if (aux[name][kpi.category]) {
+          difference = aux[name][kpi.category].value - kpi.transactions;
+          percentage = (difference / kpi.transactions) * 100;
+        }
       }
-
-      aux[name][kpi.category].variationYNumber = difference;
-      aux[name][kpi.category].variationYpercentage = percentage;
+      if (aux[name][kpi.category]) {
+        aux[name][kpi.category].variationYNumber = difference;
+        aux[name][kpi.category].variationYpercentage = percentage;
+      }
     });
 
     baseArray.slice(-1)[0].forEach((kpi) => {
-      let difference;
-      let percentage;
+      let difference = '-';
+      let percentage = '-';
 
       if (name === 'Contribución') {
-        difference = aux[name][kpi.category].value - kpi.contribution;
-        percentage = (difference / kpi.contribution) * 100;
+        if (aux[name][kpi.category]) {
+          difference = aux[name][kpi.category].value - kpi.contribution;
+          percentage = (difference / kpi.contribution) * 100;
+        }
       } else if (name === 'Venta Bruta') {
-        difference = aux[name][kpi.category].value - kpi.grossSale;
-        percentage = (difference / kpi.grossSale) * 100;
+        if (aux[name][kpi.category]) {
+          difference = aux[name][kpi.category].value - kpi.grossSale;
+          percentage = (difference / kpi.grossSale) * 100;
+        }
       } else if (name === 'Venta Neta') {
-        difference = aux[name][kpi.category].value - kpi.netSale;
-        percentage = (difference / kpi.netSale) * 100;
+        if (aux[name][kpi.category]) {
+          difference = aux[name][kpi.category].value - kpi.netSale;
+          percentage = (difference / kpi.netSale) * 100;
+        }
       } else if (name === 'Ticket promedio') {
-        difference = aux[name][kpi.category].value - kpi.averageTicket;
-        percentage = (difference / kpi.averageTicket) * 100;
+        if (aux[name][kpi.category]) {
+          difference = aux[name][kpi.category].value - kpi.averageTicket;
+          percentage = (difference / kpi.averageTicket) * 100;
+        }
       } else if (name === 'Transacciones') {
-        difference = aux[name][kpi.category].value - kpi.transactions;
-        percentage = (difference / kpi.transactions) * 100;
+        if (aux[name][kpi.category]) {
+          difference = aux[name][kpi.category].value - kpi.transactions;
+          percentage = (difference / kpi.transactions) * 100;
+        }
       }
-
-      aux[name][kpi.category].variationLWNumber = difference;
-      aux[name][kpi.category].variationLWpercentage = percentage;
+      if (aux[name][kpi.category]) {
+        aux[name][kpi.category].variationLWNumber = difference;
+        aux[name][kpi.category].variationLWpercentage = percentage;
+      }
     });
   });
 

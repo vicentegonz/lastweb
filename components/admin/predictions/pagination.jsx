@@ -36,8 +36,8 @@ const PaginationFrame = ({ itemArray }) => {
     setElemsForPage(pageSize);
   };
 
-  const clickHandle = (idx) => {
-    dispatch(changeProduct(idx));
+  const clickHandle = (subitem) => {
+    dispatch(changeProduct([subitem.id, subitem.description]));
   };
 
   return (
@@ -52,11 +52,11 @@ const PaginationFrame = ({ itemArray }) => {
           (state - 1) * elemsForPage,
           elemsForPage * (state),
         )).map((item) => (
-          <div className={styles.notificationContainer}>
-            <Menu mode="inline" key={`row-${item[0].id}`}>
+          <div className={styles.productsContainer} key={item[0].id}>
+            <Menu mode="inline" key={`row-${item[0].id}`} selectable={false}>
               {item.map((subitem) => (
                 <Menu.Item key={subitem.id} icon={<DollarCircleOutlined />}>
-                  <a role="button" onClick={() => clickHandle(subitem.id)} onKeyDown={() => clickHandle(subitem.id)} tabIndex={subitem.id}>
+                  <a role="button" onClick={() => clickHandle(subitem)} onKeyDown={() => clickHandle(subitem.id)} tabIndex={subitem.id}>
                     <Space size="middle">
                       <span>
                         {`${subitem.description} `}
