@@ -3,9 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '@/store/user/userReducer';
 import {
   selectStorePredictions,
-  saveProducts, savePredictions,
+  getProductDataFromApi,
+  getPredictionDataFromApi,
+  startLoading,
+  clearStoreProducts,
+  clearStorePredictions,
+  clearProduct,
 } from '@/store/storePredictions/predictionsReducer';
-import api from '@/api';
 import {
   Row, Col, Divider, Space, Affix, Typography, Input,
 } from 'antd';
@@ -21,80 +25,23 @@ import styles from './predictions.module.scss';
 const { Title } = Typography;
 const { Search } = Input;
 
-const dummyData = [
-  {
-    id: 'Unidades',
-    data: [
-      { x: '2018-01-01', y: 7 },
-      { x: '2018-01-02', y: 5 },
-      { x: '2018-01-03', y: 11 },
-      { x: '2018-01-04', y: 9 },
-      { x: '2018-01-05', y: 12 },
-      { x: '2018-01-06', y: 16 },
-      { x: '2018-01-07', y: 13 },
-      { x: '2018-01-08', y: 13 },
-    ],
-  },
-];
-const dummyRange = {
-  '2018-01-01': [5, 50],
-  '2018-01-02': [5, 40],
-  '2018-01-03': [5, 40],
-  '2018-01-04': [5, 40],
-  '2018-01-05': [5, 40],
-  '2018-01-06': [5, 40],
-  '2018-01-07': [5, 40],
-  '2018-01-08': [5, 40],
-};
-
-// const getDateRangeSum = (datearray, days) => {
-//   const relevantDays = datearray.slice(1, days + 1);
-//   const dataSum = relevantDays.reduce((a, b) => a + b.value, 0);
-//   return Math.round(dataSum);
-// };
-
 const PredictionsFrame = () => {
-  const [loading, setLoading] = useState(true);
   const user = useSelector(selectUser);
   const storePredictions = useSelector(selectStorePredictions);
   const [formattedProductData, setFormattedProductData] = useState([]);
   const [filteredText, setFilteredText] = useState('');
+  const [chartData, setChartData] = useState(null);
+  const [chartRange, setChartRange] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const storeProductsData = async () => {
-      try {
-        await user.stores.map(async (store) => {
-          const processedData = {};
-
-          processedData.store = store;
-          processedData.data = [];
-
-          const requestParams = {
-            id: store,
-            page: 1,
-          };
-
-          let response;
-          let allRequested = true;
-
-          while (allRequested) {
-            // eslint-disable-next-line no-await-in-loop
-            response = await api.account.productData(requestParams);
-            processedData.data.push(...response.data.results);
-
-            requestParams.page += 1;
-            allRequested = response.data.links.next;
-          }
-
-          dispatch(saveProducts(processedData));
-          return true;
-        });
-        return true;
-      } catch (err) {
-        return false;
-      }
+    const storeProductsData = () => {
+      user.stores.forEach((store) => {
+        dispatch(getProductDataFromApi(store));
+      });
     };
+    dispatch(startLoading());
+    dispatch(clearStoreProducts());
     storeProductsData();
   }, [dispatch, user.stores]);
 
@@ -103,71 +50,84 @@ const PredictionsFrame = () => {
       || Object.keys(storePredictions.storeProducts).length === 0) {
       return;
     }
-    const storePredictionsData = async () => {
-      try {
-        await user.stores.map(async (store) => {
-          const today = new Date();
-          const offset = today.getTimezoneOffset();
-          const offsetWeek = new Date(today.getTime() - (offset * 60 * 1000));
-          const parsedLastWeek = offsetWeek.toISOString().split('T')[0];
-
-          let result;
-
-          if (storePredictions.storeProducts
-            && Object.keys(storePredictions.storeProducts).length !== 0
-            && storePredictions.storeProducts[store]
-            && storePredictions.storeProducts[store].length !== 0) {
-            await storePredictions.storeProducts[store].map(async (product) => {
-              const processedData = {};
-              processedData.store = store;
-              processedData.product = product.id;
-              processedData.data = [];
-              const requestParams = {
-                product: product.id,
-                store,
-                date: parsedLastWeek,
-              };
-              try {
-                result = await api.account.predictionData(requestParams);
-                processedData.data.push(result.data);
-                dispatch(savePredictions(processedData));
-                return true;
-              } catch (error) {
-                return false;
-              }
-            });
-          }
-        });
-        return true;
-      } catch (err) {
-        return false;
-      }
+    const storePredictionsData = () => {
+      user.stores.map(async (store) => {
+        if (storePredictions.storeProducts
+          && Object.keys(storePredictions.storeProducts).length !== 0
+          && storePredictions.storeProducts[store]
+          && storePredictions.storeProducts[store].length !== 0) {
+          storePredictions.storeProducts[store].forEach((product) => {
+            dispatch(getPredictionDataFromApi([store, product]));
+          });
+        }
+      });
     };
-
-    setLoading(true);
+    dispatch(startLoading());
+    dispatch(clearStorePredictions());
     storePredictionsData();
-    setLoading(false);
   }, [dispatch, user.stores, storePredictions.storeProducts]);
 
   useEffect(() => {
-    setLoading(true);
     if (!user.selectedStore
       || Object.keys(storePredictions.storeProducts).length === 0) {
       return;
     }
 
-    const formattedArray = storePredictions.storeProducts[user.selectedStore] || [];
+    const validPredictions = storePredictions.storePredictions[user.selectedStore]
+      ? Object.keys(storePredictions.storePredictions[user.selectedStore]) : [];
+
+    const validProducts = storePredictions.storeProducts[user.selectedStore] || [];
+
+    const formattedArray = validProducts.filter((f) => validPredictions.includes(f.id.toString()));
+
     const filteredArray = formattedArray.filter(
       (f) => f.description.toLowerCase().includes(filteredText.toLowerCase())
     || filteredText === '',
     );
     setFormattedProductData(filteredArray);
-
-    setLoading(false);
   }, [storePredictions, user.selectedStore, filteredText]);
+
   const changeFilter = (event) => {
     setFilteredText(event.target.value);
   };
+
+  useEffect(() => {
+    if (!storePredictions.selectedProduct
+      || !user.selectedStore
+      || !storePredictions.storePredictions[user.selectedStore]
+      || !storePredictions.storePredictions[user.selectedStore][storePredictions.selectedProduct]) {
+      return;
+    }
+    const prediction = storePredictions
+      .storePredictions[user.selectedStore][storePredictions.selectedProduct];
+
+    const dataDict = {
+      id: 'Unidades',
+      data: [],
+    };
+
+    const rangeDict = {};
+
+    prediction.mean.forEach((item, i) => {
+      const data = {
+        x: item.timestamp.split('T')[0],
+        y: Math.round(item.value),
+      };
+      dataDict.data.push(data);
+
+      const range = [prediction.p10[i].value, prediction.p90[i].value];
+      rangeDict[data.x] = range;
+    });
+
+    setChartData([dataDict]);
+    setChartRange(rangeDict);
+  }, [storePredictions.selectedProduct, user.selectedStore, storePredictions.storePredictions]);
+
+  useEffect(() => {
+    dispatch(clearProduct());
+    setChartData(null);
+    setChartRange(null);
+  }, [user.selectedStore, dispatch]);
 
   return (
     <div>
@@ -203,7 +163,7 @@ const PredictionsFrame = () => {
         </Row>
       </Affix>
       <Divider />
-      {loading && <Loading />}
+      {storePredictions.loading && <Loading />}
       <Row gutter={[32, 32]}>
         <Col span={8}>
           <Space direction="vertical" size="small" className={styles.fatherWidth}>
@@ -222,10 +182,10 @@ const PredictionsFrame = () => {
               />
             </Row>
 
-            {loading && <Loading />}
+            {storePredictions.loading && <Loading />}
 
             <Row className={styles.alertContainer}>
-              { !loading && (formattedProductData.length ? (
+              { !storePredictions.loading && (formattedProductData.length ? (
                 <PaginationFrame
                   itemArray={formattedProductData}
                 />
@@ -247,9 +207,12 @@ const PredictionsFrame = () => {
 
         <Col span={16} className={styles.colContainer}>
           <Title className={styles.chartTitle} level={4}>
-            Predicciones de venta de [Inserte nombre del item]
+            {storePredictions.selectedProduct
+              ? `Predicciones de venta de ${storePredictions.selectedProductName}`
+              : 'Seleccione un producto'}
           </Title>
-          <PredictionLineChart chartData={dummyData} chartRange={dummyRange} />
+          {(chartData && chartRange)
+            ? (<PredictionLineChart chartData={chartData} chartRange={chartRange} />) : null}
         </Col>
 
       </Row>
