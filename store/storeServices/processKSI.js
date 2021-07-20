@@ -41,12 +41,12 @@ const makeIndicator = (obj) => {
 };
 
 const processKSI = (data) => {
-  const indicators = [];
+  let indicators = [];
   data.data.forEach((obj) => {
     indicators.push(makeIndicator(obj));
   });
 
-  indicators.reverse();
+  indicators = indicators.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   if (indicators.length === 0) {
     return undefined;

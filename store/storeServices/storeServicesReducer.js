@@ -65,7 +65,9 @@ export const storeServicesSlice = createSlice({
   extraReducers: {
     [getDataFromApi.fulfilled]: (state, action) => {
       const data = action.payload;
+
       const processedKSI = processKSI(data);
+
       if (processedKSI) {
         state.servicesData[data.store] = processedKSI.aux;
         state.summaryKsi[data.store] = processedKSI.mainService;

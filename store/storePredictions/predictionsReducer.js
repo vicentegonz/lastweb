@@ -124,6 +124,9 @@ export const storePredictionSlice = createSlice({
     startLoading: (state) => {
       state.loading = true;
     },
+    endLoading: (state) => {
+      state.loading = false;
+    },
   },
   extraReducers: {
     [getProductDataFromApi.fulfilled]: (state, action) => {
@@ -156,6 +159,7 @@ export const {
   changeProduct,
   startLoading,
   clearProduct,
+  endLoading,
 } = storePredictionSlice.actions;
 
 export const selectStorePredictions = (state) => state.storePredictions;

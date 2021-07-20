@@ -6,6 +6,7 @@ import {
   getProductDataFromApi,
   getPredictionDataFromApi,
   startLoading,
+  endLoading,
   clearStoreProducts,
   clearStorePredictions,
   clearProduct,
@@ -54,11 +55,14 @@ const PredictionsFrame = () => {
       user.stores.map(async (store) => {
         if (storePredictions.storeProducts
           && Object.keys(storePredictions.storeProducts).length !== 0
-          && storePredictions.storeProducts[store]
-          && storePredictions.storeProducts[store].length !== 0) {
-          storePredictions.storeProducts[store].forEach((product) => {
-            dispatch(getPredictionDataFromApi([store, product]));
-          });
+          && storePredictions.storeProducts[store]) {
+          if (storePredictions.storeProducts[store].length === 0) {
+            dispatch(endLoading());
+          } else {
+            storePredictions.storeProducts[store].forEach((product) => {
+              dispatch(getPredictionDataFromApi([store, product]));
+            });
+          }
         }
       });
     };
@@ -194,7 +198,7 @@ const PredictionsFrame = () => {
                   <Row justify="space-between" align="top">
                     <Title level={3}>
                       <Space>
-                        {filteredText === '' && 'No hay predicciones para esta tienda.'}
+                        {filteredText === '' && 'No hay productos con predicciones para esta tienda.'}
                         {filteredText !== '' && `No hay productos que contengan "${filteredText}"`}
                       </Space>
                     </Title>
