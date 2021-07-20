@@ -30,11 +30,13 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     save: (state, action) => {
-      state.status = true;
-      state.email = action.payload.email;
-      state.givenName = action.payload.givenName;
-      state.role = action.payload.role;
-      state.stores = action.payload.stores;
+      if (action.payload.stores.length !== 0) {
+        state.status = true;
+        state.email = action.payload.email;
+        state.givenName = action.payload.givenName;
+        state.role = action.payload.role;
+        state.stores = action.payload.stores;
+      }
     },
     clear: (state) => {
       state.status = null;

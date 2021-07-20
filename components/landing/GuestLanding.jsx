@@ -13,12 +13,7 @@ import styles from './landing.module.scss';
 const { Title } = Typography;
 
 const showCorrectContent = (successfulLogin, refreshFunction) => {
-  let currentMessage = '';
-  if (successfulLogin === 'Failed') {
-    currentMessage = 'Se ha producido un error. Inténtalo de nuevo.';
-  } else if (successfulLogin === 'Loading') {
-    currentMessage = 'Ingresando...';
-  }
+  const currentMessage = successfulLogin;
 
   return (
     <>
@@ -42,11 +37,15 @@ const showCorrectContent = (successfulLogin, refreshFunction) => {
 };
 
 const GuestLanding = () => {
-  const [successfulLogin, setSuccessfulLogin] = useState(null);
+  const [successfulLogin, setSuccessfulLogin] = useState('');
   const dispatch = useDispatch();
   const storeUserData = async () => {
     try {
       const response = await api.account.accountData();
+      if (response.data.stores.length === 0) {
+        setSuccessfulLogin('Usuario no Identificado');
+        return false;
+      }
       dispatch(save(response.data));
       return true;
     } catch (err) {
@@ -55,12 +54,12 @@ const GuestLanding = () => {
   };
 
   const refreshOnceLogged = async (googleData) => {
-    setSuccessfulLogin('Loading');
+    setSuccessfulLogin('Ingresando...');
     const loginResult = await continueWithGoogle(googleData);
-    if (loginResult) {
+    if (loginResult.status) {
       await storeUserData();
     } else {
-      setSuccessfulLogin('Failed');
+      setSuccessfulLogin(loginResult.message);
     }
   };
 
