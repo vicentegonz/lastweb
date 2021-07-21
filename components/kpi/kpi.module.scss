@@ -13,6 +13,8 @@
 
 .chartContainer {
   height: 33rem;
+  margin-bottom: 1rem;
+  min-width: 38rem;
 }
 
 .parentHeight {
@@ -77,4 +79,9 @@
 
 .category {
   font-style: italic;
+}
+
+.chartTitle {
+  margin: 10px;
+  text-align: center;
 }

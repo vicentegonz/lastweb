@@ -86,17 +86,20 @@ const KpiFrame = () => {
       <Divider />
       {loading && <Loading />}
 
-      <Row justify="space-between" align="top">
+      <Row justify="space-around" align="top">
         { !loading && user.selectedStore
             && (Object.keys(storeStats.statsData).length
             && storeStats.statsData[user.selectedStore]
             && Object.keys(storeStats.statsData[user.selectedStore]).length
               ? (
                 <>
-                  <Col span={13} className={styles.chartContainer}>
+                  <Col s={23} m={23} lg={23} xl={13} className={styles.chartContainer}>
+                    <Title className={styles.chartTitle} level={4}>
+                      {`Estadísticas de ${storeStats.selectedKPI}`}
+                    </Title>
                     <StoreChart />
                   </Col>
-                  <Col span={10}>
+                  <Col s={23} m={23} lg={23} xl={10}>
                     <StoreStats />
                   </Col>
                 </>
