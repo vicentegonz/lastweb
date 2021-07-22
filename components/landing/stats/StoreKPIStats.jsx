@@ -61,6 +61,7 @@ const KPIStats = () => {
               differenceLastWeekVal={item.variationLWNumber}
               category={item.category}
               unit={item.units}
+              poa={item.poa}
             />
           ))
         }

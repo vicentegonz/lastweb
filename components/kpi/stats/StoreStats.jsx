@@ -90,6 +90,7 @@ const StoreStats = () => {
         differenceYesterdayVal={summaryData.variationYNumber}
         differenceLastWeekVal={summaryData.variationLWNumber}
         unit={summaryData.units}
+        poa={summaryData.poa}
       />
       )}
 

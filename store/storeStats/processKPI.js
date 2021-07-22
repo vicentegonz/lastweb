@@ -19,6 +19,8 @@ export const processMainKpis = (baseArray) => {
   let transactionsLW = 0;
   let averageTicketLW = 0;
 
+  let poa = 0;
+
   let store;
   baseArray[0].forEach((kpi) => {
     if (kpi.category === 'TOTAL') {
@@ -28,6 +30,7 @@ export const processMainKpis = (baseArray) => {
       transactionsT = kpi.transactions;
       averageTicketT = kpi.averageTicket;
       store = kpi.store;
+      poa = kpi.poa;
     }
   });
 
@@ -106,6 +109,10 @@ export const processMainKpis = (baseArray) => {
       variationLWpercentage: ((valueT - valueLW) / valueLW) * 100,
     };
 
+    if (obj.name === 'Venta Neta') {
+      obj.poa = poa;
+    }
+
     auxMainKpi.push(obj);
   });
   return auxMainKpi;
@@ -123,6 +130,11 @@ export const processStoreKpis = (data) => {
       && kpi.category !== 'POA') {
         const auxKpi = kpi;
         auxKpi.averageTicket = kpi.grossSale / kpi.transactions;
+        if (kpi.category === 'TOTAL') {
+          const kpiPOA = data.data.find((el) => el.category === 'POA' && new Date(el.date).toDateString() === day.toDateString());
+          auxKpi.poa = kpiPOA.netSale;
+        }
+
         auxArray.push(auxKpi);
       }
     });
@@ -135,7 +147,6 @@ export const processStoreKpis = (data) => {
   if (baseArray.length === 0) {
     return undefined;
   }
-
   const aux = {};
 
   const kpis = [
