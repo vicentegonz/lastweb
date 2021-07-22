@@ -37,6 +37,9 @@ const PredictionsFrame = () => {
 
   useEffect(() => {
     const storeProductsData = () => {
+      if (!user.stores) {
+        return;
+      }
       user.stores.forEach((store) => {
         dispatch(getProductDataFromApi(store));
       });
@@ -52,6 +55,9 @@ const PredictionsFrame = () => {
       return;
     }
     const storePredictionsData = () => {
+      if (!user.stores) {
+        return;
+      }
       user.stores.map(async (store) => {
         if (storePredictions.storeProducts
           && Object.keys(storePredictions.storeProducts).length !== 0

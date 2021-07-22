@@ -29,6 +29,9 @@ const AdminAlerts = () => {
 
   useEffect(() => {
     const storeAlertsData = async () => {
+      if (!user.stores) {
+        return;
+      }
       user.stores.forEach((store) => {
         dispatch(getAlertDataFromApi(store));
       });
