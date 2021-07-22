@@ -19,7 +19,7 @@ const { Title, Text } = Typography;
 
 const ReportCard = ({
   name, value, createdAt, differenceYesterdayPct, differenceLastWeekPct,
-  differenceYesterdayVal, differenceLastWeekVal, category, unit,
+  differenceYesterdayVal, differenceLastWeekVal, category, unit, poa,
 }) => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -70,6 +70,7 @@ const ReportCard = ({
 
   return (
     <Card
+      className={styles.minCardHeight}
       title={(
         <Space size="middle">
           <span>{name}</span>
@@ -90,9 +91,23 @@ const ReportCard = ({
         </Space>
       )}
     >
-      {unit === '$' && <Title type="success">{`${unit} ${formattedValue}`}</Title>}
-      {unit === 'unidades' && <Title type="success">{`${formattedValue} ${unit}`}</Title>}
-      {!unit && <Title type="success">{`${formattedValue}`}</Title>}
+      <Row justify="space-between">
+        <Col>
+          {unit === '$' && <Title type="success">{`${unit} ${formattedValue}`}</Title>}
+          {unit === 'unidades' && <Title type="success">{`${formattedValue} ${unit}`}</Title>}
+          {!unit && <Title type="success">{`${formattedValue}`}</Title>}
+        </Col>
+        {poa && (
+          <Col>
+            <Title level={3} type="warning">
+              <Space direction="vertical">
+                {`POA: $ ${round(poa, 2)} `}
+                {`Progreso: ${FormattDifferencePercent((value / poa) * 100)}%`}
+              </Space>
+            </Title>
+          </Col>
+        )}
+      </Row>
 
       <Row justify="space-between">
         <Col>
@@ -165,6 +180,7 @@ ReportCard.propTypes = {
   differenceLastWeekVal: number,
   category: string,
   unit: string,
+  poa: number,
 };
 
 ReportCard.defaultProps = {
@@ -174,6 +190,7 @@ ReportCard.defaultProps = {
   differenceLastWeekPct: undefined,
   differenceYesterdayVal: undefined,
   differenceLastWeekVal: undefined,
+  poa: undefined,
 };
 
 export default ReportCard;
