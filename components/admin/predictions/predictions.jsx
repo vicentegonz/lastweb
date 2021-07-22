@@ -119,7 +119,7 @@ const PredictionsFrame = () => {
       };
       dataDict.data.push(data);
 
-      const range = [prediction.p10[i].value, prediction.p90[i].value];
+      const range = [Math.round(prediction.p10[i].value), Math.round(prediction.p90[i].value)];
       rangeDict[data.x] = range;
     });
 
