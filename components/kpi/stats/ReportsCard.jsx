@@ -70,6 +70,7 @@ const ReportCard = ({
 
   return (
     <Card
+      className={styles.minCardHeight}
       title={(
         <Space size="middle">
           <span>{name}</span>

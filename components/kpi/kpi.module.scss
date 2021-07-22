@@ -85,3 +85,9 @@
   margin: 10px;
   text-align: center;
 }
+
+.minCardHeight {
+  :global .ant-card-body {
+    min-height: 200px;
+  }
+}
