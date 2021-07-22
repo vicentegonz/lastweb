@@ -26,7 +26,9 @@ const StoreSelector = () => {
   }, [dispatch, selected]);
 
   useEffect(() => {
-    if (!user.selectedStore && user.stores.length !== 0) {
+    if (!user.stores) {
+      setSelected('Cargando...');
+    } else if (!user.selectedStore && user.stores.length !== 0) {
       setSelected(user.stores[0]);
     }
   }, [user.stores, user.selectedStore]);
@@ -37,15 +39,25 @@ const StoreSelector = () => {
         Seleccionar tienda:
       </Title>
       <Select size="middle" value={selected} onChange={handleChange}>
-        {user.stores.map((e) => (
-          <Option key={e} value={e}>
-            <Space>
-              <ShopOutlined />
-              Tienda:
-              {e}
-            </Space>
-          </Option>
-        ))}
+        { user.stores
+
+          ? (user.stores.map((e) => (
+            <Option key={e} value={e}>
+              <Space>
+                <ShopOutlined />
+                Tienda:
+                {e}
+              </Space>
+            </Option>
+          )))
+          : (
+            <Option key="Empty" value="Cargando...">
+              <Space>
+                <ShopOutlined />
+                No hay tiendas.
+              </Space>
+            </Option>
+          )}
       </Select>
     </Space>
   );

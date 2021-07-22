@@ -27,6 +27,9 @@ const Ksi = () => {
 
   useEffect(() => {
     const storeServicesData = () => {
+      if (!user.stores) {
+        return;
+      }
       user.stores.forEach((store) => {
         dispatch(getDataFromApi([store, user.dateRange[0], user.dateRange[1]]));
       });
