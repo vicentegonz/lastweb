@@ -27,16 +27,9 @@ const AlertDetail = () => {
       || !alerts.selectedAlert) {
       return;
     }
-    const id = alerts.selectedAlert;
-    const alert = alerts.alertsData[user.selectedStore].filter((el) => el.id === id).pop();
-    setCardData(alert);
-  }, [alerts.alertsData, user.selectedStore, alerts.selectedAlert]);
-  const getDate = () => {
-    if (cardData) {
-      return new Date(cardData.createdAt).toLocaleDateString('en-ZA');
-    }
-    return null;
-  };
+    const { selectedAlert } = alerts;
+    setCardData(selectedAlert);
+  }, [alerts.alertsData, user.selectedStore, alerts]);
 
   return (
     cardData
@@ -55,18 +48,18 @@ const AlertDetail = () => {
             </Col>
             <Col>
               <Title level={3} className={alertStyles.contactTitle}>
-                {`Alerta ${cardData ? cardData.id : null}`}
+                {`${cardData ? cardData.product : null}`}
               </Title>
             </Col>
             <Col>
               <Title level={5} className={alertStyles.contactTitle}>
-                {`fecha:${getDate()}`}
+                {`fecha:${cardData.createdAt}`}
               </Title>
             </Col>
           </Row>
           <Row justify="center">
             <Col>
-              <p>{cardData ? cardData.data.event : 'cargando'}</p>
+              <p>{cardData ? cardData.event : 'cargando'}</p>
             </Col>
           </Row>
         </Space>
